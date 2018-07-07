@@ -20,7 +20,16 @@ class EventDetailsState extends State<EventDetails> {
       appBar: AppBar(
         title: Text(this.widget.event.eventName),
       ),
-      body: EventDetailsBody(widget.event, widget.pageController),
+      body: PageView(
+        controller: widget.pageController,
+        onPageChanged: _handlePageChanged,
+        children: <Widget>[
+          EventInfo(),
+          EventLocation(),
+          EventTimeDate(),
+          EventOrganizer(),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
         onTap: _handleBottomNavigationBarTap,
@@ -49,35 +58,26 @@ class EventDetailsState extends State<EventDetails> {
 
   void _handleBottomNavigationBarTap(int index) {
     setState(() {
+      if ((currentIndex - index).abs() <= 1) {
+        widget.pageController.animateToPage(
+          index,
+          duration: Duration(milliseconds: 200),
+          curve: Curves.easeIn,
+        );
+      } else {
+        widget.pageController.jumpToPage(index);
+      }
       currentIndex = index;
-      widget.pageController.animateToPage(
-        index,
-        duration: Duration(milliseconds: 200),
-        curve: Curves.easeIn,
-      );
+    });
+  }
+
+  void _handlePageChanged(int index) {
+    setState(() {
+      currentIndex = index;
     });
   }
 
   int currentIndex = 0;
-}
-
-class EventDetailsBody extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return PageView(
-      controller: this.pageController,
-      children: <Widget>[
-        EventInfo(),
-        EventLocation(),
-        EventTimeDate(),
-        EventOrganizer(),
-      ],
-    );
-  }
-
-  EventDetailsBody(this.event, this.pageController);
-  final Event event;
-  final PageController pageController;
 }
 
 class EventInfo extends StatelessWidget {
