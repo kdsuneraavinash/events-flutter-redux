@@ -5,7 +5,7 @@ import 'package:event_app/screens/event_details/event_location.dart'
     show EventLocation;
 import 'package:event_app/screens/event_details/event_organizer.dart'
     show EventOrganizer;
-import 'package:event_app/screens/event_details/event_time.dart'
+import 'package:event_app/screens/event_details/event_links.dart'
     show EventTimeDate;
 
 import 'package:event_app/event.dart' show Event;
@@ -35,7 +35,7 @@ class EventDetailsState extends State<EventDetails> {
         controller: widget.pageController,
         onPageChanged: _handlePageChanged,
         children: <Widget>[
-          EventInfo(),
+          EventInfo(widget.event),
           EventLocation(),
           EventTimeDate(),
           EventOrganizer(),
@@ -49,22 +49,22 @@ class EventDetailsState extends State<EventDetails> {
           BottomNavigationBarItem(
             icon: Icon(Icons.event_note),
             title: Text("Event Info"),
-            backgroundColor: Colors.blue[800],
+            backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.location_city),
             title: Text("Location"),
-            backgroundColor: Colors.cyan[800],
+            backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.access_time),
-            title: Text("Time/Date"),
-            backgroundColor: Colors.red[800],
+            icon: Icon(Icons.link),
+            title: Text("Contact Links"),
+            backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
             title: Text("Organizers"),
-            backgroundColor: Colors.green[800],
+            backgroundColor: Theme.of(context).primaryColor,
           ),
         ],
       ),
