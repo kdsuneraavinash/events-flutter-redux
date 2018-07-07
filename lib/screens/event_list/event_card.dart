@@ -1,10 +1,11 @@
+import 'package:event_app/custom_widgets/transition_maker.dart';
 import 'package:flutter/material.dart';
 
 import 'package:event_app/event.dart' show Event;
 import 'package:event_app/custom_widgets/icon_text.dart' show IconText;
 import 'package:event_app/custom_widgets/network_image.dart'
     show DefParameterNetworkImage;
-import 'package:event_app/windows/event_image_view.dart' show EventImageView;
+import 'package:event_app/screens/event_image_view.dart' show EventImageView;
 
 /// Individual Card.
 /// Displays a Banner, Event Title and Organizers, and Time and Date.
@@ -65,20 +66,8 @@ class EventCard extends StatelessWidget {
   /// Will show EventImageView and animates Banner as a Hero.
   /// Use Fade animation as transition.
   void _handleBannerOnTap(BuildContext context) {
-    Navigator.of(context).push(
-          PageRouteBuilder(
-            opaque: false,
-            pageBuilder: (_, __, ___) {
-              return EventImageView(this.event);
-            },
-            transitionsBuilder:
-                (_, Animation<double> animation, __, Widget child) {
-              return FadeTransition(
-                opacity: Tween<double>(begin: 0.0, end: 1.0).animate(animation),
-                child: child,
-              );
-            },
-          ),
-        );
+    TransitionMaker.fadeTransition(
+      destinationPageCall: () => EventImageView(this.event),
+    ).start(context);
   }
 }

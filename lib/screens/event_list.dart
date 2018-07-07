@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'package:event_app/custom_widgets/transition_maker.dart';
 import 'package:flutter/material.dart';
-import 'package:event_app/windows/event_list/event_card.dart' show EventCard;
+import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
 import 'package:event_app/event.dart' show Event;
-import 'package:event_app/windows/credits.dart' show Credits;
+import 'package:event_app/screens/credits.dart' show Credits;
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
@@ -31,21 +32,9 @@ class EventListWindowState extends State<EventListWindow> {
   }
 
   void _handleCreditsAction(BuildContext context) {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        pageBuilder: (_, __, ___) {
-          return Credits();
-        },
-        transitionsBuilder:
-            (_, Animation<double> animation, __, Widget child) {
-          return SlideTransition(
-            position: Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0)).animate(animation),
-            child: child,
-          );
-        },
-      ),
-    );
+    TransitionMaker.slideTransition(
+      destinationPageCall: () => Credits(),
+    ).start(context);
   }
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:event_app/custom_widgets/rounded_button.dart'
     show RoundedButton;
+import 'package:event_app/screens/event_details.dart' show EventDetails;
 
 /// Controls in the bottom of [EventBannerView]
 /// Contains a IconButton with an image.

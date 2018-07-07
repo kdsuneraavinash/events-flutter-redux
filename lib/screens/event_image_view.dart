@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:event_app/event.dart' show Event;
-import 'package:event_app/windows/event_image_view/middle_controls.dart'
+import 'package:event_app/screens/event_image_view/middle_controls.dart'
     show MiddleControls;
-import 'package:event_app/windows/event_image_view/bottom_controls.dart'
+import 'package:event_app/screens/event_image_view/bottom_controls.dart'
     show BottomControls;
 
 /// Window that shows Event Banner Separately
