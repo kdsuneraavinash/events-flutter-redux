@@ -26,27 +26,33 @@ class CreditsBody extends StatelessWidget {
           ),
         ),
         ListTile(
-            leading: Image.asset("images/credits/sunera.png"),
+            leading: Image.asset("images/credits/sunera.png",
+                width: 50.0, fit: BoxFit.fitWidth),
             title: Text("K. D. Sunera Avinash Chandrasiri"),
             subtitle: Text("Lead Programmer | CTO")),
         ListTile(
-            leading: Image.asset("images/credits/deepana.png"),
+            leading: Image.asset("images/credits/deepana.png",
+                width: 50.0, fit: BoxFit.fitWidth),
             title: Text("Deepana Ishtaweera"),
             subtitle: Text("CTO")),
         ListTile(
-            leading: Image.asset("images/credits/ruchin.png"),
+            leading: Image.asset("images/credits/ruchin.png",
+                width: 50.0, fit: BoxFit.fitWidth),
             title: Text("Ruchin Amarathunga"),
             subtitle: Text("COO")),
         ListTile(
-            leading: Image.asset("images/credits/dinith.png"),
+            leading: Image.asset("images/credits/dinith.png",
+                width: 50.0, fit: BoxFit.fitWidth),
             title: Text("Dinith Subasinshana Herath"),
             subtitle: Text("Product Manager")),
         ListTile(
-            leading: Image.asset("images/credits/uvindu.jpg"),
+            leading: Image.asset("images/credits/uvindu.jpg",
+                width: 50.0, fit: BoxFit.fitWidth),
             title: Text("Uvindu Avishka"),
             subtitle: Text("Head of Marketing")),
         ListTile(
-            leading: Image.asset("images/credits/ravikula.png"),
+            leading: Image.asset("images/credits/ravikula.png",
+                width: 50.0, fit: BoxFit.fitWidth),
             title: Text("Ravikula Silva"),
             subtitle: Text("Head of Creative Design")),
         SizedBox(
