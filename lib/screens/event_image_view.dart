@@ -49,7 +49,7 @@ class EventImageBody extends StatelessWidget {
     return Stack(
       children: <Widget>[
         MiddleControls(this.event),
-        BottomControls(),
+        BottomControls(this.event),
       ],
     );
   }

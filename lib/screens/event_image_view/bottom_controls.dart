@@ -1,3 +1,5 @@
+import 'package:event_app/custom_widgets/transition_maker.dart';
+import 'package:event_app/event.dart';
 import 'package:flutter/material.dart';
 
 import 'package:event_app/custom_widgets/rounded_button.dart'
@@ -9,7 +11,10 @@ import 'package:event_app/screens/event_details.dart' show EventDetails;
 /// TODO: Add Favourite Button here
 class BottomControls extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => BottomControlsState();
+  State<StatefulWidget> createState() => BottomControlsState(this.event);
+
+  BottomControls(this.event);
+  final Event event;
 }
 
 /// State of BottomControls
@@ -22,8 +27,23 @@ class BottomControlsState extends State<BottomControls> {
       child: RoundedButton(
         buttonIcon: Icons.event_note,
         text: "View Event",
-        onPressed: () => null,
+        onPressed: () => _handleEventButtonPress(context),
       ),
     );
   }
+
+  void _handleEventButtonPress(BuildContext context) {
+    TransitionMaker
+        .slideTransition(
+            destinationPageCall: () => EventDetails(
+                  event: this.event,
+                ),
+            beginOffset: Offset(0.0, 1.0),
+            endOffset: Offset(0.0, 0.0),
+    )
+        .start(context);
+  }
+
+  BottomControlsState(this.event);
+  final Event event;
 }
