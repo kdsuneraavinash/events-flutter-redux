@@ -61,6 +61,13 @@ class CreditsBody extends StatelessWidget {
           title: Text("Ravikula Silva"),
           subtitle: Text("Head of Creative Design"),
         ),
+        Divider(),
+        AboutListTile(
+          icon: Icon(Icons.developer_board),
+          applicationName: "MoraEvents",
+          applicationVersion: "Prototype",
+          applicationLegalese: "Team Axys",
+        ),
       ],
     );
   }
