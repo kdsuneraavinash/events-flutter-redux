@@ -1,3 +1,10 @@
+import 'package:event_app/screens/event_details/event_info.dart' show EventInfo;
+import 'package:event_app/screens/event_details/event_location.dart'
+    show EventLocation;
+import 'package:event_app/screens/event_details/event_organizer.dart'
+    show EventOrganizer;
+import 'package:event_app/screens/event_details/event_time.dart'
+    show EventTimeDate;
 import 'package:flutter/material.dart';
 
 import 'package:event_app/event.dart' show Event;
@@ -78,40 +85,4 @@ class EventDetailsState extends State<EventDetails> {
   }
 
   int currentIndex = 0;
-}
-
-class EventInfo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-    );
-  }
-}
-
-class EventTimeDate extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red,
-    );
-  }
-}
-
-class EventOrganizer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.green,
-    );
-  }
-}
-
-class EventLocation extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.cyan,
-    );
-  }
 }
