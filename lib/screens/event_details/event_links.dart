@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:event_app/custom_widgets/event_info_card.dart' show EventInfoCard;
+import 'package:event_app/custom_widgets/event_info_card.dart'
+    show EventInfoCard;
 
 /// Page to show Event Date/Time
 class EventTimeDate extends StatelessWidget {

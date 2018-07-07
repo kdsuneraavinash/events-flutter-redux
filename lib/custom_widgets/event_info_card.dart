@@ -27,7 +27,7 @@ class EventInfoCard extends StatelessWidget {
               ),
             ),
             Container(
-              alignment: Alignment.centerLeft ,
+              alignment: Alignment.centerLeft,
               padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
               child: Text(this.description,
                   style: descriptionTextStyle,
@@ -41,7 +41,11 @@ class EventInfoCard extends StatelessWidget {
   }
 
   EventInfoCard(
-      {this.icon, this.title, this.description, this.descriptionTextStyle, this.handleTap});
+      {this.icon,
+      this.title,
+      this.description,
+      this.descriptionTextStyle,
+      this.handleTap});
   final IconData icon;
   final String title;
   final String description;
