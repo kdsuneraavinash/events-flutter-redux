@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// Builds a basic animated route transition
 class TransitionMaker {
   final destinationPageCall;
   dynamic transitionBuilder;
 
+  /// Use fade animation
   TransitionMaker.fadeTransition({
     this.destinationPageCall,
     double beginOpacity = 0.0,
@@ -19,6 +21,7 @@ class TransitionMaker {
     };
   }
 
+  /// Use slide animation
   TransitionMaker.slideTransition({
     this.destinationPageCall,
     Offset beginOffset,
@@ -36,6 +39,7 @@ class TransitionMaker {
     };
   }
 
+  /// Start animation
   void start(BuildContext context) {
     Navigator.of(context).push(
           PageRouteBuilder(

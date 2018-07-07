@@ -11,7 +11,7 @@ import 'package:event_app/screens/event_details.dart' show EventDetails;
 /// TODO: Add Favourite Button here
 class BottomControls extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => BottomControlsState(this.event);
+  State<StatefulWidget> createState() => BottomControlsState();
 
   BottomControls(this.event);
   final Event event;
@@ -36,14 +36,11 @@ class BottomControlsState extends State<BottomControls> {
     TransitionMaker
         .slideTransition(
             destinationPageCall: () => EventDetails(
-                  event: this.event,
+                  event: widget.event,
                 ),
             beginOffset: Offset(0.0, 1.0),
             endOffset: Offset(0.0, 0.0),
     )
         .start(context);
   }
-
-  BottomControlsState(this.event);
-  final Event event;
 }

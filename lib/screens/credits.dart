@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Credits Page Scaffold
 class Credits extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -13,6 +14,7 @@ class Credits extends StatelessWidget {
   }
 }
 
+/// Credits Page Content
 class CreditsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -36,27 +38,28 @@ class CreditsBody extends StatelessWidget {
             title: Text("Deepana Ishtaweera"),
             subtitle: Text("CTO")),
         ListTile(
-            leading: Image.asset("images/credits/ruchin.png",
-                width: 50.0, fit: BoxFit.fitWidth),
-            title: Text("Ruchin Amarathunga"),
-            subtitle: Text("COO")),
+          leading: Image.asset("images/credits/ruchin.png",
+              width: 50.0, fit: BoxFit.fitWidth),
+          title: Text("Ruchin Amarathunga"),
+          subtitle: Text("COO"),
+        ),
         ListTile(
-            leading: Image.asset("images/credits/dinith.png",
-                width: 50.0, fit: BoxFit.fitWidth),
-            title: Text("Dinith Subasinshana Herath"),
-            subtitle: Text("Product Manager")),
+          leading: Image.asset("images/credits/dinith.png",
+              width: 50.0, fit: BoxFit.fitWidth),
+          title: Text("Dinith Subasinshana Herath"),
+          subtitle: Text("Product Manager"),
+        ),
         ListTile(
-            leading: Image.asset("images/credits/uvindu.jpg",
-                width: 50.0, fit: BoxFit.fitWidth),
-            title: Text("Uvindu Avishka"),
-            subtitle: Text("Head of Marketing")),
+          leading: Image.asset("images/credits/uvindu.jpg",
+              width: 50.0, fit: BoxFit.fitWidth),
+          title: Text("Uvindu Avishka"),
+          subtitle: Text("Head of Marketing"),
+        ),
         ListTile(
-            leading: Image.asset("images/credits/ravikula.png",
-                width: 50.0, fit: BoxFit.fitWidth),
-            title: Text("Ravikula Silva"),
-            subtitle: Text("Head of Creative Design")),
-        SizedBox(
-          height: 20.0,
+          leading: Image.asset("images/credits/ravikula.png",
+              width: 50.0, fit: BoxFit.fitWidth),
+          title: Text("Ravikula Silva"),
+          subtitle: Text("Head of Creative Design"),
         ),
       ],
     );

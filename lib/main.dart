@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:event_app/screens/event_list.dart' show EventListWindow;
+
 import 'package:event_app/theme.dart' as Theme;
 
 /// Run main App

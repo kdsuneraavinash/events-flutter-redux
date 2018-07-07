@@ -1,19 +1,16 @@
 import 'dart:async';
-import 'package:event_app/custom_widgets/transition_maker.dart';
 import 'package:flutter/material.dart';
+
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
 import 'package:event_app/event.dart' show Event;
 import 'package:event_app/screens/credits.dart' show Credits;
 
+import 'package:event_app/custom_widgets/transition_maker.dart'
+    show TransitionMaker;
+
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
-class EventListWindow extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => EventListWindowState();
-}
-
-/// State of EventListWindow.
-class EventListWindowState extends State<EventListWindow> {
+class EventListWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,9 +29,11 @@ class EventListWindowState extends State<EventListWindow> {
   }
 
   void _handleCreditsAction(BuildContext context) {
-    TransitionMaker.slideTransition(
-      destinationPageCall: () => Credits(),
-    ).start(context);
+    TransitionMaker
+        .slideTransition(
+          destinationPageCall: () => Credits(),
+        )
+        .start(context);
   }
 }
 
@@ -45,13 +44,7 @@ class EventListWindowState extends State<EventListWindow> {
 /// TODO: Connect with internet.
 /// Also contains a RefreshIndicator so users can refresh Event Content.
 /// TODO: Add Event Refresh Process
-class EventListBody extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => EventListBodyState();
-}
-
-/// State of [EventListBody].
-class EventListBodyState extends State<EventListBody> {
+class EventListBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -62,7 +55,7 @@ class EventListBodyState extends State<EventListBody> {
             ),
         itemCount: 100,
       ),
-      onRefresh: _handleRefresh,
+      onRefresh: () => _handleRefresh(context),
     );
   }
 
@@ -70,7 +63,7 @@ class EventListBodyState extends State<EventListBody> {
   /// RefreshIndicator.
   /// Currently set to wait 3s and display a SnackBar.
   /// TODO: Add a real refresh method.
-  Future<Null> _handleRefresh() {
+  Future<Null> _handleRefresh(context) {
     final Completer<Null> completer = Completer<Null>();
     Timer(
       Duration(seconds: 3),

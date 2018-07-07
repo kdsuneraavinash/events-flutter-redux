@@ -5,24 +5,9 @@ import 'package:event_app/screens/event_image_view/middle_controls.dart'
 import 'package:event_app/screens/event_image_view/bottom_controls.dart'
     show BottomControls;
 
-/// Window that shows Event Banner Separately
-class EventImageView extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => EventImageViewState(event);
-
-  /// Constructor to pass image Url and tag to identify hero
-  /// Will create new DataStore object and pass that down Widget Tree
-  /// TODO: Implement a method better than passing data down
-  EventImageView(this.event);
-  final Event event;
-}
-
 /// State of EventImageView
 /// Controls Star Marking State.
-class EventImageViewState extends State<EventImageView> {
-  EventImageViewState(this.event);
-  final Event event;
-
+class EventImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +21,9 @@ class EventImageViewState extends State<EventImageView> {
       body: EventImageBody(this.event),
     );
   }
+
+  EventImageView(this.event);
+  final Event event;
 }
 
 /// Body of EventImageView
