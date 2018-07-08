@@ -6,8 +6,7 @@ class Credits extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("CREDITS"),
-        centerTitle: true,
+        title: Text("Credits"),
       ),
       body: CreditsBody(),
     );
@@ -36,7 +35,7 @@ class CreditsBody extends StatelessWidget {
             leading: Image.asset("images/credits/deepana.png",
                 width: 50.0, fit: BoxFit.fitWidth),
             title: Text("Deepana Ishtaweera"),
-            subtitle: Text("CTO")),
+            subtitle: Text("CEO")),
         ListTile(
           leading: Image.asset("images/credits/ruchin.png",
               width: 50.0, fit: BoxFit.fitWidth),

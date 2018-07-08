@@ -25,6 +25,8 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 1.0,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular((8.0)))),
       child: Column(
         children: <Widget>[
           GestureDetector(

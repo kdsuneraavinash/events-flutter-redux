@@ -8,13 +8,14 @@ class IconText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsetsDirectional.only(bottom: 16.0, end: 16.0),
+      color: Theme.of(context).primaryColor,
+      padding: EdgeInsets.all(4.0),
       child: Row(
         mainAxisAlignment: this.mainAxisAlignment,
         children: <Widget>[
           Icon(
             this.icon,
-            color: Theme.of(context).primaryColor,
+            color: Colors.white,
           ),
           SizedBox(
             height: 8.0,
@@ -23,7 +24,7 @@ class IconText extends StatelessWidget {
           Text(
             this.text,
             textAlign: TextAlign.end,
-            style: TextStyle(color: Theme.of(context).primaryColor),
+            style: TextStyle(color: Colors.white),
           ),
         ],
       ),

@@ -15,8 +15,7 @@ class EventListWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("MORA EVENTS"),
-        centerTitle: true,
+        title: Text("Mora Events"),
         actions: <Widget>[
           IconButton(
             icon: new Icon(Icons.help),

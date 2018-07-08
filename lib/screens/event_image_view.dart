@@ -14,7 +14,6 @@ class EventImageView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(this.event.eventName),
-        centerTitle: true,
         actions: <Widget>[],
       ),
       backgroundColor: Colors.black,

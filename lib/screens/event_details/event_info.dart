@@ -10,7 +10,7 @@ class EventInfo extends StatelessWidget {
     return ListView(
       children: <Widget>[
         EventInfoCard(
-          icon: Icons.arrow_drop_down_circle,
+          icon: Icons.title,
           title: "Description",
           description: this.event.description,
         ),
