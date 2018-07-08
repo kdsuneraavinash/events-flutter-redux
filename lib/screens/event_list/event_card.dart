@@ -29,9 +29,10 @@ class EventCard extends StatefulWidget {
   /// Constructor ->
   /// index is card position,
   /// event is event details
-  EventCard({this.index, this.event});
+  EventCard({this.index, this.event, this.flaggedEvents});
   final int index;
   final Event event;
+  final List<Event> flaggedEvents;
 
   /// Builds CachedNetworkImage as Banner.
   /// This will also act as a Hero.
@@ -84,24 +85,12 @@ class EventCardState extends State<EventCard> {
             child: ListTile(
               title: Text(this.widget.event.eventName),
               subtitle: Text(this.widget.event.organizer),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(
-                      widget.event.alarm ? Icons.alarm_on : Icons.alarm_off,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    onPressed: _handleAlarmOnTap,
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      widget.event.flagged ? Icons.bookmark : Icons.bookmark_border,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    onPressed: _handleFlagOnTap,
-                  ),
-                ],
+              trailing: IconButton(
+                icon: Icon(
+                  widget.event.flagged ? Icons.bookmark : Icons.bookmark_border,
+                  color: widget.event.flagged ? Theme.of(context).primaryColor : null,
+                ),
+                onPressed: _handleFlagOnTap,
               ),
             ),
           ),
@@ -119,14 +108,9 @@ class EventCardState extends State<EventCard> {
   }
 
   void _handleFlagOnTap() {
+    widget.flaggedEvents.add(widget.event);
     setState(() {
       widget.event.flagged = ! widget.event.flagged;
-    });
-  }
-
-  void _handleAlarmOnTap() {
-    setState(() {
-      widget.event.alarm = ! widget.event.alarm;
     });
   }
 }

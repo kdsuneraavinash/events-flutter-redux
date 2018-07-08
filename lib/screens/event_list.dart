@@ -51,12 +51,6 @@ class EventListWindow extends StatelessWidget {
               subtitle: Text("Show events that you pinned"),
               onTap: () => null,
             ),
-            ListTile(
-              leading: Icon(Icons.alarm),
-              title: Text("Alarms"),
-              subtitle: Text("Show future alarms"),
-              onTap: () => null,
-            ),
           ],
         ),
       ),

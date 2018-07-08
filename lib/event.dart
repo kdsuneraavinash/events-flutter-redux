@@ -12,7 +12,6 @@ class Event {
   String description;
   String location;
   bool flagged = false;
-  bool alarm = false;
 
   /// Create an event for test purposes
   Event.fromIndex(int index) {

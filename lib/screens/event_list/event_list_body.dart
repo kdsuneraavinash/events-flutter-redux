@@ -40,9 +40,9 @@ class EventListBodyState extends State<EventListBody> {
     return RefreshIndicator(
       child: ListView.builder(
         itemBuilder: (_, index) => EventCard(
-              index: index,
-              event: eventList[index],
-            ),
+            index: index,
+            event: this.eventList[index],
+            flaggedEvents: this.flaggedList),
         itemCount: events.length,
       ),
       onRefresh: () => widget._handleRefresh(context),
@@ -50,4 +50,5 @@ class EventListBodyState extends State<EventListBody> {
   }
 
   List<Event> eventList = events.map((v) => Event.fromDataList(v)).toList();
+  List<Event> flaggedList = [];
 }
