@@ -9,7 +9,7 @@ class DefParameterNetworkImage extends StatelessWidget {
       imageUrl: this.imageUrl,
       placeholder: Image.asset("images/placeholders/banner_placeholder.jpg"),
       errorWidget: Image.asset("images/placeholders/banner_error.png"),
-      fit: BoxFit.fitWidth,
+      fit: BoxFit.contain,
     );
   }
 

@@ -1,26 +1,37 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-ThemeData kAndroidTheme = _buildAndroidTheme();
-
-/// Define default theme for Android devices
-ThemeData _buildAndroidTheme(){
+/// Define default theme for All devices
+ThemeData buildTheme(BuildContext context){
   return ThemeData(
     primaryColor: Colors.blue[900],
-    accentColor: Colors.redAccent,
+    accentColor: Colors.red[900],
     textTheme: TextTheme(
       body1: TextStyle(
-        letterSpacing: 0.7,
-        fontWeight: FontWeight.w400
+        fontWeight: FontWeight.w600,
       ),
       button: TextStyle(
-          letterSpacing: 0.5,
+          letterSpacing: 2.0,
           fontWeight: FontWeight.w500
       ),
       subhead: TextStyle(
-          letterSpacing: 0.9,
+          letterSpacing: 1.2,
+          fontWeight: FontWeight.w800
+      ),
+      headline: TextStyle(
+          letterSpacing: 2.0,
+          fontWeight: FontWeight.w800,
+          decoration: TextDecoration.underline,
+        fontSize: 20.0,
+        color: Colors.blue[900],
+      ),
+      body2: TextStyle(
+          letterSpacing: 5.0,
           fontWeight: FontWeight.w800
       ),
     ),
-    dividerColor: Colors.black,
+    dividerColor: Colors.blue[700],
+    splashColor: Colors.blue[500],
+    platform: defaultTargetPlatform,
   );
 }

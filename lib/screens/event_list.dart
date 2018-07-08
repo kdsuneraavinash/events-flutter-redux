@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
 import 'package:event_app/event.dart' show Event;
 import 'package:event_app/screens/credits.dart' show Credits;
+import 'package:event_app/test_data.dart' show events;
 
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
@@ -16,11 +17,15 @@ class EventListWindow extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Mora Events"),
+        leading: IconButton(
+          icon: new Icon(Icons.search),
+          onPressed: () => _handleSearchAction(context),
+        ),
         actions: <Widget>[
           IconButton(
             icon: new Icon(Icons.help),
             onPressed: () => _handleCreditsAction(context),
-          )
+          ),
         ],
       ),
       body: EventListBody(),
@@ -34,6 +39,8 @@ class EventListWindow extends StatelessWidget {
         )
         .start(context);
   }
+
+  void _handleSearchAction(BuildContext context) {}
 }
 
 /// Body of EventListWindow.
@@ -52,7 +59,7 @@ class EventListBody extends StatelessWidget {
               index: index,
               event: Event.fromIndex(index),
             ),
-        itemCount: 100,
+        itemCount: events.length,
       ),
       onRefresh: () => _handleRefresh(context),
     );
@@ -67,11 +74,6 @@ class EventListBody extends StatelessWidget {
     Timer(
       Duration(seconds: 3),
       () {
-        Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Refreshed"),
-              ),
-            );
         completer.complete(null);
       },
     );

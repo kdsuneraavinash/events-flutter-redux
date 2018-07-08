@@ -6,10 +6,11 @@ class EventInfoCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-          border: Border.all(
-              color: Theme.of(context).primaryColor,
-              style: BorderStyle.solid,
-              width: 1.0)),
+        border: Border.all(
+            color: Theme.of(context).primaryColor,
+            style: BorderStyle.solid,
+            width: 1.0),
+      ),
       child: InkWell(
         onTap: this.handleTap,
         child: Column(

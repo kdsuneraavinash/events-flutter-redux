@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:event_app/custom_widgets/event_info_card.dart'
-    show EventInfoCard;
+import 'package:event_app/custom_widgets/event_info_button.dart'
+    show EventInfoButton;
 
 /// Page to show Event Date/Time
 class EventTimeDate extends StatelessWidget {
@@ -9,22 +9,19 @@ class EventTimeDate extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        EventInfoCard(
+        EventInfoButton(
           icon: Icons.web,
-          title: "Facebook",
-          description: "www.facebook.com/fake.link",
+          title: "Facebook\n(www.facebook.com/fake.link)",
           handleTap: () => null,
         ),
-        EventInfoCard(
+        EventInfoButton(
           icon: Icons.call,
-          title: "Call",
-          description: "076-9955684 (Ruwan)",
+          title: "Call\n076-9955684 (Ruwan)",
           handleTap: () => null,
         ),
-        EventInfoCard(
+        EventInfoButton(
           icon: Icons.message,
-          title: "Message",
-          description: "076-9955684 (Ruwan)",
+          title: "Message\n076-9955684 (Ruwan)",
           handleTap: () => null,
         ),
       ],

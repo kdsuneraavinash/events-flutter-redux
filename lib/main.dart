@@ -14,7 +14,7 @@ class MoraEventsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "MoraEvents",
-      theme: Theme.kAndroidTheme,
+      theme: Theme.buildTheme(context),
       home: EventListWindow(),
     );
   }

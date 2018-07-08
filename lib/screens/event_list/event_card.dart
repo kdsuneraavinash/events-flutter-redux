@@ -8,6 +8,7 @@ import 'package:event_app/custom_widgets/network_image.dart'
     show DefParameterNetworkImage;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
+import 'package:event_app/screens/event_details.dart' show EventDetails;
 
 /// Individual Card.
 /// Displays a Banner, Event Title and Organizers, and Time and Date.
@@ -33,15 +34,21 @@ class EventCard extends StatelessWidget {
             child: _buildImageBanner(context),
             onTap: () => _handleBannerOnTap(context),
           ),
-          ListTile(
-            leading: Icon(Icons.event),
-            title: Text(this.event.eventName),
-            subtitle: Text(this.event.organizer),
+          GestureDetector(
+            child: ListTile(
+              leading: Icon(Icons.event),
+              title: Text(this.event.eventName),
+              subtitle: Text(this.event.organizer),
+            ),
+            onTap: () => _handleEventOnTap(context),
           ),
-          IconText(
-            icon: Icons.timer,
-            text: "${this.event.time} | ${this.event.date}",
-            mainAxisAlignment: MainAxisAlignment.center,
+          GestureDetector(
+            child: IconText(
+              icon: Icons.timer,
+              text: "${this.event.time} | ${this.event.date}",
+              mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            onTap: () => _handleDateTimeOnTap(context),
           ),
         ],
       ),
@@ -73,6 +80,26 @@ class EventCard extends StatelessWidget {
     TransitionMaker
         .fadeTransition(
           destinationPageCall: () => EventImageView(this.event),
+        )
+        .start(context);
+  }
+
+  void _handleDateTimeOnTap(BuildContext context) {
+    Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text("Will start on ${this.event.date} at ${this.event.time}."),
+            backgroundColor: Theme.of(context).accentColor,
+          ),
+        );
+  }
+
+  void _handleEventOnTap(BuildContext context) {
+    TransitionMaker
+        .fadeTransition(
+          destinationPageCall: () => EventDetails(
+                event: this.event,
+              ),
         )
         .start(context);
   }

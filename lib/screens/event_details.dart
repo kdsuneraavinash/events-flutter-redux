@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:event_app/screens/event_details/event_info.dart' show EventInfo;
-import 'package:event_app/screens/event_details/event_location.dart'
-    show EventLocation;
-import 'package:event_app/screens/event_details/event_organizer.dart'
-    show EventOrganizer;
 import 'package:event_app/screens/event_details/event_links.dart'
     show EventTimeDate;
 
@@ -29,16 +25,14 @@ class EventDetailsState extends State<EventDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(this.widget.event.eventName),
+        title: Text("Event Info"),
       ),
       body: PageView(
         controller: widget.pageController,
         onPageChanged: _handlePageChanged,
         children: <Widget>[
           EventInfo(widget.event),
-          EventLocation(),
           EventTimeDate(),
-          EventOrganizer(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -52,18 +46,8 @@ class EventDetailsState extends State<EventDetails> {
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_city),
-            title: Text("Location"),
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.link),
-            title: Text("Contact Links"),
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            title: Text("Organizers"),
+            title: Text("Contact"),
             backgroundColor: Theme.of(context).primaryColor,
           ),
         ],
