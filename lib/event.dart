@@ -11,6 +11,8 @@ class Event {
   String headerImage;
   String description;
   String location;
+  bool flagged = false;
+  bool alarm = false;
 
   /// Create an event for test purposes
   Event.fromIndex(int index) {
@@ -43,5 +45,17 @@ class Event {
       this.images = events[index][6];
       this.headerImage = this.images[0];
     }
+  }
+
+  /// Create an event for test purposes
+  Event.fromDataList(List eventData) {
+    this.eventName = eventData[0];
+    this.organizer = eventData[1];
+    this.time = eventData[2];
+    this.date = eventData[3];
+    this.location = eventData[4];
+    this.description = eventData[5];
+    this.images = eventData[6];
+    this.headerImage = this.images[0];
   }
 }

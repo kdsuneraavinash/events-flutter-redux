@@ -1,13 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
-import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
-import 'package:event_app/event.dart' show Event;
 import 'package:event_app/screens/credits.dart' show Credits;
-import 'package:event_app/test_data.dart' show events;
-
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
+import 'package:event_app/screens/event_list/event_list_body.dart'
+    show EventListBody;
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
@@ -17,16 +14,51 @@ class EventListWindow extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Mora Events"),
-        leading: IconButton(
-          icon: new Icon(Icons.search),
-          onPressed: () => _handleSearchAction(context),
-        ),
         actions: <Widget>[
+          IconButton(
+            icon: new Icon(Icons.search),
+            onPressed: () => _handleSearchAction(context),
+          ),
           IconButton(
             icon: new Icon(Icons.help),
             onPressed: () => _handleCreditsAction(context),
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(
+              child: Text(
+                "Mora Events",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              decoration: BoxDecoration(color: Theme.of(context).accentColor),
+            ),
+            ListTile(
+              leading: Icon(Icons.notifications),
+              title: Text("Notifications"),
+              subtitle: Text("View latest event notifications"),
+              onTap: () => null,
+            ),
+            ListTile(
+              leading: Icon(Icons.book),
+              title: Text("Pinned Events"),
+              subtitle: Text("Show events that you pinned"),
+              onTap: () => null,
+            ),
+            ListTile(
+              leading: Icon(Icons.alarm),
+              title: Text("Alarms"),
+              subtitle: Text("Show future alarms"),
+              onTap: () => null,
+            ),
+          ],
+        ),
       ),
       body: EventListBody(),
     );
@@ -41,42 +73,4 @@ class EventListWindow extends StatelessWidget {
   }
 
   void _handleSearchAction(BuildContext context) {}
-}
-
-/// Body of EventListWindow.
-/// Contains of a ListView consisting of Event Cards so Users can scroll
-/// through Events.
-/// TODO: Use a database to load events.
-/// TODO: Connect with internet.
-/// Also contains a RefreshIndicator so users can refresh Event Content.
-/// TODO: Add Event Refresh Process
-class EventListBody extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return RefreshIndicator(
-      child: ListView.builder(
-        itemBuilder: (_, index) => EventCard(
-              index: index,
-              event: Event.fromIndex(index),
-            ),
-        itemCount: events.length,
-      ),
-      onRefresh: () => _handleRefresh(context),
-    );
-  }
-
-  /// Async function which will update Events when refreshed with
-  /// RefreshIndicator.
-  /// Currently set to wait 3s and display a SnackBar.
-  /// TODO: Add a real refresh method.
-  Future<Null> _handleRefresh(context) {
-    final Completer<Null> completer = Completer<Null>();
-    Timer(
-      Duration(seconds: 3),
-      () {
-        completer.complete(null);
-      },
-    );
-    return completer.future.then((_) {});
-  }
 }

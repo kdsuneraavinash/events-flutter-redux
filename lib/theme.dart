@@ -8,7 +8,7 @@ ThemeData buildTheme(BuildContext context){
     accentColor: Colors.red[900],
     textTheme: TextTheme(
       body1: TextStyle(
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w700,
       ),
       button: TextStyle(
           letterSpacing: 2.0,
@@ -26,12 +26,14 @@ ThemeData buildTheme(BuildContext context){
         color: Colors.blue[900],
       ),
       body2: TextStyle(
-          letterSpacing: 5.0,
+          letterSpacing: 2.0,
           fontWeight: FontWeight.w800
       ),
     ),
     dividerColor: Colors.blue[700],
     splashColor: Colors.blue[500],
+    primaryColorDark: Colors.black,
+    secondaryHeaderColor: Colors.black,
     platform: defaultTargetPlatform,
   );
 }
