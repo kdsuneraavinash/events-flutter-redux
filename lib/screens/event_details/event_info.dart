@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:event_app/custom_widgets/event_info_card.dart'
     show EventInfoCard;
 import 'package:event_app/event.dart' show Event;
-import 'package:event_app/custom_widgets/event_info_button.dart' show EventInfoButton;
 
 /// Page to show Event Information/Description
 class EventInfo extends StatelessWidget {
