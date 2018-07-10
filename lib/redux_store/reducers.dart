@@ -23,11 +23,18 @@ EventStore reducers(EventStore eventStore, dynamic action) {
 EventStore addToFlaggedListReducer(
     EventStore eventStore, AddToFlaggedList action) {
   List<Event> flaggedList = eventStore.flaggedList;
+  List<List<String>> notifications = eventStore.notifications;
   return EventStore(
     eventStore.eventList,
     List.from(flaggedList)..add(action.eventToAdd),
     eventStore.currentSelectedEvent,
     eventStore.alarmsList..putIfAbsent(action.eventToAdd, () => true),
+    List.from(notifications)
+      ..add([
+        "FLAG_ADD",
+        "${action.eventToAdd.eventName} added to pinned events",
+        DateTime.now().toIso8601String(),
+      ]),
   );
 }
 
@@ -36,11 +43,18 @@ EventStore addToFlaggedListReducer(
 EventStore removeFromFlaggedListReducer(
     EventStore eventStore, RemoveFromFlaggedList action) {
   List<Event> flaggedList = eventStore.flaggedList;
+  List<List<String>> notifications = eventStore.notifications;
   return EventStore(
     eventStore.eventList,
     List.from(flaggedList)..remove(action.eventToRemove),
     eventStore.currentSelectedEvent,
     eventStore.alarmsList..remove(action.eventToRemove),
+    List.from(notifications)
+      ..add([
+        "FLAG_REM",
+        "${action.eventToRemove.eventName} removed from pinned events",
+        DateTime.now().toIso8601String(),
+      ]),
   );
 }
 
@@ -53,10 +67,12 @@ EventStore changeCurrentEventReducer(
     eventStore.flaggedList,
     action.selectedEvent,
     eventStore.alarmsList,
+    eventStore.notifications,
   );
 }
 
 EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
+  List<List<String>> notifications = eventStore.notifications;
   Map<Event, bool> alarmsList = Map.from(eventStore.alarmsList);
   alarmsList[action.alarmEvent] = action.state;
   return EventStore(
@@ -64,5 +80,13 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
     eventStore.flaggedList,
     eventStore.currentSelectedEvent,
     alarmsList,
+    List.from(notifications)
+      ..add(
+        [
+          "ALARM",
+          "${action.alarmEvent.eventName} alarm state changed to : ${action.state ? "ON": "OFF"}",
+          DateTime.now().toString(),
+        ],
+      ),
   );
 }

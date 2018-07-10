@@ -4,7 +4,8 @@ import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/screens/event_list/event_list_body.dart'
     show EventListBody;
-import 'package:event_app/screens/alarms.dart' show AlarmsManager;
+import 'package:event_app/screens/event_alarms.dart' show AlarmsManager;
+import 'package:event_app/screens/event_notifications.dart' show EventNotifications;
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
@@ -43,13 +44,13 @@ class EventListWindow extends StatelessWidget {
               leading: Icon(Icons.notifications),
               title: Text("Notifications"),
               subtitle: Text("View latest event notifications"),
-              onTap: () => null,
+              onTap: () => _handleNotificationsAction(context),
             ),
             ListTile(
               leading: Icon(Icons.book),
               title: Text("Pinned Events"),
               subtitle: Text("Show events that you pinned"),
-              onTap: () => null,
+              onTap: () =>  null,
             ),
             ListTile(
               leading: Icon(Icons.alarm),
@@ -80,6 +81,16 @@ class EventListWindow extends StatelessWidget {
         .slideTransition(
           destinationPageCall: () => AlarmsManager(),
         )
+        .start(context);
+  }
+
+  /// Show notifications page
+  void _handleNotificationsAction(BuildContext context) {
+    Navigator.pop(context);
+    TransitionMaker
+        .slideTransition(
+      destinationPageCall: () => EventNotifications(),
+    )
         .start(context);
   }
 

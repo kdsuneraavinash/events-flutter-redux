@@ -85,7 +85,7 @@ class EventCard extends StatelessWidget {
             isFlagged ? Icons.bookmark : Icons.bookmark_border,
             color: isFlagged ? Theme.of(context).primaryColor : null,
           ),
-          onPressed: () => _handleFlagOnTap(isFlagged, eventStore),
+          onPressed: () => _handleFlagOnTap(context, isFlagged, eventStore),
         ),
       ),
     );
@@ -106,13 +106,21 @@ class EventCard extends StatelessWidget {
 
   /// Handles tap on flag
   /// Toggled its flagged state
-  void _handleFlagOnTap(bool isFlagged, Store<EventStore> eventStore) {
+  void _handleFlagOnTap(
+      BuildContext context, bool isFlagged, Store<EventStore> eventStore) {
     Event event = eventStore.state.eventList[this.index];
+    String message = "";
     if (isFlagged) {
       eventStore.dispatch(RemoveFromFlaggedList(event));
+      message = "Event Unpinned Successfully";
     } else {
       eventStore.dispatch(AddToFlaggedList(event));
+      message = "Event Pinned Successfully";
     }
+    Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text(message),
+          backgroundColor: Theme.of(context).accentColor,
+        ));
   }
 
   /// Shows a small message when tapped on Date/Time

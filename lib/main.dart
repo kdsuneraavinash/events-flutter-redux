@@ -17,9 +17,10 @@ void main() {
     reducers,
     initialState: EventStore(
       events.map((v) => Event.fromDataList(v)).toList(),
-      [],
+      List(),
       null,
       Map(),
+      List(),
     ),
   );
   return runApp(MoraEventsApp(store));
