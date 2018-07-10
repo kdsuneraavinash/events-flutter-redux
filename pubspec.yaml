@@ -12,6 +12,8 @@ dependencies:
   cached_network_image: ^0.4.1
   # Library to launch phone calls, messages and email.
   url_launcher: ^3.0.2
+  # Redux architecture
+  flutter_redux: 0.5.2
 
 dev_dependencies:
   flutter_test:

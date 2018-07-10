@@ -1,3 +1,5 @@
+import 'package:event_app/redux_store/actions.dart';
+import 'package:event_app/redux_store/store.dart';
 import 'package:flutter/material.dart';
 
 import 'package:event_app/screens/event_image_view.dart' show EventImageView;
@@ -8,6 +10,8 @@ import 'package:event_app/custom_widgets/network_image.dart'
     show DefParameterNetworkImage;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 
 /// Individual Card.
 /// Displays a Banner, Event Title and Organizers, and Time and Date.
@@ -20,56 +24,16 @@ import 'package:event_app/custom_widgets/transition_maker.dart'
 /// User can add this event straight to Google Calendars from here.
 /// TODO: Implement Calendar Viewing
 /// TODO: Implement Google Calendar event adding
-class EventCard extends StatefulWidget {
+class EventCard extends StatelessWidget {
   @override
-  EventCardState createState() {
-    return new EventCardState();
-  }
-
-  /// Constructor ->
-  /// index is card position,
-  /// event is event details
-  EventCard({this.index, this.event, this.flaggedEvents});
-  final int index;
-  final Event event;
-  final List<Event> flaggedEvents;
-
-  /// Builds CachedNetworkImage as Banner.
-  /// This will also act as a Hero.
-  Widget _buildImageBanner(BuildContext context) {
-    return Hero(
-      tag: this.event,
-      child: DefParameterNetworkImage(
-        imageUrl: this.event.headerImage,
-      ),
+  Widget build(BuildContext context) {
+    return StoreBuilder<EventStore>(
+      builder: (context, store) => buildEventCard(context, store),
     );
   }
 
-  /// Handles Tap on Banner.
-  /// Will show EventImageView and animates Banner as a Hero.
-  /// Use Fade animation as transition.
-  void _handleBannerOnTap(BuildContext context) {
-    TransitionMaker
-        .fadeTransition(
-          destinationPageCall: () => EventImageView(this.event),
-        )
-        .start(context);
-  }
-
-  void _handleDateTimeOnTap(BuildContext context) {
-    Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text("Will start on ${this.event.date} at ${this.event.time}."),
-            backgroundColor: Theme.of(context).accentColor,
-          ),
-        );
-  }
-}
-
-class EventCardState extends State<EventCard> {
-  @override
-  Widget build(BuildContext context) {
+  Widget buildEventCard(BuildContext context, Store<EventStore> store) {
+    Event event = store.state.eventList[this.index];
     return Card(
       elevation: 1.0,
       shape: RoundedRectangleBorder(
@@ -77,40 +41,69 @@ class EventCardState extends State<EventCard> {
       child: Column(
         children: <Widget>[
           GestureDetector(
-            child: widget._buildImageBanner(context),
-            onTap: () => widget._handleBannerOnTap(context),
+            child: _buildImageBanner(event),
+            onTap: () => _handleBannerOnTap(context, store),
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: ListTile(
-              title: Text(this.widget.event.eventName),
-              subtitle: Text(this.widget.event.organizer),
+              title: Text(event.eventName),
+              subtitle: Text(event.organizer),
               trailing: IconButton(
                 icon: Icon(
-                  widget.event.flagged ? Icons.bookmark : Icons.bookmark_border,
-                  color: widget.event.flagged ? Theme.of(context).primaryColor : null,
+                  event.flagged ? Icons.bookmark : Icons.bookmark_border,
+                  color: event.flagged ? Theme.of(context).primaryColor : null,
                 ),
-                onPressed: _handleFlagOnTap,
+                onPressed: () => null,
               ),
             ),
           ),
           GestureDetector(
             child: IconText(
               icon: Icons.timer,
-              text: "${this.widget.event.time} | ${this.widget.event.date}",
+              text: "${event.time} | ${event.date}",
               mainAxisAlignment: MainAxisAlignment.center,
             ),
-            onTap: () => widget._handleDateTimeOnTap(context),
+            onTap: () => _handleDateTimeOnTap(context, event),
           ),
         ],
       ),
     );
   }
 
-  void _handleFlagOnTap() {
-    widget.flaggedEvents.add(widget.event);
-    setState(() {
-      widget.event.flagged = ! widget.event.flagged;
-    });
+  /// Builds CachedNetworkImage as Banner.
+  /// This will also act as a Hero.
+  Widget _buildImageBanner(Event event) {
+    return Hero(
+      tag: event,
+      child: DefParameterNetworkImage(
+        imageUrl: event.headerImage,
+      ),
+    );
   }
+
+  /// Handles Tap on Banner.
+  /// Will show EventImageView and animates Banner as a Hero.
+  /// Use Fade animation as transition.
+  void _handleBannerOnTap(BuildContext context, Store<EventStore> store) {
+    Event currentEvent = store.state.eventList[index];
+    store.dispatch(ChangeCurrentEvent(currentEvent));
+    TransitionMaker
+        .fadeTransition(
+          destinationPageCall: () => EventImageView(currentEvent),
+        )
+        .start(context);
+  }
+
+  void _handleDateTimeOnTap(BuildContext context, Event event) {
+    Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Will start on ${event.date} at ${event.time}."),
+            backgroundColor: Theme.of(context).accentColor,
+          ),
+        );
+  }
+
+  EventCard(this.index);
+  final int index;
 }

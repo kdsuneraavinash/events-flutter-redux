@@ -1,12 +1,12 @@
+import 'package:event_app/custom_widgets/network_image.dart';
+import 'package:event_app/custom_widgets/rounded_button.dart';
+import 'package:event_app/custom_widgets/transition_maker.dart';
+import 'package:event_app/screens/event_details.dart';
 import 'package:flutter/material.dart';
 import 'package:event_app/event.dart' show Event;
-import 'package:event_app/screens/event_image_view/middle_controls.dart'
-    show MiddleControls;
-import 'package:event_app/screens/event_image_view/bottom_controls.dart'
-    show BottomControls;
 
 /// State of EventImageView
-/// Controls Star Marking State.
+/// Hosts PageView and buttons.
 class EventImageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -14,30 +14,53 @@ class EventImageView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(this.event.eventName),
-        actions: <Widget>[],
       ),
       backgroundColor: Colors.black,
-      body: EventImageBody(this.event),
+      body: Stack(
+        children: <Widget>[
+          _buildImageBox(),
+          _buildBottomButton(context),
+        ],
+      ),
     );
+  }
+
+  Widget _buildImageBox() {
+    return Center(
+      child: Hero(
+        tag: this.event,
+        child: PageView(
+            children: this
+                .event
+                .images
+                .map((v) => DefParameterNetworkImage(imageUrl: v))
+                .toList()),
+      ),
+    );
+  }
+
+  Widget _buildBottomButton(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(8.0),
+      alignment: Alignment.bottomRight,
+      child: RoundedButton(
+        buttonIcon: Icons.event_note,
+        text: "View Event",
+        onPressed: () => _handleEventButtonPress(context),
+      ),
+    );
+  }
+
+  void _handleEventButtonPress(BuildContext context) {
+    TransitionMaker
+        .slideTransition(
+          destinationPageCall: () => EventDetails(),
+          beginOffset: Offset(0.0, 1.0),
+          endOffset: Offset(0.0, 0.0),
+        )
+        .start(context);
   }
 
   EventImageView(this.event);
   final Event event;
-}
-
-/// Body of EventImageView
-/// Hosts PageView and buttons.
-class EventImageBody extends StatelessWidget {
-  EventImageBody(this.event);
-  final Event event;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        MiddleControls(this.event),
-        BottomControls(this.event),
-      ],
-    );
-  }
 }

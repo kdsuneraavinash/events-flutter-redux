@@ -35,7 +35,7 @@ List<List> events = [
     "8:00 AM - 6:00 PM",
     "10 Jul - 11 Jul",
     "Colombo",
-    """"
+    """
 "Transforming Nations Vision with Cyber Security"
 Cyber Security for Financial Services explore Exhibitions and Conference is taking a step to address the cybersecurity challenges of the country by bringing in the key stakeholders from the financial institutions and foster an engagement between public and private enterprises to address the potential threats and vulnerabilities. The summit will witness 250+ key decision makers from a wide range of businesses within the BFSI vertical and also introduce regional and international speakers to educate and help implement the strategies to safeguard critical data. 
 """,
