@@ -1,14 +1,12 @@
 import 'dart:async';
-
+import 'package:flutter/material.dart';
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
 import 'package:event_app/test_data.dart' show events;
-import 'package:flutter/material.dart';
 
 /// Body of EventListWindow.
 /// Contains of a ListView consisting of Event Cards so Users can scroll
 /// through Events.
-/// TODO: Use a database to load events.
-/// TODO: Connect with internet.
+/// TODO: Use a firestore connection to load events.
 /// Also contains a RefreshIndicator so users can refresh Event Content.
 /// TODO: Add Event Refresh Process
 /// Async function which will update Events when refreshed with
@@ -27,6 +25,7 @@ class EventListBody extends StatelessWidget {
     );
   }
 
+  /// Refresh indicator method (Placeholder)
   Future<Null> _handleRefresh(context) {
     final Completer<Null> completer = Completer<Null>();
     Timer(

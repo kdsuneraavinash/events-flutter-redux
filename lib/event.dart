@@ -1,14 +1,15 @@
-import 'package:event_app/test_data.dart' show events;
-
 import 'package:flutter/material.dart' show IconData, Icons;
 
+/// Launch method for EventContact
 enum LaunchMethod { CALL, MESSAGE, WEB, FACEBOOK }
 
+/// Hold Event Organizer Contact Data
 class EventContact {
   String contactPerson;
   String contactLink;
   LaunchMethod method;
 
+  /// Get Icon according to launch method
   IconData getIcon() {
     switch (this.method) {
       case LaunchMethod.CALL:
@@ -23,6 +24,7 @@ class EventContact {
     }
   }
 
+  /// Get Url to execute the method
   String getUrl() {
     switch (this.method) {
       case LaunchMethod.CALL:
@@ -37,6 +39,7 @@ class EventContact {
     }
   }
 
+  /// Get String according to contact method
   String getContactMethodString() {
     switch (this.method) {
       case LaunchMethod.CALL:
@@ -53,6 +56,7 @@ class EventContact {
   }
 
   EventContact({this.contactPerson, this.contactLink, this.method});
+
   EventContact.fromList(List<String> contact) {
     this.contactLink = contact[1];
     this.contactPerson = contact[0];

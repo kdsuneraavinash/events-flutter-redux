@@ -1,29 +1,23 @@
 import 'package:event_app/redux_store/actions.dart';
+import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/event.dart' show Event;
-import 'package:event_app/redux_store/store.dart';
 
+/// Connect to all reducers
 EventStore reducers(EventStore eventStore, dynamic action) {
   switch (action.runtimeType) {
-    case AddToEventList:
-      return addToEventListReducer(eventStore, action);
     case AddToFlaggedList:
       return addToFlaggedListReducer(eventStore, action);
-    case ChangeCurrentEvent:
+    case RemoveFromFlaggedList:
+      return removeFromFlaggedListReducer(eventStore, action);
+    case ChangeCurrentSelectedEvent:
       return changeCurrentEventReducer(eventStore, action);
     default:
       return eventStore;
   }
 }
 
-EventStore addToEventListReducer(EventStore eventStore, AddToEventList action) {
-  List<Event> eventList = eventStore.eventList;
-  return EventStore(
-    List.from(eventList)..add(action.eventToAdd),
-    eventStore.flaggedList,
-    eventStore.currentSelectedEvent,
-  );
-}
-
+/// Add event to flagged events list
+/// returns a copy of original list
 EventStore addToFlaggedListReducer(
     EventStore eventStore, AddToFlaggedList action) {
   List<Event> flaggedList = eventStore.flaggedList;
@@ -34,11 +28,25 @@ EventStore addToFlaggedListReducer(
   );
 }
 
+/// Remove event from flagged events list
+/// returns a copy of original list
+EventStore removeFromFlaggedListReducer(
+    EventStore eventStore, RemoveFromFlaggedList action) {
+  List<Event> flaggedList = eventStore.flaggedList;
+  return EventStore(
+    eventStore.eventList,
+    List.from(flaggedList)..remove(action.eventToRemove),
+    eventStore.currentSelectedEvent,
+  );
+}
+
+/// Change current selected event
+/// Current selected event is the event displayed in EventInfo page, etc...
 EventStore changeCurrentEventReducer(
-    EventStore eventStore, ChangeCurrentEvent action) {
+    EventStore eventStore, ChangeCurrentSelectedEvent action) {
   return EventStore(
     eventStore.eventList,
     eventStore.flaggedList,
-    action.currentEvent,
+    action.selectedEvent,
   );
 }

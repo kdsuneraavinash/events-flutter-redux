@@ -2,8 +2,8 @@ List<List> events = [
   [
     "Home & You Lifestyle Fair",
     "Aitken Spence Conventions & Exhibitions",
-    "09:00 AM-06:00 PM",
-    "06 Jul-08 Jul",
+    "09:00 AM - 06:00 PM",
+    "06 Jul - 08 Jul",
     "BMICH, Colombo",
     "The Home & You Lifestyle Fair event features remodeling, home improvement, decor and outdoor spaces with hundreds of local experts all under one roof. The event showcases windows and flooring to cabinets and patios and more. ",
     [

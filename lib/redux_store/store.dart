@@ -1,5 +1,6 @@
-import 'package:event_app/event.dart';
+import 'package:event_app/event.dart' show Event;
 
+/// The main store object
 class EventStore{
   final List<Event> eventList;
   final List<Event> flaggedList;

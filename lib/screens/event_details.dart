@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:event_app/screens/event_details/event_info.dart' show EventInfo;
 import 'package:event_app/screens/event_details/event_links.dart'
     show EventLinks;
-
-import 'package:event_app/event.dart' show Event;
 
 /// Event Details Page which hosts a PageView to show all info
 class EventDetails extends StatefulWidget {
@@ -54,18 +51,13 @@ class EventDetailsState extends State<EventDetails> {
   }
 
   /// Animate PageView when BottomNavigationBar is tapped
-  /// If the page is far away jump to that page without animating
   void _handleBottomNavigationBarTap(int index) {
+    widget.pageController.animateToPage(
+      index,
+      duration: Duration(milliseconds: 200),
+      curve: Curves.easeIn,
+    );
     setState(() {
-      if ((currentIndex - index).abs() <= 1) {
-        widget.pageController.animateToPage(
-          index,
-          duration: Duration(milliseconds: 200),
-          curve: Curves.easeIn,
-        );
-      } else {
-        widget.pageController.jumpToPage(index);
-      }
       currentIndex = index;
     });
   }

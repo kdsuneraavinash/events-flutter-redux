@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:event_app/screens/credits.dart' show Credits;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
@@ -65,6 +64,7 @@ class EventListWindow extends StatelessWidget {
     );
   }
 
+  /// Show credits window
   void _handleCreditsAction(BuildContext context) {
     TransitionMaker
         .slideTransition(
@@ -73,6 +73,7 @@ class EventListWindow extends StatelessWidget {
         .start(context);
   }
 
+  /// Show alarms page
   void _handleAlarmsAction(BuildContext context) {
     TransitionMaker
         .fadeTransition(
@@ -81,5 +82,7 @@ class EventListWindow extends StatelessWidget {
         .start(context);
   }
 
+  /// Search action
+  /// TODO: Implement this
   void _handleSearchAction(BuildContext context) {}
 }

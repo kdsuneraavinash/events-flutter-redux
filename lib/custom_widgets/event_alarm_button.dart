@@ -1,6 +1,7 @@
-import 'package:event_app/event.dart' show Event;
 import 'package:flutter/material.dart';
+import 'package:event_app/event.dart' show Event;
 
+// TODO: Add comments and implement this tool
 class EventAlarmButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

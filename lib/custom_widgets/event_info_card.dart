@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Card to show event information in EventDetailsPage
 class EventInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -7,9 +8,10 @@ class EventInfoCard extends StatelessWidget {
       margin: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         border: Border.all(
-            color: Theme.of(context).primaryColor,
-            style: BorderStyle.solid,
-            width: 1.0),
+          color: Theme.of(context).primaryColor,
+          style: BorderStyle.solid,
+          width: 1.0,
+        ),
       ),
       child: InkWell(
         onTap: this.handleTap,

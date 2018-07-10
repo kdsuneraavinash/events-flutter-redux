@@ -12,6 +12,7 @@ import 'package:redux/redux.dart' show Store;
 
 /// Run main App
 void main() {
+  // Main store holder (REDUX)
   final store = new Store<EventStore>(
     reducers,
     initialState: EventStore(

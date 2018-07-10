@@ -1,10 +1,9 @@
-import 'package:event_app/redux_store/store.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:event_app/custom_widgets/event_info_card.dart'
     show EventInfoCard;
 import 'package:event_app/event.dart' show Event;
-import 'package:flutter_redux/flutter_redux.dart';
+import 'package:event_app/redux_store/store.dart' show EventStore;
 
 /// Page to show Event Information/Description
 class EventInfo extends StatelessWidget {
@@ -17,6 +16,7 @@ class EventInfo extends StatelessWidget {
     );
   }
 
+  /// Separated build data because StoreConnector is used
   Widget buildEventInfo(BuildContext context, Event event) {
     return ListView(
       children: <Widget>[

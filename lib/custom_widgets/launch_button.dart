@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' show canLaunch, launch;
 import 'package:event_app/event.dart' show EventContact;
 
+/// Button to Launch Call, Message, Web, etc...
+/// Will use info from event
 class LaunchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class LaunchButton extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.0),
               child: Text(
                 "${this.eventContact.getContactMethodString()} :\n${this.eventContact.contactLink} "
                     "(${this.eventContact.contactPerson})",
@@ -34,11 +36,10 @@ class LaunchButton extends StatelessWidget {
     );
   }
 
-  /// * Launch in default app
+  /// Launch in default app
   void launchAction() async {
     if (this.eventContact == null) return;
     String url = this.eventContact.getUrl();
-    print(url);
 
     if (await canLaunch(url)) {
       await launch(url);

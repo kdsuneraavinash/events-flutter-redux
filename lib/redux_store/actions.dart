@@ -1,26 +1,23 @@
 import 'package:event_app/event.dart' show Event;
 
-class AddToEventList {
-  final Event eventToAdd;
-  AddToEventList(this.eventToAdd);
-}
+/// Actions:
+/// Will only contain classes to distinguish each command for reducer and
+/// contain actions
 
+/// Add an event to flagged event list
 class AddToFlaggedList {
   final Event eventToAdd;
   AddToFlaggedList(this.eventToAdd);
 }
 
-class RemoveFromEventList {
-  final Event eventToRemove;
-  RemoveFromEventList(this.eventToRemove);
-}
-
+/// Remove an event from flagged event list
 class RemoveFromFlaggedList {
   final Event eventToRemove;
   RemoveFromFlaggedList(this.eventToRemove);
 }
 
-class ChangeCurrentEvent {
-  final Event currentEvent;
-  ChangeCurrentEvent(this.currentEvent);
+/// Change current selected event
+class ChangeCurrentSelectedEvent {
+  final Event selectedEvent;
+  ChangeCurrentSelectedEvent(this.selectedEvent);
 }

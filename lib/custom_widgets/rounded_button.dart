@@ -17,15 +17,13 @@ class RoundedButton extends StatelessWidget {
         children: <Widget>[
           Icon(
             buttonIcon,
-            color: Theme.of(context).primaryTextTheme.body1.color,
+            color: Colors.white,
           ),
-          SizedBox(
-            width: 12.0,
-          ),
+          SizedBox(width: 12.0),
           Text(
             text,
             style: TextStyle(
-              color: Theme.of(context).primaryTextTheme.body1.color,
+              color: Colors.white,
               fontSize: 14.0,
             ),
           ),

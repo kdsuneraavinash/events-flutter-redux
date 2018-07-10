@@ -1,25 +1,20 @@
-import 'package:event_app/redux_store/actions.dart';
-import 'package:event_app/redux_store/store.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 import 'package:event_app/screens/event_image_view.dart' show EventImageView;
-
 import 'package:event_app/event.dart' show Event;
 import 'package:event_app/custom_widgets/icon_text.dart' show IconText;
 import 'package:event_app/custom_widgets/network_image.dart'
     show DefParameterNetworkImage;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
+import 'package:event_app/redux_store/actions.dart';
+import 'package:event_app/redux_store/store.dart' show EventStore;
 
 /// Individual Card.
 /// Displays a Banner, Event Title and Organizers, and Time and Date.
 /// When clicked on Image, shows a Image Banner Window of Pagination of Images.
 /// Image will act as a Hero.
-/// When clicked on Event Title, goes straight to Event Page.
-/// TODO: Implement Event Page
-/// TODO: Implement Going to Event Page
 /// When clicked on Time and Date, shows a calendar showing the date.
 /// User can add this event straight to Google Calendars from here.
 /// TODO: Implement Calendar Viewing
@@ -32,6 +27,7 @@ class EventCard extends StatelessWidget {
     );
   }
 
+  /// Separated build method because StoreBuilder is used
   Widget buildEventCard(BuildContext context, Store<EventStore> store) {
     Event event = store.state.eventList[this.index];
     return Card(
@@ -44,28 +40,8 @@ class EventCard extends StatelessWidget {
             child: _buildImageBanner(event),
             onTap: () => _handleBannerOnTap(context, store),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: ListTile(
-              title: Text(event.eventName),
-              subtitle: Text(event.organizer),
-              trailing: IconButton(
-                icon: Icon(
-                  event.flagged ? Icons.bookmark : Icons.bookmark_border,
-                  color: event.flagged ? Theme.of(context).primaryColor : null,
-                ),
-                onPressed: () => null,
-              ),
-            ),
-          ),
-          GestureDetector(
-            child: IconText(
-              icon: Icons.timer,
-              text: "${event.time} | ${event.date}",
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
-            onTap: () => _handleDateTimeOnTap(context, event),
-          ),
+          _buildTitleStrip(context, store),
+          _buildTimeDateStrip(context, event),
         ],
       ),
     );
@@ -82,12 +58,45 @@ class EventCard extends StatelessWidget {
     );
   }
 
+  /// Build Time Date Data
+  Widget _buildTimeDateStrip(BuildContext context, Event event) {
+    return GestureDetector(
+      child: IconText(
+        icon: Icons.timer,
+        text: "${event.time} | ${event.date}",
+        mainAxisAlignment: MainAxisAlignment.center,
+      ),
+      onTap: () => _handleDateTimeOnTap(context, event),
+    );
+  }
+
+  /// Build Title and flagging controller
+  Widget _buildTitleStrip(BuildContext context, Store<EventStore> eventStore) {
+    Event event = eventStore.state.eventList[this.index];
+    List<Event> flaggedList = eventStore.state.flaggedList;
+    bool isFlagged = flaggedList.contains(event);
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: ListTile(
+        title: Text(event.eventName),
+        subtitle: Text(event.organizer),
+        trailing: IconButton(
+          icon: Icon(
+            isFlagged ? Icons.bookmark : Icons.bookmark_border,
+            color: isFlagged ? Theme.of(context).primaryColor : null,
+          ),
+          onPressed: () => _handleFlagOnTap(isFlagged, eventStore),
+        ),
+      ),
+    );
+  }
+
   /// Handles Tap on Banner.
   /// Will show EventImageView and animates Banner as a Hero.
   /// Use Fade animation as transition.
   void _handleBannerOnTap(BuildContext context, Store<EventStore> store) {
     Event currentEvent = store.state.eventList[index];
-    store.dispatch(ChangeCurrentEvent(currentEvent));
+    store.dispatch(ChangeCurrentSelectedEvent(currentEvent));
     TransitionMaker
         .fadeTransition(
           destinationPageCall: () => EventImageView(currentEvent),
@@ -95,6 +104,18 @@ class EventCard extends StatelessWidget {
         .start(context);
   }
 
+  /// Handles tap on flag
+  /// Toggled its flagged state
+  void _handleFlagOnTap(bool isFlagged, Store<EventStore> eventStore) {
+    Event event = eventStore.state.eventList[this.index];
+    if (isFlagged) {
+      eventStore.dispatch(RemoveFromFlaggedList(event));
+    } else {
+      eventStore.dispatch(AddToFlaggedList(event));
+    }
+  }
+
+  /// Shows a small message when tapped on Date/Time
   void _handleDateTimeOnTap(BuildContext context, Event event) {
     Scaffold.of(context).showSnackBar(
           SnackBar(
