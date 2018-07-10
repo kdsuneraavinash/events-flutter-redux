@@ -11,6 +11,8 @@ EventStore reducers(EventStore eventStore, dynamic action) {
       return removeFromFlaggedListReducer(eventStore, action);
     case ChangeCurrentSelectedEvent:
       return changeCurrentEventReducer(eventStore, action);
+    case ChangeAlarmState:
+      return changeAlarmState(eventStore, action);
     default:
       return eventStore;
   }
@@ -25,6 +27,7 @@ EventStore addToFlaggedListReducer(
     eventStore.eventList,
     List.from(flaggedList)..add(action.eventToAdd),
     eventStore.currentSelectedEvent,
+    eventStore.alarmsList..putIfAbsent(action.eventToAdd, () => true),
   );
 }
 
@@ -37,6 +40,7 @@ EventStore removeFromFlaggedListReducer(
     eventStore.eventList,
     List.from(flaggedList)..remove(action.eventToRemove),
     eventStore.currentSelectedEvent,
+    eventStore.alarmsList..remove(action.eventToRemove),
   );
 }
 
@@ -48,5 +52,17 @@ EventStore changeCurrentEventReducer(
     eventStore.eventList,
     eventStore.flaggedList,
     action.selectedEvent,
+    eventStore.alarmsList,
+  );
+}
+
+EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
+  Map<Event, bool> alarmsList = Map.from(eventStore.alarmsList);
+  alarmsList[action.alarmEvent] = action.state;
+  return EventStore(
+    eventStore.eventList,
+    eventStore.flaggedList,
+    eventStore.currentSelectedEvent,
+    alarmsList,
   );
 }

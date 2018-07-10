@@ -75,8 +75,9 @@ class EventListWindow extends StatelessWidget {
 
   /// Show alarms page
   void _handleAlarmsAction(BuildContext context) {
+    Navigator.pop(context);
     TransitionMaker
-        .fadeTransition(
+        .slideTransition(
           destinationPageCall: () => AlarmsManager(),
         )
         .start(context);

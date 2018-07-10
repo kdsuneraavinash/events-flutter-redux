@@ -19,6 +19,7 @@ void main() {
       events.map((v) => Event.fromDataList(v)).toList(),
       [],
       null,
+      Map(),
     ),
   );
   return runApp(MoraEventsApp(store));

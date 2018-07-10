@@ -21,3 +21,10 @@ class ChangeCurrentSelectedEvent {
   final Event selectedEvent;
   ChangeCurrentSelectedEvent(this.selectedEvent);
 }
+
+/// Change alarm state
+class ChangeAlarmState {
+  final Event alarmEvent;
+  final bool state;
+  ChangeAlarmState(this.alarmEvent, this.state);
+}
