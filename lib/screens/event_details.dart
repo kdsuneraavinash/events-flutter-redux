@@ -32,7 +32,7 @@ class EventDetailsState extends State<EventDetails> {
         onPageChanged: _handlePageChanged,
         children: <Widget>[
           EventInfo(widget.event),
-          EventTimeDate(),
+          EventTimeDate(widget.event),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

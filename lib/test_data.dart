@@ -11,6 +11,23 @@ List<List> events = [
       "http://static.dailymirror.lk/media/images/image_1467359683-9a78b1e6b2.png",
       "http://static.ft.lk/ftadmin/wp-content/uploads/2017/06/28224522/DFT-17-52.jpg"
     ],
+    [
+      [
+        "Aitken Spence Conventions",
+        "https://www.aitkenspence.com",
+        "WEB",
+      ],
+      [
+        "Ajith",
+        "0762259874",
+        "CALL",
+      ],
+      [
+        "Saman",
+        "0342225689",
+        "CALL",
+      ]
+    ],
   ],
   [
     "Cyber Security Conference",
@@ -26,6 +43,28 @@ Cyber Security for Financial Services explore Exhibitions and Conference is taki
       "https://www.nyit.edu/files/events/Events_20150924_CybersecurityConference.jpg",
       "https://www.cybersecurityconference.me/images/logo-big2.png",
       "https://www.neechamber.co.uk/uploads/2016/05/20160509190531-global%20security%20and%20cyber%20security%20conference%20aberdeen-posts-590x.jpg"
+    ],
+    [
+      [
+        "Cyber Security Convtion",
+        "https://cybersecconv.com/index.html",
+        "WEB",
+      ],
+      [
+        "Cyber Security Convention",
+        "https://www.facebook.com/cybersec",
+        "FACEBOOK",
+      ],
+      [
+        "Naveen",
+        "0762259874",
+        "CALL",
+      ],
+      [
+        "Naveen",
+        "0762259874",
+        "MESSAGE",
+      ]
     ],
   ],
   [
@@ -43,6 +82,13 @@ Rice Tech Expo is an international exhibition that will concentrate on the rice 
       "http://ricetechexpo.com/cw_admin/Gallery/13912364561.jpg",
       "http://img.trade-india.com/new_website1/general/trade_fair/ricetechdec-1.jpg"
     ],
+    [
+      [
+        "Rice Tech",
+        "https://www.facebook.com/rice.tech",
+        "FACEBOOK",
+      ],
+    ],
   ],
   [
     "International Conference on Community Medicine and Public Health",
@@ -59,6 +105,18 @@ The International Conference on Community Medicine and Public Health Under the t
       "https://d3p2qewzsoh75c.cloudfront.net/uploads/conferences/logo/200/global_academic_research_institute_gari_1518776896.jpg",
       "https://publichealthconference.co/wp-content/uploads/2018/03/public-health-conference-group-photo-best-conferences.jpg",
       "https://www.arcjournals.org/images/covers/ajphcm.jpg"
+    ],
+    [
+      [
+        "Kumara",
+        "0762259874",
+        "MESSAGE",
+      ],
+      [
+        "Kumara",
+        "0342225689",
+        "CALL",
+      ]
     ],
   ]
 ];
