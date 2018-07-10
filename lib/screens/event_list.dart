@@ -5,6 +5,7 @@ import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/screens/event_list/event_list_body.dart'
     show EventListBody;
+import 'package:event_app/screens/alarms.dart' show AlarmsManager;
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
@@ -55,7 +56,7 @@ class EventListWindow extends StatelessWidget {
               leading: Icon(Icons.alarm),
               title: Text("Alarms"),
               subtitle: Text("Alarms for future events"),
-              onTap: () => null,
+              onTap: () => _handleAlarmsAction(context),
             ),
           ],
         ),
@@ -68,6 +69,14 @@ class EventListWindow extends StatelessWidget {
     TransitionMaker
         .slideTransition(
           destinationPageCall: () => Credits(),
+        )
+        .start(context);
+  }
+
+  void _handleAlarmsAction(BuildContext context) {
+    TransitionMaker
+        .fadeTransition(
+          destinationPageCall: () => AlarmsManager(),
         )
         .start(context);
   }

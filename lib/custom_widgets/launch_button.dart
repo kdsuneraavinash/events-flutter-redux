@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' show canLaunch, launch;
 import 'package:event_app/event.dart' show EventContact;
