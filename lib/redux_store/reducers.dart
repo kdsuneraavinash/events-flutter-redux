@@ -60,7 +60,7 @@ EventStore removeFromFlaggedListReducer(
     List.from(notifications)
       ..add(
         EventNotification(
-          "${action.eventToRemove.eventName} added to pinned events",
+          "${action.eventToRemove.eventName} removed from pinned events",
           NotificationType.ADD_FLAG,
           DateTime.now().toIso8601String(),
         ),

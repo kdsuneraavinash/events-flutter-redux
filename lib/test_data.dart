@@ -118,5 +118,29 @@ The International Conference on Community Medicine and Public Health Under the t
         "CALL",
       ]
     ],
+  ],
+  [
+    "Colombo Bike Show",
+    "CEMS Lanka",
+    "09:00 AM - 06:00 PM",
+    " 02 Aug - 04 Aug",
+    "Sri Lanka Exhibition & Convention Centre Paijanindia, Colombo",
+    """
+Colombo Bike Show is a 3 day event being held from 2nd August to 4th August 2018 at the Sri Lanka Exhibition & Convention Centre Paijanindia in Colombo, Sri Lanka.The Colombo Bike Show will have Exhibitors from showcasing,Sport Motorcycle, Road Motorcycle, Sport Cruiser Motorcycle, Off-road Motorcycles, e-bikes, All Terrain Motorcycles, Moped, and Scooter.Motorcycles Parts, Components and Accessories, Brake, Brake Control System, Control Cable and Parts etc. 
+""",
+    [
+      "https://d3dz4rogqkqh6r.cloudfront.net/uploads/files/2018/05/yimg_K0SDyG-1024x536.jpg",
+      "https://www.tourismsrilanka.org/travelguide/wp-content/uploads/2018/02/digital-content-marketing-travelindex-189.jpg",
+      "http://www.cems-bikeshow.com/cibs/wp-content/uploads/2017/11/colombo-bike-show-2018.png",
+      "https://i.ytimg.com/vi/c9-LNasK_Fs/maxresdefault.jpg",
+      "http://www.cems-bikeshow.com/cibs/wp-content/uploads/2018/05/img4-1.jpg"
+    ],
+    [
+      [
+        "CEMS Sri Lanka",
+        "https://cems.lk",
+        "WEB",
+      ],
+    ],
   ]
 ];
