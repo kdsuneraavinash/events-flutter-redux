@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:event_app/screens/event_image_view.dart' show EventImageView;
-import 'package:event_app/event.dart' show Event;
+import 'package:event_app/event.dart' show Event, FlaggedEvent;
 import 'package:event_app/custom_widgets/icon_text.dart' show IconText;
 import 'package:event_app/custom_widgets/network_image.dart'
     show DefParameterNetworkImage;
@@ -73,8 +73,8 @@ class EventCard extends StatelessWidget {
   /// Build Title and flagging controller
   Widget _buildTitleStrip(BuildContext context, Store<EventStore> eventStore) {
     Event event = eventStore.state.eventList[this.index];
-    List<Event> flaggedList = eventStore.state.flaggedList;
-    bool isFlagged = flaggedList.contains(event);
+    List<FlaggedEvent> flaggedList = eventStore.state.flaggedList;
+    bool isFlagged = flaggedList.any((v) => v.event == event);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
@@ -83,7 +83,7 @@ class EventCard extends StatelessWidget {
         trailing: IconButton(
           icon: Icon(
             isFlagged ? Icons.bookmark : Icons.bookmark_border,
-            color: isFlagged ? Theme.of(context).primaryColor : null,
+            color: isFlagged ? Theme.of(context).accentColor : null,
           ),
           onPressed: () => _handleFlagOnTap(context, isFlagged, eventStore),
         ),

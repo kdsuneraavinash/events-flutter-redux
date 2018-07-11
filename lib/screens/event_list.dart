@@ -4,14 +4,24 @@ import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/screens/event_list/event_list_body.dart'
     show EventListBody;
-import 'package:event_app/screens/event_alarms.dart' show AlarmsManager;
-import 'package:event_app/screens/event_notifications.dart' show EventNotificationsManager;
+import 'package:event_app/screens/event_flagged.dart' show FlaggedEventManager;
+import 'package:event_app/screens/event_notifications.dart'
+    show EventNotificationsManager;
+import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
 class EventListWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return StoreConnector<EventStore, EventStore>(
+      converter: (store) => store.state,
+      builder: buildEventListWindow,
+    );
+  }
+
+  Widget buildEventListWindow(BuildContext context, EventStore eventStore) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Mora Events"),
@@ -38,10 +48,15 @@ class EventListWindow extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              decoration: BoxDecoration(color: Theme.of(context).accentColor),
+              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
             ),
             ListTile(
-              leading: Icon(Icons.notifications),
+              leading: eventStore.notifications.any((v) => !v.read)
+                  ? Icon(
+                      Icons.notifications_active,
+                      color: Theme.of(context).accentColor,
+                    )
+                  : Icon(Icons.notifications_none),
               title: Text("Notifications"),
               subtitle: Text("View latest event notifications"),
               onTap: () => _handleNotificationsAction(context),
@@ -50,13 +65,7 @@ class EventListWindow extends StatelessWidget {
               leading: Icon(Icons.book),
               title: Text("Pinned Events"),
               subtitle: Text("Show events that you pinned"),
-              onTap: () =>  null,
-            ),
-            ListTile(
-              leading: Icon(Icons.alarm),
-              title: Text("Alarms"),
-              subtitle: Text("Alarms for future events"),
-              onTap: () => _handleAlarmsAction(context),
+              onTap: () => _handleFlaggedAction(context),
             ),
           ],
         ),
@@ -75,11 +84,11 @@ class EventListWindow extends StatelessWidget {
   }
 
   /// Show alarms page
-  void _handleAlarmsAction(BuildContext context) {
+  void _handleFlaggedAction(BuildContext context) {
     Navigator.pop(context);
     TransitionMaker
         .slideTransition(
-          destinationPageCall: () => AlarmsManager(),
+          destinationPageCall: () => FlaggedEventManager(),
         )
         .start(context);
   }
@@ -89,8 +98,8 @@ class EventListWindow extends StatelessWidget {
     Navigator.pop(context);
     TransitionMaker
         .slideTransition(
-      destinationPageCall: () => EventNotificationsManager(),
-    )
+          destinationPageCall: () => EventNotificationsManager(),
+        )
         .start(context);
   }
 

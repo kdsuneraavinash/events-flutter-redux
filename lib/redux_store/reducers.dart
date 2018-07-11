@@ -1,7 +1,7 @@
 import 'package:event_app/redux_store/actions.dart';
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/event.dart'
-    show Event, EventNotification, NotificationType;
+    show EventNotification, NotificationType, FlaggedEvent;
 
 /// Connect to all reducers
 EventStore reducers(EventStore eventStore, dynamic action) {
@@ -29,13 +29,15 @@ EventStore reducers(EventStore eventStore, dynamic action) {
 /// returns a copy of original list
 EventStore addToFlaggedListReducer(
     EventStore eventStore, AddToFlaggedList action) {
-  List<Event> flaggedList = eventStore.flaggedList;
+  List<FlaggedEvent> flaggedList = eventStore.flaggedList;
   List<EventNotification> notifications = eventStore.notifications;
   return EventStore(
     eventStore.eventList,
-    List.from(flaggedList)..add(action.eventToAdd),
+    List.from(flaggedList)
+      ..add(
+        FlaggedEvent(action.eventToAdd, true),
+      ),
     eventStore.currentSelectedEvent,
-    eventStore.alarmsList..putIfAbsent(action.eventToAdd, () => true),
     List.from(notifications)
       ..add(
         EventNotification(
@@ -51,13 +53,12 @@ EventStore addToFlaggedListReducer(
 /// returns a copy of original list
 EventStore removeFromFlaggedListReducer(
     EventStore eventStore, RemoveFromFlaggedList action) {
-  List<Event> flaggedList = eventStore.flaggedList;
+  List<FlaggedEvent> flaggedList = eventStore.flaggedList;
   List<EventNotification> notifications = eventStore.notifications;
   return EventStore(
     eventStore.eventList,
-    List.from(flaggedList)..remove(action.eventToRemove),
+    List.from(flaggedList)..removeWhere((v) => v.event == action.eventToRemove),
     eventStore.currentSelectedEvent,
-    eventStore.alarmsList..remove(action.eventToRemove),
     List.from(notifications)
       ..add(
         EventNotification(
@@ -77,20 +78,23 @@ EventStore changeCurrentEventReducer(
     eventStore.eventList,
     eventStore.flaggedList,
     action.selectedEvent,
-    eventStore.alarmsList,
     eventStore.notifications,
   );
 }
 
 EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
   List<EventNotification> notifications = eventStore.notifications;
-  Map<Event, bool> alarmsList = Map.from(eventStore.alarmsList);
-  alarmsList[action.alarmEvent] = action.state;
+  List<FlaggedEvent> flaggedList = List.from(eventStore.flaggedList);
+  for (int index = 0; index < eventStore.flaggedList.length; index++) {
+    if (flaggedList[index].event == action.alarmEvent) {
+      flaggedList[index] = FlaggedEvent(action.alarmEvent, action.state);
+    }
+  }
+
   return EventStore(
     eventStore.eventList,
-    eventStore.flaggedList,
+    flaggedList,
     eventStore.currentSelectedEvent,
-    alarmsList,
     List.from(notifications)
       ..add(
         EventNotification(
@@ -108,7 +112,6 @@ EventStore markNotificationsAsReadReducer(
     eventStore.eventList,
     eventStore.flaggedList,
     eventStore.currentSelectedEvent,
-    eventStore.alarmsList,
     eventStore.notifications
         .map((v) =>
             EventNotification(v.message, v.type, v.timestamp)..markAsRead())
@@ -122,18 +125,10 @@ EventStore clearNotificationsReducer(
     eventStore.eventList,
     eventStore.flaggedList,
     eventStore.currentSelectedEvent,
-    eventStore.alarmsList,
     List(),
   );
 }
 
-EventStore loadEventsReducer(
-    EventStore eventStore, ClearNotifications action) {
-  return EventStore(
-    eventStore.eventList,
-    eventStore.flaggedList,
-    eventStore.currentSelectedEvent,
-    eventStore.alarmsList,
-    List(),
-  );
-    }
+EventStore loadEventsReducer(EventStore eventStore, LoadEvents action) {
+  return EventStore.loadEventStore();
+}

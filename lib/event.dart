@@ -141,3 +141,9 @@ class EventNotification {
     }
   }
 }
+
+class FlaggedEvent {
+  final Event event;
+  final bool alarmStatus;
+  FlaggedEvent(this.event, this.alarmStatus);
+}
