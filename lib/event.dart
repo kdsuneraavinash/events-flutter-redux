@@ -146,4 +146,8 @@ class FlaggedEvent {
   final Event event;
   final bool alarmStatus;
   FlaggedEvent(this.event, this.alarmStatus);
+
+  bool equals(Event event){
+    return this.event == event;
+  }
 }

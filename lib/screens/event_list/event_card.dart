@@ -60,13 +60,10 @@ class EventCard extends StatelessWidget {
 
   /// Build Time Date Data
   Widget _buildTimeDateStrip(BuildContext context, Event event) {
-    return GestureDetector(
-      child: IconText(
-        icon: Icons.timer,
-        text: "${event.time} | ${event.date}",
-        mainAxisAlignment: MainAxisAlignment.center,
-      ),
-      onTap: () => _handleDateTimeOnTap(context, event),
+    return IconText(
+      icon: Icons.timer,
+      text: "${event.time} | ${event.date}",
+      mainAxisAlignment: MainAxisAlignment.center,
     );
   }
 
@@ -74,7 +71,7 @@ class EventCard extends StatelessWidget {
   Widget _buildTitleStrip(BuildContext context, Store<EventStore> eventStore) {
     Event event = eventStore.state.eventList[this.index];
     List<FlaggedEvent> flaggedList = eventStore.state.flaggedList;
-    bool isFlagged = flaggedList.any((v) => v.event == event);
+    bool isFlagged = flaggedList.any((v) => v.equals(event));
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
@@ -109,28 +106,11 @@ class EventCard extends StatelessWidget {
   void _handleFlagOnTap(
       BuildContext context, bool isFlagged, Store<EventStore> eventStore) {
     Event event = eventStore.state.eventList[this.index];
-    String message = "";
     if (isFlagged) {
       eventStore.dispatch(RemoveFromFlaggedList(event));
-      message = "Event Unpinned Successfully";
     } else {
       eventStore.dispatch(AddToFlaggedList(event));
-      message = "Event Pinned Successfully";
     }
-    Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text(message),
-          backgroundColor: Theme.of(context).accentColor,
-        ));
-  }
-
-  /// Shows a small message when tapped on Date/Time
-  void _handleDateTimeOnTap(BuildContext context, Event event) {
-    Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Will start on ${event.date} at ${event.time}."),
-            backgroundColor: Theme.of(context).accentColor,
-          ),
-        );
   }
 
   EventCard(this.index);

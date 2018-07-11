@@ -44,23 +44,18 @@ class EventNotificationsManager extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.delete),
-            onPressed: listViewChildren.isEmpty
-                ? null
-                : () => eventStore.dispatch(ClearNotifications()),
+            onPressed: () => eventStore.dispatch(ClearNotifications()),
           )
         ],
       ),
       body: listViewChildren.isEmpty
-          ? Center(
-              child: Text("Nothing Here"),
-            )
-          : ListView(
-              children: listViewChildren,
+          ? Center(child: Text("Nothing Here"))
+          : ListView.builder(
+              itemBuilder: (_, index) => listViewChildren[index],
+              itemCount: listViewChildren.length,
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: listViewChildren.isEmpty
-            ? null
-            : () => eventStore.dispatch(MarkNotificationsAsRead()),
+        onPressed: () => eventStore.dispatch(MarkNotificationsAsRead()),
         child: Icon(Icons.done_all),
       ),
     );

@@ -57,7 +57,7 @@ EventStore removeFromFlaggedListReducer(
   List<EventNotification> notifications = eventStore.notifications;
   return EventStore(
     eventStore.eventList,
-    List.from(flaggedList)..removeWhere((v) => v.event == action.eventToRemove),
+    List.from(flaggedList)..removeWhere((v) => v.equals(action.eventToRemove)),
     eventStore.currentSelectedEvent,
     List.from(notifications)
       ..add(
@@ -85,8 +85,9 @@ EventStore changeCurrentEventReducer(
 EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
   List<EventNotification> notifications = eventStore.notifications;
   List<FlaggedEvent> flaggedList = List.from(eventStore.flaggedList);
+
   for (int index = 0; index < eventStore.flaggedList.length; index++) {
-    if (flaggedList[index].event == action.alarmEvent) {
+    if (flaggedList[index].equals( action.alarmEvent)) {
       flaggedList[index] = FlaggedEvent(action.alarmEvent, action.state);
     }
   }
