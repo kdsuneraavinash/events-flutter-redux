@@ -1,13 +1,15 @@
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
-import 'package:event_app/event.dart' show Event, FlaggedEvent;
+import 'package:event_app/event.dart' show FlaggedEvent;
 import 'package:event_app/redux_store/actions.dart'
-    show ChangeAlarmState;
+    show ChangeAlarmState, RemoveFromFlaggedList;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_image_view.dart' show EventImageView;
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
+import 'package:event_app/custom_widgets/custom_snackbar.dart'
+    show showSnackBar;
 
 // TODO: Add comments and implement this tool
 class EventFlaggedCard extends StatelessWidget {
@@ -55,7 +57,7 @@ class EventFlaggedCard extends StatelessWidget {
               _buildActionButtonButton(
                 icon: Icons.delete_outline,
                 label: "Unpin",
-                onPressed: () => null,
+                onPressed: () => _handleUnpinPressed(context, store),
               ),
             ],
           ),
@@ -88,15 +90,19 @@ class EventFlaggedCard extends StatelessWidget {
 
   /// Will show EventImageView
   void _handleViewPressed(BuildContext context, Store<EventStore> store) {
-    Event currentEvent = this.flaggedEvent.event;
     TransitionMaker
         .fadeTransition(
-          destinationPageCall: () => EventImageView(currentEvent),
+          destinationPageCall: () => EventImageView(this.flaggedEvent.event),
         )
         .start(context);
   }
 
-  EventFlaggedCard(this.flaggedEvent);
+  /// Will unpin Event
+  void _handleUnpinPressed(BuildContext context, Store<EventStore> store) {
+    store.dispatch(RemoveFromFlaggedList(this.flaggedEvent.event));
+    showSnackBar(context, "${this.flaggedEvent.event.eventName} Unpinned");
+  }
 
+  EventFlaggedCard(this.flaggedEvent);
   final FlaggedEvent flaggedEvent;
 }

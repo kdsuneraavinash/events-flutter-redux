@@ -1,3 +1,7 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
+import 'package:event_app/custom_widgets/custom_snackbar.dart'
+    show showSnackBar;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/redux_store/store.dart' show EventStore;
@@ -7,8 +11,6 @@ import 'package:event_app/screens/event_list/event_list_body.dart'
     show EventListBody;
 import 'package:event_app/screens/event_notifications.dart'
     show EventNotificationsManager;
-import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton

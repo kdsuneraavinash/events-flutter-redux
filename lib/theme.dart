@@ -28,5 +28,6 @@ ThemeData buildTheme(BuildContext context) {
     primaryColorDark: Colors.black,
     secondaryHeaderColor: Colors.black,
     platform: defaultTargetPlatform,
+    brightness: Brightness.light
   );
 }
