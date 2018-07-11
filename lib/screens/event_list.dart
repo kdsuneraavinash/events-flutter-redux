@@ -5,7 +5,7 @@ import 'package:event_app/custom_widgets/transition_maker.dart'
 import 'package:event_app/screens/event_list/event_list_body.dart'
     show EventListBody;
 import 'package:event_app/screens/event_alarms.dart' show AlarmsManager;
-import 'package:event_app/screens/event_notifications.dart' show EventNotifications;
+import 'package:event_app/screens/event_notifications.dart' show EventNotificationsManager;
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
@@ -89,7 +89,7 @@ class EventListWindow extends StatelessWidget {
     Navigator.pop(context);
     TransitionMaker
         .slideTransition(
-      destinationPageCall: () => EventNotifications(),
+      destinationPageCall: () => EventNotificationsManager(),
     )
         .start(context);
   }

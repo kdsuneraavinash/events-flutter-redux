@@ -1,7 +1,10 @@
+import 'package:event_app/test_data.dart' show events;
 import 'package:flutter/material.dart' show IconData, Icons;
 
 /// Launch method for EventContact
 enum LaunchMethod { CALL, MESSAGE, WEB, FACEBOOK }
+
+enum NotificationType { ADD_FLAG, REM_FLAG, ALARM }
 
 /// Hold Event Organizer Contact Data
 class EventContact {
@@ -92,6 +95,7 @@ class Event {
   String location;
   bool flagged = false;
   List<EventContact> contact = [];
+  List<String> tags = [];
 
   /// Create an event for test purposes
   Event.fromDataList(List eventData) {
@@ -107,6 +111,33 @@ class Event {
       this.contact.add(
             new EventContact.fromList(_contact),
           );
+    }
+    this.tags.add("Test");
+    this.tags.add("Event");
+  }
+}
+
+class EventNotification {
+  final String message;
+  final NotificationType type;
+  final String timestamp;
+  bool read = false;
+  EventNotification(this.message, this.type, this.timestamp);
+
+  void markAsRead() {
+    read = true;
+  }
+
+  IconData getIcon() {
+    switch (this.type) {
+      case NotificationType.ADD_FLAG:
+        return Icons.flag;
+      case NotificationType.REM_FLAG:
+        return Icons.outlined_flag;
+      case NotificationType.ALARM:
+        return Icons.alarm;
+      default:
+        return Icons.info;
     }
   }
 }

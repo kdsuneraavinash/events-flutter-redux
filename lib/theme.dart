@@ -8,15 +8,14 @@ ThemeData buildTheme(BuildContext context){
     accentColor: Colors.red[900],
     textTheme: TextTheme(
       body1: TextStyle(
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w400,
       ),
       button: TextStyle(
           letterSpacing: 2.0,
           fontWeight: FontWeight.w500
       ),
       subhead: TextStyle(
-          letterSpacing: 1.2,
-          fontWeight: FontWeight.w800
+          fontWeight: FontWeight.w700,
       ),
       headline: TextStyle(
           letterSpacing: 2.0,

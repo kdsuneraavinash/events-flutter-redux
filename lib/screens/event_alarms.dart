@@ -13,22 +13,27 @@ class AlarmsManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Alarms Manager"),
-        ),
-        body: StoreConnector<EventStore, EventStore>(
-          converter: (store) => store.state,
-          builder: (context, eventStore) => ListView(
-                children: _buildAlarmButtons(eventStore.alarmsList),
-              ),
-        ));
+      appBar: AppBar(
+        title: Text("Alarms Manager"),
+      ),
+      body: StoreConnector<EventStore, EventStore>(
+        converter: (store) => store.state,
+        builder: (context, eventStore) =>
+            buildAlarmButtons(eventStore.alarmsList),
+      ),
+    );
   }
 
-  List<Widget> _buildAlarmButtons(Map<Event, bool> alarmList){
+  Widget buildAlarmButtons(Map<Event, bool> alarmList) {
     List<Widget> list = [];
-    for (Event alarm in alarmList.keys){
+    for (Event alarm in alarmList.keys) {
       list.add(EventAlarmButton(alarm, alarmList[alarm]));
     }
-    return list;
+
+    if (list.isEmpty) {
+      return Center(child: Text("Pin events and they will show up here."));
+    } else {
+      return ListView(children: list);
+    }
   }
 }

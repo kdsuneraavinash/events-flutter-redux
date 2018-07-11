@@ -1,7 +1,5 @@
-import 'package:event_app/event.dart' show Event;
 import 'package:event_app/redux_store/reducers.dart' show reducers;
 import 'package:event_app/redux_store/store.dart' show EventStore;
-import 'package:event_app/test_data.dart' show events;
 import 'package:flutter/material.dart';
 
 import 'package:event_app/screens/event_list.dart' show EventListWindow;
@@ -15,13 +13,7 @@ void main() {
   // Main store holder (REDUX)
   final store = new Store<EventStore>(
     reducers,
-    initialState: EventStore(
-      events.map((v) => Event.fromDataList(v)).toList(),
-      List(),
-      null,
-      Map(),
-      List(),
-    ),
+    initialState: EventStore.loadEventStore(),
   );
   return runApp(MoraEventsApp(store));
 }

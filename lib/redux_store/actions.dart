@@ -1,4 +1,4 @@
-import 'package:event_app/event.dart' show Event;
+import 'package:event_app/event.dart' show Event, EventNotification;
 
 /// Actions:
 /// Will only contain classes to distinguish each command for reducer and
@@ -28,3 +28,9 @@ class ChangeAlarmState {
   final bool state;
   ChangeAlarmState(this.alarmEvent, this.state);
 }
+
+class MarkNotificationsAsRead {}
+
+class ClearNotifications {}
+
+class LoadEvents {}

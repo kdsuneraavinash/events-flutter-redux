@@ -1,51 +1,67 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
+import 'package:redux/redux.dart' show Store;
+import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:event_app/event.dart' show EventNotification;
+import 'package:event_app/redux_store/actions.dart'
+    show MarkNotificationsAsRead, ClearNotifications;
 
-class EventNotifications extends StatelessWidget {
+class EventNotificationsManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<EventStore, EventStore>(
-      converter: (store) => store.state,
-      builder: buildEventNotifications,
+    return StoreBuilder<EventStore>(
+      builder: buildEventNotificationsManager,
     );
   }
 
-  Widget buildEventNotifications(BuildContext context, EventStore eventStore) {
+  Widget buildEventNotificationsManager(
+      BuildContext context, Store<EventStore> eventStore) {
     List<Widget> listViewChildren = [];
-    for (List<String> notification in eventStore.notifications.reversed) {
-      IconData icon;
-      switch (notification[0]) {
-        case "FLAG_ADD":
-          icon = Icons.flag;
-          break;
-        case "FLAG_REM":
-          icon = Icons.outlined_flag;
-          break;
-        case "ALARM":
-          icon = Icons.alarm;
-          break;
-        default:
-          icon = Icons.info;
-      }
+    for (EventNotification notification
+        in eventStore.state.notifications.reversed) {
       listViewChildren.add(ListTile(
-        leading: Icon(icon),
-        title: Text(
-          notification[1],
+        leading: Icon(
+          notification.getIcon(),
+          color: notification.read ? null : Theme.of(context).primaryColor,
         ),
-        subtitle: Text(notification[2]),
-      ));
-      listViewChildren.add(Divider(
-        color: Colors.black,
+        title: Text(
+          notification.message,
+          style:
+              TextStyle(fontWeight: notification.read ? FontWeight.w400 : null),
+        ),
+        subtitle: Text(
+          notification.timestamp,
+          style: TextStyle(
+            color: notification.read ? null : Theme.of(context).accentColor,
+          ),
+        ),
       ));
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Notifications"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: listViewChildren.isEmpty
+                ? null
+                : () => eventStore.dispatch(ClearNotifications()),
+          )
+        ],
       ),
-      body: ListView(
-        children: listViewChildren,
+      body: listViewChildren.isEmpty
+          ? Center(
+              child: Text("Nothing Here"),
+            )
+          : ListView(
+              children: listViewChildren,
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: listViewChildren.isEmpty
+            ? null
+            : () => eventStore.dispatch(MarkNotificationsAsRead()),
+        child: Icon(Icons.done_all),
       ),
     );
   }
