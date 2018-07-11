@@ -2,7 +2,7 @@ import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/event.dart' show Event, FlaggedEvent;
 import 'package:event_app/redux_store/actions.dart'
-    show ChangeAlarmState, ChangeCurrentSelectedEvent;
+    show ChangeAlarmState;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_image_view.dart' show EventImageView;
 import 'package:flutter/material.dart';
@@ -89,7 +89,6 @@ class EventFlaggedCard extends StatelessWidget {
   /// Will show EventImageView
   void _handleViewPressed(BuildContext context, Store<EventStore> store) {
     Event currentEvent = this.flaggedEvent.event;
-    store.dispatch(ChangeCurrentSelectedEvent(currentEvent));
     TransitionMaker
         .fadeTransition(
           destinationPageCall: () => EventImageView(currentEvent),

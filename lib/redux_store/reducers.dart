@@ -10,8 +10,6 @@ EventStore reducers(EventStore eventStore, dynamic action) {
       return addToFlaggedListReducer(eventStore, action);
     case RemoveFromFlaggedList:
       return removeFromFlaggedListReducer(eventStore, action);
-    case ChangeCurrentSelectedEvent:
-      return changeCurrentEventReducer(eventStore, action);
     case ChangeAlarmState:
       return changeAlarmState(eventStore, action);
     case MarkNotificationsAsRead:
@@ -67,18 +65,6 @@ EventStore removeFromFlaggedListReducer(
           DateTime.now().toIso8601String(),
         ),
       ),
-  );
-}
-
-/// Change current selected event
-/// Current selected event is the event displayed in EventInfo page, etc...
-EventStore changeCurrentEventReducer(
-    EventStore eventStore, ChangeCurrentSelectedEvent action) {
-  return EventStore(
-    eventStore.eventList,
-    eventStore.flaggedList,
-    action.selectedEvent,
-    eventStore.notifications,
   );
 }
 

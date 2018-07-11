@@ -18,13 +18,6 @@ class RemoveFromFlaggedList {
   RemoveFromFlaggedList(this.eventToRemove);
 }
 
-/// Change current selected event
-class ChangeCurrentSelectedEvent {
-  final Event selectedEvent;
-
-  ChangeCurrentSelectedEvent(this.selectedEvent);
-}
-
 /// Change alarm state
 class ChangeAlarmState {
   final Event alarmEvent;
