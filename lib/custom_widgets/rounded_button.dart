@@ -33,6 +33,7 @@ class RoundedButton extends StatelessWidget {
   }
 
   RoundedButton({this.buttonIcon, this.text, this.onPressed});
+
   final IconData buttonIcon;
   final String text;
   final VoidCallback onPressed;

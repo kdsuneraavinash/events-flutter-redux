@@ -1,4 +1,3 @@
-import 'package:event_app/test_data.dart' show events;
 import 'package:flutter/material.dart' show IconData, Icons;
 
 /// Launch method for EventContact
@@ -122,6 +121,7 @@ class EventNotification {
   final NotificationType type;
   final String timestamp;
   bool read = false;
+
   EventNotification(this.message, this.type, this.timestamp);
 
   void markAsRead() {
@@ -145,9 +145,10 @@ class EventNotification {
 class FlaggedEvent {
   final Event event;
   final bool alarmStatus;
+
   FlaggedEvent(this.event, this.alarmStatus);
 
-  bool equals(Event event){
+  bool equals(Event event) {
     return this.event == event;
   }
 }

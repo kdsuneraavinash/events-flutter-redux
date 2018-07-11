@@ -1,7 +1,7 @@
-import 'package:event_app/redux_store/actions.dart';
-import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/event.dart'
     show EventNotification, NotificationType, FlaggedEvent;
+import 'package:event_app/redux_store/actions.dart';
+import 'package:event_app/redux_store/store.dart' show EventStore;
 
 /// Connect to all reducers
 EventStore reducers(EventStore eventStore, dynamic action) {
@@ -87,7 +87,7 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
   List<FlaggedEvent> flaggedList = List.from(eventStore.flaggedList);
 
   for (int index = 0; index < eventStore.flaggedList.length; index++) {
-    if (flaggedList[index].equals( action.alarmEvent)) {
+    if (flaggedList[index].equals(action.alarmEvent)) {
       flaggedList[index] = FlaggedEvent(action.alarmEvent, action.state);
     }
   }
@@ -99,7 +99,8 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
     List.from(notifications)
       ..add(
         EventNotification(
-          "${action.alarmEvent.eventName} alarm state changed to : ${action.state ? "ON": "OFF"}",
+          "${action.alarmEvent.eventName} alarm state changed to : ${action
+              .state ? "ON" : "OFF"}",
           NotificationType.ALARM,
           DateTime.now().toIso8601String(),
         ),

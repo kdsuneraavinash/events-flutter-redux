@@ -1,29 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:event_app/custom_widgets/event_info_card.dart'
     show EventInfoCard;
 import 'package:event_app/event.dart' show Event;
-import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:flutter/material.dart';
 
 /// Page to show Event Information/Description
 class EventInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<EventStore, EventStore>(
-      converter: (store) => store.state,
-      builder: (context, eventStore) =>
-          buildEventInfo(context, eventStore.currentSelectedEvent),
-    );
-  }
-
-  /// Separated build data because StoreConnector is used
-  Widget buildEventInfo(BuildContext context, Event event) {
     return ListView(
       children: <Widget>[
         Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
-            "${event.eventName}",
+            "${this.event.eventName}",
             style: Theme.of(context).textTheme.headline,
             textAlign: TextAlign.center,
           ),
@@ -31,29 +20,33 @@ class EventInfo extends StatelessWidget {
         EventInfoCard(
           icon: Icons.description,
           title: "Description",
-          description: event.description,
+          description: this.event.description,
         ),
         EventInfoCard(
           icon: Icons.access_time,
           title: "Time",
-          description: event.time,
+          description: this.event.time,
         ),
         EventInfoCard(
           icon: Icons.date_range,
           title: "Date",
-          description: event.date,
+          description: this.event.date,
         ),
         EventInfoCard(
           icon: Icons.location_city,
           title: "Venue",
-          description: event.location,
+          description: this.event.location,
         ),
         EventInfoCard(
           icon: Icons.people,
           title: "Organizers",
-          description: event.organizer,
+          description: this.event.organizer,
         ),
       ],
     );
   }
+
+  final Event event;
+
+  EventInfo(this.event);
 }

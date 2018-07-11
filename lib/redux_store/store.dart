@@ -1,4 +1,5 @@
-import 'package:event_app/event.dart' show Event, EventNotification, FlaggedEvent;
+import 'package:event_app/event.dart'
+    show Event, EventNotification, FlaggedEvent;
 import 'package:event_app/test_data.dart' show events;
 
 /// The main store object

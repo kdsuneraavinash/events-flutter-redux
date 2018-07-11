@@ -49,6 +49,7 @@ class EventInfoCard extends StatelessWidget {
       this.description,
       this.descriptionTextStyle,
       this.handleTap});
+
   final IconData icon;
   final String title;
   final String description;

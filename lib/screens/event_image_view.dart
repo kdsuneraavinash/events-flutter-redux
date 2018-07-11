@@ -1,9 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:event_app/custom_widgets/network_image.dart'
+    show DefParameterNetworkImage;
+import 'package:event_app/custom_widgets/rounded_button.dart'
+    show RoundedButton;
+import 'package:event_app/custom_widgets/transition_maker.dart'
+    show TransitionMaker;
 import 'package:event_app/event.dart' show Event;
-import 'package:event_app/custom_widgets/network_image.dart' show DefParameterNetworkImage;
-import 'package:event_app/custom_widgets/rounded_button.dart' show RoundedButton;
-import 'package:event_app/custom_widgets/transition_maker.dart' show TransitionMaker;
 import 'package:event_app/screens/event_details.dart' show EventDetails;
+import 'package:flutter/material.dart';
 
 /// Hosts PageView and buttons.
 class EventImageView extends StatelessWidget {
@@ -57,7 +60,7 @@ class EventImageView extends StatelessWidget {
   void _handleEventButtonPress(BuildContext context) {
     TransitionMaker
         .slideTransition(
-          destinationPageCall: () => EventDetails(),
+          destinationPageCall: () => EventDetails(this.event),
           beginOffset: Offset(0.0, 1.0),
           endOffset: Offset(0.0, 0.0),
         )
@@ -65,5 +68,6 @@ class EventImageView extends StatelessWidget {
   }
 
   EventImageView(this.event);
+
   final Event event;
 }

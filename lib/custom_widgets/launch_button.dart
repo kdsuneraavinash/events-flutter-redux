@@ -1,6 +1,6 @@
+import 'package:event_app/event.dart' show EventContact;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' show canLaunch, launch;
-import 'package:event_app/event.dart' show EventContact;
 
 /// Button to Launch Call, Message, Web, etc...
 /// Will use info from event
@@ -25,7 +25,8 @@ class LaunchButton extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                "${this.eventContact.getContactMethodString()} :\n${this.eventContact.contactLink} "
+                "${this.eventContact.getContactMethodString()} :\n${this
+                    .eventContact.contactLink} "
                     "(${this.eventContact.contactPerson})",
                 style: Theme.of(context).textTheme.button,
               ),
@@ -49,5 +50,6 @@ class LaunchButton extends StatelessWidget {
   }
 
   LaunchButton(this.eventContact);
+
   final EventContact eventContact;
 }

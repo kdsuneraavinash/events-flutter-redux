@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:event_app/event.dart' show Event;
 import 'package:event_app/screens/event_details/event_info.dart' show EventInfo;
 import 'package:event_app/screens/event_details/event_links.dart'
     show EventLinks;
+import 'package:flutter/material.dart';
 
 /// Event Details Page which hosts a PageView to show all info
 class EventDetails extends StatefulWidget {
@@ -11,6 +12,9 @@ class EventDetails extends StatefulWidget {
   }
 
   final PageController pageController = new PageController(initialPage: 0);
+  final Event event;
+
+  EventDetails(this.event);
 }
 
 /// State of EventDetails
@@ -26,8 +30,8 @@ class EventDetailsState extends State<EventDetails> {
         controller: widget.pageController,
         onPageChanged: _handlePageChanged,
         children: <Widget>[
-          EventInfo(),
-          EventLinks(),
+          EventInfo(widget.event),
+          EventLinks(widget.event),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

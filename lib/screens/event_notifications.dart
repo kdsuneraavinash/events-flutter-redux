@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:redux/redux.dart' show Store;
-import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
-import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/event.dart' show EventNotification;
 import 'package:event_app/redux_store/actions.dart'
     show MarkNotificationsAsRead, ClearNotifications;
+import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
+import 'package:redux/redux.dart' show Store;
 
 class EventNotificationsManager extends StatelessWidget {
   @override

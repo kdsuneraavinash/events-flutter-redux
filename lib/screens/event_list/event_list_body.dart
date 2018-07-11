@@ -1,7 +1,10 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+
+import 'package:event_app/event.dart' show Event;
+import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
-import 'package:event_app/test_data.dart' show events;
+import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 /// Body of EventListWindow.
 /// Contains of a ListView consisting of Event Cards so Users can scroll
@@ -16,9 +19,16 @@ import 'package:event_app/test_data.dart' show events;
 class EventListBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return StoreConnector<EventStore, EventStore>(
+      builder: (context, store) => buildEventListBody(context, store.eventList),
+      converter: (store) => store.state,
+    );
+  }
+
+  Widget buildEventListBody(BuildContext context, List<Event> events) {
     return RefreshIndicator(
       child: ListView.builder(
-        itemBuilder: (_, index) => EventCard(index),
+        itemBuilder: (_, index) => EventCard(events[index]),
         itemCount: events.length,
       ),
       onRefresh: () => _handleRefresh(context),

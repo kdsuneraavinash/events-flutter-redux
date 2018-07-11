@@ -32,6 +32,7 @@ class IconText extends StatelessWidget {
   }
 
   IconText({this.icon, this.text, this.mainAxisAlignment});
+
   final IconData icon;
   final String text;
   final MainAxisAlignment mainAxisAlignment;

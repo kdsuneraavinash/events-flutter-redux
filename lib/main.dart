@@ -1,10 +1,8 @@
 import 'package:event_app/redux_store/reducers.dart' show reducers;
 import 'package:event_app/redux_store/store.dart' show EventStore;
-import 'package:flutter/material.dart';
-
 import 'package:event_app/screens/event_list.dart' show EventListWindow;
-
 import 'package:event_app/theme.dart' as Theme;
+import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart' show StoreProvider;
 import 'package:redux/redux.dart' show Store;
 
@@ -22,6 +20,7 @@ void main() {
 /// Sets up theme
 class MoraEventsApp extends StatelessWidget {
   final Store<EventStore> store;
+
   MoraEventsApp(this.store);
 
   @override

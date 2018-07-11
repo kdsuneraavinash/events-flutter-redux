@@ -1,9 +1,9 @@
+import 'package:event_app/event.dart' show FlaggedEvent;
 import 'package:event_app/redux_store/store.dart';
-import 'package:flutter/material.dart';
 import 'package:event_app/screens/event_flagged/event_flagged_card.dart'
     show EventFlaggedCard;
+import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
-import 'package:event_app/event.dart' show Event, FlaggedEvent;
 
 /// Window to show pinned events to toggle alarms
 /// TODO: All toggle alarms
@@ -27,7 +27,7 @@ class FlaggedEventManager extends StatelessWidget {
   Widget buildAlarmButtons(List<FlaggedEvent> alarmList) {
     List<Widget> list = [];
     for (FlaggedEvent alarm in alarmList) {
-      list.add(EventFlaggedCard(alarm.event, alarm.alarmStatus));
+      list.add(EventFlaggedCard(alarm));
     }
 
     if (list.isEmpty) {

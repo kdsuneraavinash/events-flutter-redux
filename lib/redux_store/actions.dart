@@ -7,18 +7,21 @@ import 'package:event_app/event.dart' show Event, EventNotification;
 /// Add an event to flagged event list
 class AddToFlaggedList {
   final Event eventToAdd;
+
   AddToFlaggedList(this.eventToAdd);
 }
 
 /// Remove an event from flagged event list
 class RemoveFromFlaggedList {
   final Event eventToRemove;
+
   RemoveFromFlaggedList(this.eventToRemove);
 }
 
 /// Change current selected event
 class ChangeCurrentSelectedEvent {
   final Event selectedEvent;
+
   ChangeCurrentSelectedEvent(this.selectedEvent);
 }
 
@@ -26,6 +29,7 @@ class ChangeCurrentSelectedEvent {
 class ChangeAlarmState {
   final Event alarmEvent;
   final bool state;
+
   ChangeAlarmState(this.alarmEvent, this.state);
 }
 
