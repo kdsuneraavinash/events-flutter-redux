@@ -1,3 +1,5 @@
+import 'package:event_app/custom_widgets/custom_snackbar.dart'
+    show showSnackBar;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/event.dart' show FlaggedEvent;
@@ -8,8 +10,6 @@ import 'package:event_app/screens/event_image_view.dart' show EventImageView;
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
-import 'package:event_app/custom_widgets/custom_snackbar.dart'
-    show showSnackBar;
 
 // TODO: Add comments and implement this tool
 class EventFlaggedCard extends StatelessWidget {
@@ -22,7 +22,6 @@ class EventFlaggedCard extends StatelessWidget {
 
   Widget buildEventAlarmButton(BuildContext context, Store<EventStore> store) {
     return Card(
-      margin: EdgeInsets.all(8.0),
       child: Column(
         children: <Widget>[
           ListTile(
@@ -47,7 +46,7 @@ class EventFlaggedCard extends StatelessWidget {
                   ),
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               _buildActionButtonButton(
                 icon: Icons.slideshow,
@@ -79,7 +78,7 @@ class EventFlaggedCard extends StatelessWidget {
   Widget _buildActionButtonButton(
       {IconData icon, String label, VoidCallback onPressed}) {
     return Padding(
-      padding: EdgeInsets.all(4.0),
+      padding: EdgeInsets.all(8.0),
       child: OutlineButton.icon(
         icon: Icon(icon),
         label: Text(label),
@@ -104,5 +103,6 @@ class EventFlaggedCard extends StatelessWidget {
   }
 
   EventFlaggedCard(this.flaggedEvent);
+
   final FlaggedEvent flaggedEvent;
 }
