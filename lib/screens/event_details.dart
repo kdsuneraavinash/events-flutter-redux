@@ -26,13 +26,16 @@ class EventDetailsState extends State<EventDetails> {
       appBar: AppBar(
         title: Text("Event Info"),
       ),
-      body: PageView(
-        controller: widget.pageController,
-        onPageChanged: _handlePageChanged,
-        children: <Widget>[
-          EventInfo(widget.event),
-          EventLinks(),
-        ],
+      body: _buildPagedWindow(
+        widget.event,
+        PageView(
+          controller: widget.pageController,
+          onPageChanged: _handlePageChanged,
+          children: <Widget>[
+            EventInfo(widget.event),
+            EventLinks(),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.shifting,
@@ -50,6 +53,55 @@ class EventDetailsState extends State<EventDetails> {
             backgroundColor: Theme.of(context).primaryColor,
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPagedWindow(Event event, Widget child) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        _buildInlineListTile(
+          "Start Date",
+          event.startTime,
+          Icons.hourglass_full,
+          context,
+        ),
+        _buildInlineListTile(
+          "End Date",
+          event.endTime,
+          Icons.hourglass_empty,
+          context,
+        ),
+        Expanded(
+          child: child,
+        )
+      ],
+    );
+  }
+
+  Widget _buildInlineListTile(
+      String title, String text, IconData icon, BuildContext context) {
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: Theme.of(context).cardColor,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: Theme.of(context).cardColor,
+          ),
+        ),
+        trailing: Text(
+          text,
+          style: TextStyle(
+            color: Theme.of(context).cardColor,
+          ),
+        ),
       ),
     );
   }

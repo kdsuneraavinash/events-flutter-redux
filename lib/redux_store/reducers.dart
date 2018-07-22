@@ -20,9 +20,9 @@ EventStore reducers(EventStore eventStore, dynamic action) {
       return clearNotificationsReducer(eventStore, action);
     case LoadEvents:
       return loadEventsReducer(eventStore, action);
-    case RequestEventsFirestore:
+    case StartFirestoreConnection:
       return eventStore;
-    case CancelEventsFirestore:
+    case EndFirestoreConnection:
       return eventStore;
     default:
       return eventStore;

@@ -32,6 +32,6 @@ class ClearNotifications {}
 
 class LoadEvents {}
 
-class RequestEventsFirestore {}
+class StartFirestoreConnection {}
 
-class CancelEventsFirestore {}
+class EndFirestoreConnection {}

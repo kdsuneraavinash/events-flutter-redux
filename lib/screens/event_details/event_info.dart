@@ -9,19 +9,6 @@ class EventInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        _buildInlineListTile(
-          "Start Date",
-          this.event.startTime,
-          Icons.hourglass_full,
-          context,
-        ),
-        _buildInlineListTile(
-          "End Date",
-          this.event.endTime,
-          Icons.hourglass_empty,
-          context,
-        ),
-        Divider(),
         EventInfoCard(
           icon: Icons.location_city,
           title: "Venue",
@@ -38,18 +25,6 @@ class EventInfo extends StatelessWidget {
           description: this.event.description,
         ),
       ],
-    );
-  }
-
-  Widget _buildInlineListTile(
-      String title, String text, IconData icon, BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: Theme.of(context).primaryColor,
-      ),
-      title: Text(title),
-      trailing: Text(text),
     );
   }
 

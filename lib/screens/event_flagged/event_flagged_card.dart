@@ -23,6 +23,7 @@ class EventFlaggedCard extends StatelessWidget {
   Widget buildEventFlaggedItemButton(
       BuildContext context, Store<EventStore> store) {
     return ExpansionTile(
+      key: Key(this.flaggedEvent.event.id),
       title: Text(
         this.flaggedEvent.event.eventName,
         style: TextStyle(color: Theme.of(context).primaryColor),

@@ -7,104 +7,73 @@ enum NotificationType { ADD_FLAG, REM_FLAG, ALARM }
 
 /// Hold Event Organizer Contact Data
 class EventContact {
+  Map<LaunchMethod, List> _methodToPropertyMap = {
+    LaunchMethod.CALL: [Icons.call, (v) => "tel:$v", "Call"],
+    LaunchMethod.MESSAGE: [Icons.call, (v) => "sms:$v", "Message"],
+    LaunchMethod.WEB: [Icons.web, (v) => "$v", "Website"],
+    LaunchMethod.FACEBOOK: [Icons.web, (v) => "$v", "Facebook"],
+  };
+
+  Map<String, LaunchMethod> _stringToMethodMap = {
+    "CALL": LaunchMethod.CALL,
+    "MESSAGE": LaunchMethod.MESSAGE,
+    "WEB": LaunchMethod.WEB,
+    "FACEBOOK": LaunchMethod.FACEBOOK
+  };
+
   String contactPerson;
   String contactLink;
   LaunchMethod method;
 
   /// Get Icon according to launch method
-  IconData getIcon() {
-    switch (this.method) {
-      case LaunchMethod.CALL:
-        return Icons.call;
-      case LaunchMethod.MESSAGE:
-        return Icons.sms;
-      case LaunchMethod.WEB:
-      case LaunchMethod.FACEBOOK:
-        return Icons.web;
-      default:
-        return Icons.info;
-    }
-  }
+  IconData getIcon() => _methodToPropertyMap[this.method][0];
 
   /// Get Url to execute the method
-  String getUrl() {
-    switch (this.method) {
-      case LaunchMethod.CALL:
-        return "tel:${this.contactLink}";
-      case LaunchMethod.MESSAGE:
-        return "sms:${this.contactLink}";
-      case LaunchMethod.WEB:
-      case LaunchMethod.FACEBOOK:
-        return "${this.contactLink}";
-      default:
-        return "";
-    }
-  }
+  String getUrl() => _methodToPropertyMap[this.method][1];
 
   /// Get String according to contact method
-  String getContactMethodString() {
-    switch (this.method) {
-      case LaunchMethod.CALL:
-        return "Call";
-      case LaunchMethod.MESSAGE:
-        return "Message";
-      case LaunchMethod.WEB:
-        return "Website";
-      case LaunchMethod.FACEBOOK:
-        return "Facebook";
-      default:
-        return "";
-    }
-  }
+  String getContactMethodString() => _methodToPropertyMap[this.method][2];
 
-  EventContact({this.contactPerson, this.contactLink, this.method});
+  EventContact(this.contactPerson, this.contactLink, this.method);
 
   EventContact.fromList(List<String> contact) {
     this.contactLink = contact[1];
     this.contactPerson = contact[0];
-    switch (contact[2]) {
-      case "CALL":
-        this.method = LaunchMethod.CALL;
-        break;
-      case "MESSAGE":
-        this.method = LaunchMethod.MESSAGE;
-        break;
-      case "WEB":
-        this.method = LaunchMethod.WEB;
-        break;
-      case "FACEBOOK":
-        this.method = LaunchMethod.FACEBOOK;
-        break;
-      default:
-        this.method = null;
-    }
+    this.method = _stringToMethodMap[contact[2]];
   }
 }
 
 /// Class to hold info on events
 /// Will be used as main object to save, load, show info
 class Event {
-  String eventName;
-  String organizer;
-  String startTime;
-  String endTime;
-  List<String> images;
-  String headerImage; // Auto assigned
-  String description;
-  String location;
+  final String eventName;
+  final String organizer;
+  final String startTime;
+  final String endTime;
+  final List<String> images;
+  final String headerImage; // Auto assigned
+  final String description;
+  final String location;
+  final String id;
   //List<EventContact> contact = [];
-  List<String> tags = [];
+  final List<String> tags = [];
+
+  Event(this.eventName, this.organizer, this.startTime, this.endTime,
+      this.images, this.headerImage, this.description, this.location, this.id);
 
   /// Create an event for test purposes
-  Event.fromDataList(List eventData) {
-    this.eventName = eventData[0];
-    this.organizer = eventData[1];
-    this.startTime = eventData[2];
-    this.endTime = eventData[3];
-    this.location = eventData[4];
-    this.description = eventData[5];
-    this.images = eventData[6];
-    this.headerImage = this.images[0];
+  factory Event.fromDataList(List eventData) {
+    return Event(
+        eventData[0],
+        eventData[1],
+        eventData[2],
+        eventData[3],
+        eventData[6],
+        eventData[6][0],
+        eventData[4],
+        eventData[5],
+        eventData[0] + eventData[1])
+      ..tags.add("Test");
     /*
     TODO: Add functionality later in web
     for (List<String> _contact in eventData[7]) {
@@ -112,9 +81,10 @@ class Event {
             new EventContact.fromList(_contact),
           );
     }
-    */
+
     this.tags.add("Test");
     this.tags.add("Event");
+    */
   }
 }
 

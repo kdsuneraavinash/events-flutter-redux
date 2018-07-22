@@ -3,16 +3,17 @@ import 'package:event_app/event.dart'
 import 'package:event_app/test_data.dart' show events;
 
 /// The main store object
+/// Here this also is the VIew Model (No separate class for view modal)
 class EventStore {
   final List<Event> eventList;
   final List<FlaggedEvent> flaggedList;
   final List<EventNotification> notifications;
 
-  static EventStore loadEventStore() {
+  factory EventStore.loadEventStore(){
     return EventStore(
       events.map((v) => Event.fromDataList(v)).toList(),
-      List(),
-      List(),
+      List<FlaggedEvent>(),
+      List<EventNotification>(),
     );
   }
 

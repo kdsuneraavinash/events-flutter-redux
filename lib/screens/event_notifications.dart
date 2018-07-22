@@ -20,9 +20,12 @@ class EventNotificationsManager extends StatelessWidget {
     for (EventNotification notification
         in eventStore.state.notifications.reversed) {
       listViewChildren.add(ListTile(
-        leading: Icon(
-          notification.getIcon(),
-          color: notification.read ? null : Theme.of(context).primaryColor,
+        leading: CircleAvatar(
+          child: Icon(
+            notification.getIcon(),
+            color: Colors.white,
+          ),
+          backgroundColor: notification.read ? Colors.grey : Theme.of(context).primaryColor,
         ),
         title: Text(
           notification.message,
