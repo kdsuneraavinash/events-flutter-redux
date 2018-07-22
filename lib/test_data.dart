@@ -2,8 +2,8 @@ List<List> events = [
   [
     "Home & You Lifestyle Fair",
     "Aitken Spence Conventions & Exhibitions",
-    "09:00 AM - 06:00 PM",
-    "06 Jul - 08 Jul",
+    "06 July 2018 - 09:00 AM",
+    "08 July 2018 - 06:00 PM",
     "BMICH, Colombo",
     "The Home & You Lifestyle Fair event features remodeling, home improvement, decor and outdoor spaces with hundreds of local experts all under one roof. The event showcases windows and flooring to cabinets and patios and more. ",
     [
@@ -32,8 +32,8 @@ List<List> events = [
   [
     "Cyber Security Conference",
     "EXPLORE EXHIBITIONS & CONFERENCE LLP",
-    "8:00 AM - 6:00 PM",
-    "10 Jul - 11 Jul",
+    "10 July 2018 - 8:00 AM",
+    "11 July 2018 - 6:00 PM",
     "Colombo",
     """
 "Transforming Nations Vision with Cyber Security"
@@ -70,8 +70,8 @@ Cyber Security for Financial Services explore Exhibitions and Conference is taki
   [
     "Rice Tech Expo",
     "Shiny Trade Expositions",
-    "09:00 AM - 06:00 PM",
-    "13 Jul - 15 Jul",
+    "13 July 2018 - 09:00 AM",
+    "15 July 2018 - 06:00 PM",
     "Sri Lanka Exhibition & Convention Centre Paijanindia, Colombo",
     """
 "International trade exhibition for agriculture and forestry industry."
@@ -93,8 +93,8 @@ Rice Tech Expo is an international exhibition that will concentrate on the rice 
   [
     "International Conference on Community Medicine and Public Health",
     "Global Academic Research Institute",
-    "08:30 AM - 05:00 PM",
-    "22 Jul 2018",
+    "22 July 2018 - 08:30 AM",
+    "22 July 2018 - 05:00 PM",
     "Galle Face Hotel, Colombo",
     """
 "Public Health for Human well-being ICCMPH 2018"
@@ -122,8 +122,8 @@ The International Conference on Community Medicine and Public Health Under the t
   [
     "Colombo Bike Show",
     "CEMS Lanka",
-    "09:00 AM - 06:00 PM",
-    " 02 Aug - 04 Aug",
+    "02 August 2018 - 09:00 AM",
+    "04 August 2018 - 06:00 PM",
     "Sri Lanka Exhibition & Convention Centre Paijanindia, Colombo",
     """
 Colombo Bike Show is a 3 day event being held from 2nd August to 4th August 2018 at the Sri Lanka Exhibition & Convention Centre Paijanindia in Colombo, Sri Lanka.The Colombo Bike Show will have Exhibitors from showcasing,Sport Motorcycle, Road Motorcycle, Sport Cruiser Motorcycle, Off-road Motorcycles, e-bikes, All Terrain Motorcycles, Moped, and Scooter.Motorcycles Parts, Components and Accessories, Brake, Brake Control System, Control Cable and Parts etc. 

@@ -10,15 +10,15 @@ class EventInfo extends StatelessWidget {
     return ListView(
       children: <Widget>[
         _buildInlineListTile(
-          "Date",
-          this.event.time,
-          Icons.access_time,
+          "Start Date",
+          this.event.startTime,
+          Icons.hourglass_full,
           context,
         ),
         _buildInlineListTile(
-          "Time",
-          this.event.date,
-          Icons.date_range,
+          "End Date",
+          this.event.endTime,
+          Icons.hourglass_empty,
           context,
         ),
         Divider(),
@@ -32,7 +32,6 @@ class EventInfo extends StatelessWidget {
           title: "Organizers",
           description: this.event.organizer,
         ),
-        Divider(),
         EventInfoCard(
           icon: Icons.description,
           title: "Description",

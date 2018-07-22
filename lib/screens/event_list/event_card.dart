@@ -62,7 +62,7 @@ class EventCard extends StatelessWidget {
   Widget _buildTimeDateStrip(BuildContext context) {
     return IconText(
       icon: Icons.timer,
-      text: "${this.event.time} | ${this.event.date}",
+      text: "${this.event.startTime}",
       mainAxisAlignment: MainAxisAlignment.center,
     );
   }

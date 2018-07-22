@@ -86,31 +86,33 @@ class EventContact {
 class Event {
   String eventName;
   String organizer;
-  String time;
-  String date;
+  String startTime;
+  String endTime;
   List<String> images;
-  String headerImage;
+  String headerImage; // Auto assigned
   String description;
   String location;
-  bool flagged = false;
-  List<EventContact> contact = [];
+  //List<EventContact> contact = [];
   List<String> tags = [];
 
   /// Create an event for test purposes
   Event.fromDataList(List eventData) {
     this.eventName = eventData[0];
     this.organizer = eventData[1];
-    this.time = eventData[2];
-    this.date = eventData[3];
+    this.startTime = eventData[2];
+    this.endTime = eventData[3];
     this.location = eventData[4];
     this.description = eventData[5];
     this.images = eventData[6];
     this.headerImage = this.images[0];
+    /*
+    TODO: Add functionality later in web
     for (List<String> _contact in eventData[7]) {
       this.contact.add(
             new EventContact.fromList(_contact),
           );
     }
+    */
     this.tags.add("Test");
     this.tags.add("Event");
   }
