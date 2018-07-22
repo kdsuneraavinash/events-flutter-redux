@@ -46,7 +46,7 @@ EventStore addToFlaggedListReducer(
         EventNotification(
           "${action.eventToAdd.eventName} added to pinned events",
           NotificationType.ADD_FLAG,
-          DateTime.now().toIso8601String(),
+          DateTime.now(),
         ),
       ),
   );
@@ -66,7 +66,7 @@ EventStore removeFromFlaggedListReducer(
         EventNotification(
           "${action.eventToRemove.eventName} removed from pinned events",
           NotificationType.ADD_FLAG,
-          DateTime.now().toIso8601String(),
+          DateTime.now(),
         ),
       ),
   );
@@ -91,7 +91,7 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
           "${action.alarmEvent.eventName} alarm state changed to : ${action
               .state ? "ON" : "OFF"}",
           NotificationType.ALARM,
-          DateTime.now().toIso8601String(),
+          DateTime.now(),
         ),
       ),
   );

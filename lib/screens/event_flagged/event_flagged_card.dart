@@ -16,52 +16,57 @@ class EventFlaggedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder<EventStore>(
-      builder: (context, store) => buildEventAlarmButton(context, store),
+      builder: (context, store) => buildEventFlaggedItemButton(context, store),
     );
   }
 
-  Widget buildEventAlarmButton(BuildContext context, Store<EventStore> store) {
-    return Card(
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            title: Text(
-              this.flaggedEvent.event.eventName,
-              style: TextStyle(color: Theme.of(context).primaryColor),
-            ),
-            subtitle: Text(
-              "${this.flaggedEvent.event.time} | ${this.flaggedEvent.event
-                  .date}",
-              style: TextStyle(color: Theme.of(context).accentColor),
-            ),
-            leading: this.flaggedEvent.alarmStatus
-                ? _buildAlarmDispatchButton(
-                    icon: Icons.alarm_on,
-                    color: Theme.of(context).primaryColor,
-                    store: store,
-                  )
-                : _buildAlarmDispatchButton(
-                    icon: Icons.alarm_off,
-                    store: store,
-                  ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _buildActionButtonButton(
-                icon: Icons.slideshow,
-                label: "View",
-                onPressed: () => _handleViewPressed(context, store),
-              ),
-              _buildActionButtonButton(
-                icon: Icons.delete_outline,
-                label: "Unpin",
-                onPressed: () => _handleUnpinPressed(context, store),
-              ),
-            ],
-          ),
-        ],
+  Widget buildEventFlaggedItemButton(
+      BuildContext context, Store<EventStore> store) {
+    return ExpansionTile(
+      title: Text(
+        this.flaggedEvent.event.eventName,
+        style: TextStyle(color: Theme.of(context).primaryColor),
       ),
+      trailing: this.flaggedEvent.alarmStatus
+          ? _buildAlarmDispatchButton(
+              icon: Icons.alarm_on,
+              color: Theme.of(context).primaryColor,
+              store: store,
+            )
+          : _buildAlarmDispatchButton(
+              icon: Icons.alarm_off,
+              store: store,
+            ),
+      children: <Widget>[
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          child: Text(this.flaggedEvent.event.organizer),
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+          child: Text(
+            'Starts at ${this.flaggedEvent.event.time}',
+            style: TextStyle(color: Theme.of(context).accentColor),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            _buildActionButtonButton(
+              icon: Icons.slideshow,
+              label: "View",
+              onPressed: () => _handleViewPressed(context, store),
+            ),
+            _buildActionButtonButton(
+              icon: Icons.delete_outline,
+              label: "Unpin",
+              onPressed: () => _handleUnpinPressed(context, store),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -79,7 +84,7 @@ class EventFlaggedCard extends StatelessWidget {
       {IconData icon, String label, VoidCallback onPressed}) {
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: OutlineButton.icon(
+      child: FlatButton.icon(
         icon: Icon(icon),
         label: Text(label),
         onPressed: onPressed,

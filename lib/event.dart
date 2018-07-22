@@ -119,7 +119,7 @@ class Event {
 class EventNotification {
   final String message;
   final NotificationType type;
-  final String timestamp;
+  final DateTime timestamp;
   bool read = false;
 
   EventNotification(this.message, this.type, this.timestamp);

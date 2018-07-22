@@ -30,7 +30,7 @@ class EventNotificationsManager extends StatelessWidget {
               TextStyle(fontWeight: notification.read ? FontWeight.w400 : null),
         ),
         subtitle: Text(
-          notification.timestamp,
+          getStringText(notification.timestamp),
           style: TextStyle(
             color: notification.read ? null : Theme.of(context).accentColor,
           ),
@@ -59,5 +59,23 @@ class EventNotificationsManager extends StatelessWidget {
         child: Icon(Icons.done_all),
       ),
     );
+  }
+
+  String getStringText(DateTime timestamp) {
+    DateTime now = DateTime.now();
+    Duration diff = now.difference(timestamp);
+    if (diff.inDays == 0) {
+      if (diff.inHours == 0) {
+        if (diff.inMinutes == 0) {
+          if (diff.inSeconds <= 15) {
+            return "Just now";
+          }
+          return "${diff.inSeconds} seconds ago";
+        }
+        return "${diff.inMinutes} minutes ago";
+      }
+      return "${diff.inHours} hours ago";
+    }
+    return "${diff.inDays} days ago";
   }
 }
