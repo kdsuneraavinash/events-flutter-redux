@@ -1,4 +1,4 @@
-import 'package:event_app/event.dart' show Event, EventNotification;
+import 'package:event_app/event.dart' show Event;
 
 /// Actions:
 /// Will only contain classes to distinguish each command for reducer and

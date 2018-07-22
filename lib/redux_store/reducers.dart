@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:event_app/event.dart'
     show EventNotification, NotificationType, FlaggedEvent;
 import 'package:event_app/redux_store/actions.dart';
