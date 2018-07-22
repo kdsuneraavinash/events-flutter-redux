@@ -18,6 +18,10 @@ EventStore reducers(EventStore eventStore, dynamic action) {
       return clearNotificationsReducer(eventStore, action);
     case LoadEvents:
       return loadEventsReducer(eventStore, action);
+    case RequestEventsFirestore:
+      return eventStore;
+    case CancelEventsFirestore:
+      return eventStore;
     default:
       return eventStore;
   }
@@ -35,7 +39,6 @@ EventStore addToFlaggedListReducer(
       ..add(
         FlaggedEvent(action.eventToAdd, true),
       ),
-    eventStore.currentSelectedEvent,
     List.from(notifications)
       ..add(
         EventNotification(
@@ -56,7 +59,6 @@ EventStore removeFromFlaggedListReducer(
   return EventStore(
     eventStore.eventList,
     List.from(flaggedList)..removeWhere((v) => v.equals(action.eventToRemove)),
-    eventStore.currentSelectedEvent,
     List.from(notifications)
       ..add(
         EventNotification(
@@ -81,7 +83,6 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
   return EventStore(
     eventStore.eventList,
     flaggedList,
-    eventStore.currentSelectedEvent,
     List.from(notifications)
       ..add(
         EventNotification(
@@ -99,7 +100,6 @@ EventStore markNotificationsAsReadReducer(
   return EventStore(
     eventStore.eventList,
     eventStore.flaggedList,
-    eventStore.currentSelectedEvent,
     eventStore.notifications
         .map((v) =>
             EventNotification(v.message, v.type, v.timestamp)..markAsRead())
@@ -112,7 +112,6 @@ EventStore clearNotificationsReducer(
   return EventStore(
     eventStore.eventList,
     eventStore.flaggedList,
-    eventStore.currentSelectedEvent,
     List(),
   );
 }

@@ -7,17 +7,15 @@ class EventStore {
   final List<Event> eventList;
   final List<FlaggedEvent> flaggedList;
   final List<EventNotification> notifications;
-  final Event currentSelectedEvent;
 
   static EventStore loadEventStore() {
     return EventStore(
       events.map((v) => Event.fromDataList(v)).toList(),
       List(),
-      null,
       List(),
     );
   }
 
-  EventStore(this.eventList, this.flaggedList, this.currentSelectedEvent,
+  EventStore(this.eventList, this.flaggedList,
       this.notifications);
 }

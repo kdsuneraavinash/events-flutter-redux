@@ -1,5 +1,7 @@
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
+import 'package:event_app/redux_store/actions.dart'
+    show CancelEventsFirestore, RequestEventsFirestore;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/credits.dart' show Credits;
 import 'package:event_app/screens/event_flagged.dart' show FlaggedEventManager;
@@ -8,20 +10,25 @@ import 'package:event_app/screens/event_list/event_list_body.dart'
 import 'package:event_app/screens/event_notifications.dart'
     show EventNotificationsManager;
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
+import 'package:flutter_redux/flutter_redux.dart'
+    show StoreBuilder;
+import 'package:redux/redux.dart';
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
 class EventListWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<EventStore, EventStore>(
-      converter: (store) => store.state,
+    return StoreBuilder(
       builder: buildEventListWindow,
+      onInit: (store) => store.dispatch(RequestEventsFirestore()),
+      onDispose: (store) => store.dispatch(CancelEventsFirestore()),
     );
   }
 
-  Widget buildEventListWindow(BuildContext context, EventStore eventStore) {
+  Widget buildEventListWindow(
+      BuildContext context, Store<EventStore> storeEventStore) {
+    EventStore eventStore = storeEventStore.state;
     return Scaffold(
       appBar: AppBar(
         title: Text("Mora Events"),

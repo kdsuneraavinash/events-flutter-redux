@@ -31,3 +31,7 @@ class MarkNotificationsAsRead {}
 class ClearNotifications {}
 
 class LoadEvents {}
+
+class RequestEventsFirestore {}
+
+class CancelEventsFirestore {}

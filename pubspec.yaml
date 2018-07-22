@@ -14,6 +14,8 @@ dependencies:
   url_launcher: ^3.0.2
   # Redux architecture
   flutter_redux: 0.5.2
+  # Redux middleware
+  rxdart: ^0.16.0+1
 
 dev_dependencies:
   flutter_test:

@@ -3,7 +3,8 @@ import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_list.dart' show EventListWindow;
 import 'package:event_app/theme.dart' as Theme;
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart' show StoreProvider;
+import 'package:flutter_redux/flutter_redux.dart'
+    show StoreBuilder, StoreProvider;
 import 'package:redux/redux.dart' show Store;
 
 /// Run main App
