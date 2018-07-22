@@ -9,29 +9,19 @@ class EventInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            "${this.event.eventName}",
-            style: Theme.of(context).textTheme.headline,
-            textAlign: TextAlign.center,
-          ),
+        _buildInlineListTile(
+          "Date",
+          this.event.time,
+          Icons.access_time,
+          context,
         ),
-        EventInfoCard(
-          icon: Icons.description,
-          title: "Description",
-          description: this.event.description,
+        _buildInlineListTile(
+          "Time",
+          this.event.date,
+          Icons.date_range,
+          context,
         ),
-        EventInfoCard(
-          icon: Icons.access_time,
-          title: "Time",
-          description: this.event.time,
-        ),
-        EventInfoCard(
-          icon: Icons.date_range,
-          title: "Date",
-          description: this.event.date,
-        ),
+        Divider(),
         EventInfoCard(
           icon: Icons.location_city,
           title: "Venue",
@@ -42,7 +32,25 @@ class EventInfo extends StatelessWidget {
           title: "Organizers",
           description: this.event.organizer,
         ),
+        Divider(),
+        EventInfoCard(
+          icon: Icons.description,
+          title: "Description",
+          description: this.event.description,
+        ),
       ],
+    );
+  }
+
+  Widget _buildInlineListTile(
+      String title, String text, IconData icon, BuildContext context) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: Theme.of(context).primaryColor,
+      ),
+      title: Text(title),
+      trailing: Text(text),
     );
   }
 
