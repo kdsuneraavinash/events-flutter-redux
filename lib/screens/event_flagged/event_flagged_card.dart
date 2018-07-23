@@ -48,7 +48,7 @@ class EventFlaggedCard extends StatelessWidget {
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
           child: Text(
-            'Starts at ${this.flaggedEvent.event.startTime}',
+            'Starts at ${this.flaggedEvent.event.startTimeString}',
             style: TextStyle(color: Theme.of(context).accentColor),
           ),
         ),

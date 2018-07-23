@@ -64,13 +64,13 @@ class EventDetailsState extends State<EventDetails> {
       children: <Widget>[
         _buildInlineListTile(
           "Start Date",
-          event.startTime,
+          event.startTimeString,
           Icons.hourglass_full,
           context,
         ),
         _buildInlineListTile(
           "End Date",
-          event.endTime,
+          event.endTimeString,
           Icons.hourglass_empty,
           context,
         ),

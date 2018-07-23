@@ -50,8 +50,11 @@ class EventContact {
 class Event {
   final String eventName;
   final String organizer;
-  final String startTime;
-  final String endTime;
+  final String startTimeString;
+  final String endTimeString;
+  final DateTime startTime;
+  final DateTime endTime;
+  final bool isAllDay;
   final List<String> images;
   final String headerImage; // Auto assigned
   final String description;
@@ -60,20 +63,45 @@ class Event {
   //List<EventContact> contact = [];
   final List<String> tags = [];
 
-  Event(this.eventName, this.organizer, this.startTime, this.endTime,
-      this.images, this.headerImage, this.description, this.location, this.id);
+  Event(
+      this.eventName,
+      this.organizer,
+      this.startTime,
+      this.endTime,
+      this.startTimeString,
+      this.endTimeString,
+      this.isAllDay,
+      this.images,
+      this.headerImage,
+      this.description,
+      this.location,
+      this.id);
 
   factory Event.fromFirestoreDoc(DocumentSnapshot doc) {
     return new Event(
         doc.data['eventName'],
         doc.data['organizer'],
-        doc.data['start'].toString(),
-        doc.data['end'].toString(),
+        doc.data['start'],
+        doc.data['end'],
+        getFormattedDate(doc.data['start'], doc.data['isAllDay']),
+        getFormattedDate(doc.data['end'], doc.data['isAllDay']),
+        doc.data['isAllDay'],
         List<String>.from(doc.data['images']),
         doc.data['images'][0],
         doc.data['description'],
         doc.data['location'],
         doc.documentID);
+  }
+
+  // Format Date to string
+  static String getFormattedDate(DateTime obj, bool isAllDay) {
+    String str = "";
+    List<String> months = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September','October', 'November', 'December'];
+    str += '${obj.year} ${months[obj.month]} ${obj.day}';
+    if (!isAllDay) 
+     str += 'at ${obj.hour % 12}:${obj.minute} ${obj.hour/12 == 0 ? "AM" : "PM"}';
+    return str;
   }
 
   /// Create an event for test purposes
@@ -94,6 +122,7 @@ class Event {
     return other.description == this.description &&
         other.startTime == this.startTime &&
         other.endTime == this.endTime &&
+        other.isAllDay == this.isAllDay &&
         IterableEquality()
             .equals(other.images, this.images) && // Checking for list equality
         other.location == this.location &&
