@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:event_app/event.dart' show Event;
 
 /// Actions:
@@ -37,7 +38,7 @@ class FirestoreStartConnection {}
 class FirestoreEndConnection {}
 
 class FirestoreEventsAdded {
-  final List<Event> events;
+  final QuerySnapshot querySnapshot;
 
-  FirestoreEventsAdded(this.events);
+  FirestoreEventsAdded(this.querySnapshot);
 }

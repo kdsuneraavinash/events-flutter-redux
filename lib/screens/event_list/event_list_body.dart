@@ -5,6 +5,8 @@ import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
+import 'package:event_app/redux_store/actions.dart';
 
 /// Body of EventListWindow.
 /// Contains of a ListView consisting of Event Cards so Users can scroll
@@ -19,31 +21,30 @@ import 'package:flutter_redux/flutter_redux.dart';
 class EventListBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<EventStore, EventStore>(
-      builder: (context, store) => buildEventListBody(context, store.eventList),
-      converter: (store) => store.state,
+    return StoreBuilder<EventStore>(
+      builder: (context, store) => buildEventListBody(context, store),
     );
   }
 
-  Widget buildEventListBody(BuildContext context, List<Event> events) {
+  Widget buildEventListBody(BuildContext context, Store<EventStore> store) {
+    List<Event> events = store.state.eventList;
     return RefreshIndicator(
-      child: ListView.builder(
-        itemBuilder: (_, index) => EventCard(events[index]),
-        itemCount: events.length,
-      ),
-      onRefresh: () => _handleRefresh(context),
+      child: events.length > 0
+          ? ListView.builder(
+              itemBuilder: (_, index) => EventCard(events[index]),
+              itemCount: events.length,
+            )
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
+      onRefresh: () => _handleRefresh(context, store),
     );
   }
 
   /// Refresh indicator method (Placeholder)
-  Future<Null> _handleRefresh(context) {
-    final Completer<Null> completer = Completer<Null>();
-    Timer(
-      Duration(seconds: 3),
-      () {
-        completer.complete(null);
-      },
-    );
-    return completer.future.then((_) {});
+  Future<Null> _handleRefresh(context, Store<EventStore> store) async{
+    store.dispatch(FirestoreStartConnection());
+    await Future.delayed(Duration(seconds: 4));
+    return;
   }
 }

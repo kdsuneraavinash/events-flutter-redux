@@ -7,7 +7,7 @@ import 'package:event_app/event.dart'
 import 'package:event_app/test_data.dart' show events;
 import 'package:event_app/redux_store/actions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'
-    show DocumentSnapshot, Firestore, QuerySnapshot;
+    show Firestore, QuerySnapshot;
 
 /// The main store object
 /// Here this also is the VIew Model (No separate class for view modal)
@@ -47,26 +47,17 @@ Stream<dynamic> readAllDocuments(
       .switchMap(
     // This function will take the FirestoreStartConnection and start the stream
     (FirestoreStartConnection requestAction) {
-      return getEventUpdates()
+      return getAllEvents()
           // Send each sent update to a Action and dispatch it
-          .map((events) => new FirestoreEventsAdded(events))
-          // When to stop : when FirestoreEndConnection is fired
-          .takeUntil(
-              actions.where((action) => action is FirestoreEndConnection)); // 8
+          .map((querySnapshot) => new FirestoreEventsAdded(querySnapshot));
     },
   );
 }
 
-Observable<List<Event>> getEventUpdates() {
-  Observable<QuerySnapshot> obs = new Observable(Stream
+// Observe the stream and issue events
+Observable<QuerySnapshot> getAllEvents() {
+  // Get documents
+  // Convert resulting QuerySnapshot to a list of events
+  return Observable(Stream
       .fromFuture(Firestore.instance.collection("events").getDocuments()));
-
-  return obs.map((QuerySnapshot allDocs) {
-    List<Event> allEvents = [];
-    for (DocumentSnapshot doc in allDocs.documents) {
-      print(doc.data['eventName']);
-      allEvents.add(Event.fromFirestoreDoc(doc));
-    }
-    return allEvents;
-  }); // 6
 }
