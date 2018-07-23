@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:event_app/custom_widgets/icon_text.dart' show IconText;
 import 'package:event_app/custom_widgets/network_image.dart'
     show DefParameterNetworkImage;
@@ -8,9 +9,8 @@ import 'package:event_app/redux_store/actions.dart'
     show RemoveFromFlaggedList, AddToFlaggedList;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_image_view.dart' show EventImageView;
-import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
+import 'package:redux/redux.dart' show Store;
 
 /// Individual Card.
 /// Displays a Banner, Event Title and Organizers, and Time and Date.

@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
+import 'package:collection/collection.dart' show IterableEquality;
 import 'package:flutter/material.dart' show IconData, Icons;
 
 /// Launch method for EventContact
@@ -77,19 +77,7 @@ class Event {
   }
 
   /// Create an event for test purposes
-  factory Event.fromDataList(List eventData) {
-    return Event(
-        eventData[0],
-        eventData[1],
-        eventData[2],
-        eventData[3],
-        eventData[6],
-        eventData[6][0],
-        eventData[4],
-        eventData[5],
-        eventData[0] + eventData[1])
-      ..tags.add("Test");
-    /*
+  /*
     TODO: Add functionality later in web
     for (List<String> _contact in eventData[7]) {
       this.contact.add(
@@ -100,8 +88,7 @@ class Event {
     this.tags.add("Test");
     this.tags.add("Event");
     */
-  }
-
+  /// Find if 2 events have same objects (Content)
   bool similar(Event other) {
     // Event name cannot change, but include here for the sako of consitancy
     return other.description == this.description &&
@@ -154,14 +141,8 @@ class FlaggedEvent {
 
   FlaggedEvent(this.event, this.alarmStatus);
 
+  /// Compare 2 events by ID
   bool equals(Event event) {
-    return this.event == event;
-  }
-
-  Event getEvent(eventList) {
-    for (Event event in eventList) {
-      if (this.equals(event)) return event;
-    }
-    return null;
+    return this.event.id == event.id;
   }
 }

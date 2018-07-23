@@ -25,7 +25,8 @@ class EventNotificationsManager extends StatelessWidget {
             notification.getIcon(),
             color: Colors.white,
           ),
-          backgroundColor: notification.read ? Colors.grey : Theme.of(context).primaryColor,
+          backgroundColor:
+              notification.read ? Colors.grey : Theme.of(context).primaryColor,
         ),
         title: Text(
           notification.message,

@@ -1,11 +1,10 @@
 import 'dart:async';
-
 import 'package:redux_epics/redux_epics.dart' show EpicStore;
 import 'package:rxdart/rxdart.dart' show Observable, TypeToken;
 import 'package:event_app/event.dart'
     show Event, EventNotification, FlaggedEvent;
-import 'package:event_app/test_data.dart' show events;
-import 'package:event_app/redux_store/actions.dart';
+import 'package:event_app/redux_store/actions.dart'
+    show FirestoreStartConnection, FirestoreEventsAdded;
 import 'package:cloud_firestore/cloud_firestore.dart'
     show Firestore, QuerySnapshot;
 
@@ -15,14 +14,6 @@ class EventStore {
   final List<Event> eventList;
   final List<FlaggedEvent> flaggedList;
   final List<EventNotification> notifications;
-
-  factory EventStore.loadEventStore() {
-    return EventStore(
-      events.map((v) => Event.fromDataList(v)).toList(),
-      List<FlaggedEvent>(),
-      List<EventNotification>(),
-    );
-  }
 
   factory EventStore.empty() {
     return EventStore(

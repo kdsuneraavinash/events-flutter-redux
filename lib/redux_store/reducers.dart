@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_app/redux_store/actions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
 import 'package:event_app/event.dart'
     show Event, EventNotification, FlaggedEvent, NotificationType;
-import 'package:event_app/redux_store/actions.dart';
 import 'package:event_app/redux_store/store.dart' show EventStore;
 
 /// Connect to all reducers
@@ -17,12 +17,6 @@ EventStore reducers(EventStore eventStore, dynamic action) {
       return markNotificationsAsReadReducer(eventStore, action);
     case ClearNotifications:
       return clearNotificationsReducer(eventStore, action);
-    case LoadEvents:
-      return loadEventsReducer(eventStore, action);
-    case FirestoreStartConnection:
-      return eventStore;
-    case FirestoreEndConnection:
-      return eventStore;
     case FirestoreEventsAdded:
       return firestoreEventsAddedReducer(eventStore, action);
     default:
@@ -40,10 +34,12 @@ EventStore addToFlaggedListReducer(
     eventStore.eventList,
     List.from(flaggedList)
       ..add(
+        // Adds to flagged list: default alarm state is True
         FlaggedEvent(action.eventToAdd, true),
       ),
     List.from(notifications)
       ..add(
+        // Add a notification about it
         EventNotification(
           "${action.eventToAdd.eventName} added to pinned events",
           NotificationType.ADD_FLAG,
@@ -61,9 +57,11 @@ EventStore removeFromFlaggedListReducer(
   List<EventNotification> notifications = eventStore.notifications;
   return EventStore(
     eventStore.eventList,
+    // Remove item by event ID
     List.from(flaggedList)..removeWhere((v) => v.equals(action.eventToRemove)),
     List.from(notifications)
       ..add(
+        // Add a notification about it
         EventNotification(
           "${action.eventToRemove.eventName} removed from pinned events",
           NotificationType.ADD_FLAG,
@@ -73,10 +71,12 @@ EventStore removeFromFlaggedListReducer(
   );
 }
 
+/// Alarm turned ON or turned OFF
 EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
   List<EventNotification> notifications = eventStore.notifications;
   List<FlaggedEvent> flaggedList = List.from(eventStore.flaggedList);
 
+  // Create new flagged item with alarm state off/on depending on state
   for (int index = 0; index < eventStore.flaggedList.length; index++) {
     if (flaggedList[index].equals(action.alarmEvent)) {
       flaggedList[index] = FlaggedEvent(action.alarmEvent, action.state);
@@ -88,6 +88,7 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
     flaggedList,
     List.from(notifications)
       ..add(
+        // Add a notification
         EventNotification(
           "${action.alarmEvent.eventName} alarm state changed to : ${action
               .state ? "ON" : "OFF"}",
@@ -98,6 +99,7 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
   );
 }
 
+///Marks all notifications as read
 EventStore markNotificationsAsReadReducer(
     EventStore eventStore, MarkNotificationsAsRead action) {
   return EventStore(
@@ -105,24 +107,33 @@ EventStore markNotificationsAsReadReducer(
     eventStore.flaggedList,
     eventStore.notifications
         .map((v) =>
+            // New notification mapping with marked as read
             EventNotification(v.message, v.type, v.timestamp)..markAsRead())
         .toList(),
   );
 }
 
+/// Empty all notifications
 EventStore clearNotificationsReducer(
     EventStore eventStore, ClearNotifications action) {
   return EventStore(
     eventStore.eventList,
     eventStore.flaggedList,
+    // Empty list assigned to event list
     List(),
   );
 }
 
-EventStore loadEventsReducer(EventStore eventStore, LoadEvents action) {
-  return EventStore.loadEventStore();
-}
-
+/// Loaded all events from Firebase
+/// Have to do few tasks
+/// * load all events to allEvents
+/// * Filter flagged items which are only present in both
+/// (Remove flagged items which are not in new list)
+/// * Detect unchanged documents
+/// * Detect changed content documents (Add a notification)
+/// * Detect removed documents (Add a notification)
+/// * Detect newly added documents (Add a notification)
+/// TODO: Find if these can be done easily using Data Streams in FireStore
 EventStore firestoreEventsAddedReducer(
     EventStore eventStore, FirestoreEventsAdded action) {
   // Get all events
@@ -156,7 +167,7 @@ EventStore firestoreEventsAddedReducer(
       // Add a notification
       eventStore.notifications.add(
         EventNotification(
-          "${oldEvent.eventName} event details changed.",
+          "${oldEvent.organizer} changed some details in Event ${oldEvent.eventName}.",
           NotificationType.CHANGE,
           DateTime.now(),
         ),
@@ -174,15 +185,18 @@ EventStore firestoreEventsAddedReducer(
     }
   }
 
-  for (Event newEvent in allEvents){
+  // For each new event
+  for (Event newEvent in allEvents) {
+    // if its id contains in a old event pass
     if (eventStore.eventList.any((v) => v.id == newEvent.id)) continue;
+    // If not add a notification
     eventStore.notifications.add(
-        EventNotification(
-          "${newEvent.organizer} added a new Event: ${newEvent.eventName}.",
-          NotificationType.ADD,
-          DateTime.now(),
-        ),
-      );
+      EventNotification(
+        "${newEvent.organizer} added a new Event: ${newEvent.eventName}.",
+        NotificationType.ADD,
+        DateTime.now(),
+      ),
+    );
   }
 
   // TODO: Find changed data and add notifications

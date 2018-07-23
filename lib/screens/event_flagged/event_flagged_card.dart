@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:event_app/custom_widgets/custom_snackbar.dart'
     show showSnackBar;
 import 'package:event_app/custom_widgets/transition_maker.dart'
@@ -7,7 +8,6 @@ import 'package:event_app/redux_store/actions.dart'
     show ChangeAlarmState, RemoveFromFlaggedList;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_image_view.dart' show EventImageView;
-import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
 

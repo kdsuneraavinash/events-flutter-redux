@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/redux_store/actions.dart'
@@ -9,10 +10,8 @@ import 'package:event_app/screens/event_list/event_list_body.dart'
     show EventListBody;
 import 'package:event_app/screens/event_notifications.dart'
     show EventNotificationsManager;
-import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart'
-    show StoreBuilder;
-import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
+import 'package:redux/redux.dart' show Store;
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
@@ -33,10 +32,13 @@ class EventListWindow extends StatelessWidget {
       appBar: AppBar(
         title: Text("Mora Events"),
         actions: <Widget>[
+          // TODO: Implement Searchbutton
+          /*
           IconButton(
             icon: new Icon(Icons.search),
             onPressed: () => _handleSearchAction(context),
           ),
+          */
           IconButton(
             icon: new Icon(Icons.help),
             onPressed: () => _handleCreditsAction(context),
@@ -109,8 +111,4 @@ class EventListWindow extends StatelessWidget {
         )
         .start(context);
   }
-
-  /// Search action
-  /// TODO: Implement this
-  void _handleSearchAction(BuildContext context) {}
 }

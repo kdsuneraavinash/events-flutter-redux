@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' show QuerySnapshot;
 import 'package:event_app/event.dart' show Event;
 
 /// Actions:
@@ -30,8 +30,6 @@ class ChangeAlarmState {
 class MarkNotificationsAsRead {}
 
 class ClearNotifications {}
-
-class LoadEvents {}
 
 class FirestoreStartConnection {}
 
