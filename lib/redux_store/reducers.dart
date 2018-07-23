@@ -1,7 +1,5 @@
-import 'dart:async';
-
 import 'package:event_app/event.dart'
-    show EventNotification, NotificationType, FlaggedEvent;
+    show EventNotification, FlaggedEvent, NotificationType;
 import 'package:event_app/redux_store/actions.dart';
 import 'package:event_app/redux_store/store.dart' show EventStore;
 
@@ -20,10 +18,12 @@ EventStore reducers(EventStore eventStore, dynamic action) {
       return clearNotificationsReducer(eventStore, action);
     case LoadEvents:
       return loadEventsReducer(eventStore, action);
-    case StartFirestoreConnection:
+    case FirestoreStartConnection:
       return eventStore;
-    case EndFirestoreConnection:
+    case FirestoreEndConnection:
       return eventStore;
+    case FirestoreEventsAdded:
+      return firestoreEventsAddedReducer(eventStore, action);
     default:
       return eventStore;
   }
@@ -120,4 +120,12 @@ EventStore clearNotificationsReducer(
 
 EventStore loadEventsReducer(EventStore eventStore, LoadEvents action) {
   return EventStore.loadEventStore();
+}
+
+EventStore firestoreEventsAddedReducer(EventStore eventStore,FirestoreEventsAdded action){
+  return EventStore(
+    action.events,
+    eventStore.flaggedList,
+    List(),
+  );
 }

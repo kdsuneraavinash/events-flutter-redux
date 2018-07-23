@@ -1,7 +1,7 @@
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/redux_store/actions.dart'
-    show StartFirestoreConnection, EndFirestoreConnection;
+    show FirestoreStartConnection, FirestoreEndConnection;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/credits.dart' show Credits;
 import 'package:event_app/screens/event_flagged.dart' show FlaggedEventManager;
@@ -21,8 +21,8 @@ class EventListWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreBuilder(
       builder: buildEventListWindow,
-      onInit: (store) => store.dispatch(StartFirestoreConnection()),
-      onDispose: (store) => store.dispatch(EndFirestoreConnection()),
+      onInit: (store) => store.dispatch(FirestoreStartConnection()),
+      onDispose: (store) => store.dispatch(FirestoreEndConnection()),
     );
   }
 

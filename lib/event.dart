@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart' show IconData, Icons;
 
 /// Launch method for EventContact
@@ -60,6 +61,19 @@ class Event {
 
   Event(this.eventName, this.organizer, this.startTime, this.endTime,
       this.images, this.headerImage, this.description, this.location, this.id);
+
+  factory Event.fromFirestoreDoc(DocumentSnapshot doc) {
+    return new Event(
+        doc.data['eventName'],
+        doc.data['organizer'],
+        doc.data['start'].toString(),
+        doc.data['end'].toString(),
+        List<String>.from(doc.data['images']),
+        doc.data['images'][0],
+        doc.data['description'],
+        doc.data['location'],
+        doc.documentID);
+  }
 
   /// Create an event for test purposes
   factory Event.fromDataList(List eventData) {

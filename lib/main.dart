@@ -4,15 +4,18 @@ import 'package:event_app/screens/event_list.dart' show EventListWindow;
 import 'package:event_app/theme.dart' as Theme;
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart'
-    show StoreBuilder, StoreProvider;
+    show StoreProvider;
 import 'package:redux/redux.dart' show Store;
+import 'package:event_app/redux_store/store.dart' show readAllDocuments;
+import 'package:redux_epics/redux_epics.dart';
 
 /// Run main App
 void main() {
   // Main store holder (REDUX)
   final store = new Store<EventStore>(
     reducers,
-    initialState: EventStore.loadEventStore(),
+    initialState: EventStore.empty(),
+    middleware: [EpicMiddleware<EventStore>(readAllDocuments)],
   );
   return runApp(MoraEventsApp(store));
 }

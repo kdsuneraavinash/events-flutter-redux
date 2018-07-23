@@ -32,6 +32,12 @@ class ClearNotifications {}
 
 class LoadEvents {}
 
-class StartFirestoreConnection {}
+class FirestoreStartConnection {}
 
-class EndFirestoreConnection {}
+class FirestoreEndConnection {}
+
+class FirestoreEventsAdded {
+  final List<Event> events;
+
+  FirestoreEventsAdded(this.events);
+}
