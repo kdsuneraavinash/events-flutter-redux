@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
 
+/**
+ * MoraEvents App
+ * ==============
+ * 
+ * Project MoraEvents
+ * 
+ * Programmed By K. D. Sunera Avinash Chandrasiri
+ * kdsuneraavinash@gmail.com
+ * (c) 2018
+ * 
+ * On behalf of teamaxys
+ * University of Moratuwa
+ */
+
 /// Credits Page Scaffold
 class Credits extends StatelessWidget {
   @override
@@ -26,40 +40,18 @@ class CreditsBody extends StatelessWidget {
             height: 100.0,
           ),
         ),
-        ListTile(
-            leading: Image.asset("images/credits/sunera.png",
-                width: 50.0, fit: BoxFit.fitWidth),
-            title: Text("K. D. Sunera Avinash Chandrasiri"),
-            subtitle: Text("Lead Programmer | CTO")),
-        ListTile(
-            leading: Image.asset("images/credits/deepana.png",
-                width: 50.0, fit: BoxFit.fitWidth),
-            title: Text("Deepana Ishtaweera"),
-            subtitle: Text("CEO")),
-        ListTile(
-          leading: Image.asset("images/credits/ruchin.png",
-              width: 50.0, fit: BoxFit.fitWidth),
-          title: Text("Ruchin Amarathunga"),
-          subtitle: Text("COO"),
-        ),
-        ListTile(
-          leading: Image.asset("images/credits/dinith.png",
-              width: 50.0, fit: BoxFit.fitWidth),
-          title: Text("Dinith Subasinshana Herath"),
-          subtitle: Text("Product Manager"),
-        ),
-        ListTile(
-          leading: Image.asset("images/credits/uvindu.jpg",
-              width: 50.0, fit: BoxFit.fitWidth),
-          title: Text("Uvindu Avishka"),
-          subtitle: Text("Head of Marketing"),
-        ),
-        ListTile(
-          leading: Image.asset("images/credits/ravikula.png",
-              width: 50.0, fit: BoxFit.fitWidth),
-          title: Text("Ravikula Silva"),
-          subtitle: Text("Head of Creative Design"),
-        ),
+        _buildCreditsTile("images/credits/sunera.png",
+            "K. D. Sunera Avinash Chandrasiri", "Lead Programmer | CTO"),
+        _buildCreditsTile(
+            "images/credits/deepana.png", "Deepana Ishtaweera", "CEO"),
+        _buildCreditsTile("images/credits/ruchin.png",
+            "K. D. Sunera Avinash Chandrasiri", "Lead Programmer | CTO"),
+        _buildCreditsTile("images/credits/dinith.png",
+            "Dinith Subasinshana Herath", "Product Manager"),
+        _buildCreditsTile("images/credits/uvindu.jpg", "Uvindu Avishka",
+            "LHead of Marketing"),
+        _buildCreditsTile("images/credits/ravikula.png", "Ravikula Silva",
+            "Head of Creative Design"),
         Divider(),
         AboutListTile(
           icon: Icon(Icons.developer_board),
@@ -68,6 +60,16 @@ class CreditsBody extends StatelessWidget {
           applicationLegalese: "Team Axys",
         ),
       ],
+    );
+  }
+
+  Widget _buildCreditsTile(String image, String title, String subtitle) {
+    return ListTile(
+      leading: ClipOval(
+        child: Image.asset(image, width: 50.0, fit: BoxFit.fitWidth),
+      ),
+      title: Text(title),
+      subtitle: Text(subtitle),
     );
   }
 }
