@@ -76,7 +76,7 @@ class EventFlaggedCard extends StatelessWidget {
     return IconButton(
       icon: Icon(icon),
       onPressed: () => store.dispatch(ChangeAlarmState(
-          this.flaggedEvent.event, !this.flaggedEvent.alarmStatus)),
+          this.flaggedEvent.event, !this.flaggedEvent.alarmStatus,  DateTime.now())),
       color: color,
     );
   }
@@ -104,7 +104,7 @@ class EventFlaggedCard extends StatelessWidget {
 
   /// Will unpin Event
   void _handleUnpinPressed(BuildContext context, Store<EventStore> store) {
-    store.dispatch(RemoveFromFlaggedList(this.flaggedEvent.event));
+    store.dispatch(RemoveFromFlaggedList(this.flaggedEvent.event,  DateTime.now()));
     showSnackBar(context, "${this.flaggedEvent.event.eventName} Unpinned");
   }
 

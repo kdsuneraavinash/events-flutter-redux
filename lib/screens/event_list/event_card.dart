@@ -103,9 +103,9 @@ class EventCard extends StatelessWidget {
   void _handleFlagOnTap(
       BuildContext context, bool isFlagged, Store<EventStore> eventStore) {
     if (isFlagged) {
-      eventStore.dispatch(RemoveFromFlaggedList(this.event));
+      eventStore.dispatch(RemoveFromFlaggedList(this.event,  DateTime.now()));
     } else {
-      eventStore.dispatch(AddToFlaggedList(this.event));
+      eventStore.dispatch(AddToFlaggedList(this.event,  DateTime.now()));
     }
   }
 

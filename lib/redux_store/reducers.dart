@@ -43,7 +43,7 @@ EventStore addToFlaggedListReducer(
         EventNotification(
           "${action.eventToAdd.eventName} added to pinned events",
           NotificationType.ADD_FLAG,
-          DateTime.now(),
+          action.time,
         ),
       ),
   );
@@ -65,7 +65,7 @@ EventStore removeFromFlaggedListReducer(
         EventNotification(
           "${action.eventToRemove.eventName} removed from pinned events",
           NotificationType.ADD_FLAG,
-          DateTime.now(),
+          action.time,
         ),
       ),
   );
@@ -93,7 +93,7 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
           "${action.alarmEvent.eventName} alarm state changed to : ${action
               .state ? "ON" : "OFF"}",
           NotificationType.ALARM,
-          DateTime.now(),
+          action.time,
         ),
       ),
   );
@@ -169,7 +169,7 @@ EventStore firestoreEventsAddedReducer(
         EventNotification(
           "${oldEvent.organizer} changed some details in Event ${oldEvent.eventName}.",
           NotificationType.CHANGE,
-          DateTime.now(),
+          action.time,
         ),
       );
     } else {
@@ -179,7 +179,7 @@ EventStore firestoreEventsAddedReducer(
         EventNotification(
           "${oldEvent.organizer} removed Event: ${oldEvent.eventName}.",
           NotificationType.REMOVE,
-          DateTime.now(),
+          action.time,
         ),
       );
     }
@@ -194,7 +194,7 @@ EventStore firestoreEventsAddedReducer(
       EventNotification(
         "${newEvent.organizer} added a new Event: ${newEvent.eventName}.",
         NotificationType.ADD,
-        DateTime.now(),
+        action.time,
       ),
     );
   }

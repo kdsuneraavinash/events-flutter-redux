@@ -40,7 +40,7 @@ Stream<dynamic> readAllDocuments(
     (FirestoreStartConnection requestAction) {
       return getAllEvents()
           // Send each sent update to a Action and dispatch it
-          .map((querySnapshot) => new FirestoreEventsAdded(querySnapshot));
+          .map((querySnapshot) => new FirestoreEventsAdded(querySnapshot, DateTime.now()));
     },
   );
 }
