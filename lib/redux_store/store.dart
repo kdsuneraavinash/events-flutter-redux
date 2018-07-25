@@ -11,13 +11,13 @@ import 'package:cloud_firestore/cloud_firestore.dart'
 /// The main store object
 /// Here this also is the VIew Model (No separate class for view modal)
 class EventStore {
-  final List<Event> eventList;
+  final Map<String, Event> eventList;
   final List<FlaggedEvent> flaggedList;
   final List<EventNotification> notifications;
 
   factory EventStore.empty() {
     return EventStore(
-      List<Event>(),
+      Map<String, Event>(),
       List<FlaggedEvent>(),
       List<EventNotification>(),
     );

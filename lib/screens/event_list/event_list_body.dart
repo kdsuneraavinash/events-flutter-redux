@@ -27,11 +27,12 @@ class EventListBody extends StatelessWidget {
   }
 
   Widget buildEventListBody(BuildContext context, Store<EventStore> store) {
-    List<Event> events = store.state.eventList;
+    Map<String, Event> events = store.state.eventList;
     return RefreshIndicator(
       child: events.length > 0
           ? ListView.builder(
-              itemBuilder: (_, index) => EventCard(events[index]),
+              itemBuilder: (_, index) =>
+                  EventCard(events[events.keys.elementAt(index)]),
               itemCount: events.length,
             )
           : Center(

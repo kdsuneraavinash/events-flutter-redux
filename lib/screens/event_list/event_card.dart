@@ -68,7 +68,7 @@ class EventCard extends StatelessWidget {
   /// Build Title and flagging controller
   Widget _buildTitleStrip(BuildContext context, Store<EventStore> eventStore) {
     List<FlaggedEvent> flaggedList = eventStore.state.flaggedList;
-    bool isFlagged = flaggedList.any((v) => v.equals(this.event));
+    bool isFlagged = flaggedList.any((v) => v.eventID == this.event.id);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
@@ -101,9 +101,9 @@ class EventCard extends StatelessWidget {
   void _handleFlagOnTap(
       BuildContext context, bool isFlagged, Store<EventStore> eventStore) {
     if (isFlagged) {
-      eventStore.dispatch(RemoveFromFlaggedList(this.event, DateTime.now()));
+      eventStore.dispatch(RemoveFromFlaggedList(this.event.id, DateTime.now()));
     } else {
-      eventStore.dispatch(AddToFlaggedList(this.event, DateTime.now()));
+      eventStore.dispatch(AddToFlaggedList(this.event.id, DateTime.now()));
     }
   }
 

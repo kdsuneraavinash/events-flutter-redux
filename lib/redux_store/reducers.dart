@@ -35,13 +35,13 @@ EventStore addToFlaggedListReducer(
     List.from(flaggedList)
       ..add(
         // Adds to flagged list: default alarm state is True
-        FlaggedEvent(action.eventToAdd, true),
+        FlaggedEvent(action.eventToAddID, true),
       ),
     List.from(notifications)
       ..add(
         // Add a notification about it
         EventNotification(
-          "${action.eventToAdd.eventName} added to pinned events",
+          "${eventStore.eventList[action.eventToAddID].eventName} added to pinned events",
           NotificationType.ADD_FLAG,
           action.time,
         ),
@@ -58,12 +58,13 @@ EventStore removeFromFlaggedListReducer(
   return EventStore(
     eventStore.eventList,
     // Remove item by event ID
-    List.from(flaggedList)..removeWhere((v) => v.equals(action.eventToRemove)),
+    List.from(flaggedList)
+      ..removeWhere((v) => v.eventID == action.eventToRemoveID),
     List.from(notifications)
       ..add(
         // Add a notification about it
         EventNotification(
-          "${action.eventToRemove.eventName} removed from pinned events",
+          "${eventStore.eventList[action.eventToRemoveID].eventName} removed from pinned events",
           NotificationType.ADD_FLAG,
           action.time,
         ),
@@ -78,8 +79,8 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
 
   // Create new flagged item with alarm state off/on depending on state
   for (int index = 0; index < eventStore.flaggedList.length; index++) {
-    if (flaggedList[index].equals(action.alarmEvent)) {
-      flaggedList[index] = FlaggedEvent(action.alarmEvent, action.state);
+    if (flaggedList[index].eventID == action.alarmEventID) {
+      flaggedList[index] = FlaggedEvent(action.alarmEventID, action.state);
     }
   }
 
@@ -90,7 +91,7 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
       ..add(
         // Add a notification
         EventNotification(
-          "${action.alarmEvent.eventName} alarm state changed to : ${action
+          "${eventStore.eventList[action.alarmEventID].eventName} alarm state changed to : ${action
               .state ? "ON" : "OFF"}",
           NotificationType.ALARM,
           action.time,
@@ -137,21 +138,21 @@ EventStore clearNotificationsReducer(
 EventStore firestoreEventsAddedReducer(
     EventStore eventStore, FirestoreEventsAdded action) {
   // Get all events
-  List<Event> allEvents = [];
+  Map<String, Event> allEvents = {};
   for (DocumentSnapshot doc in action.querySnapshot.documents) {
-    allEvents.add(Event.fromFirestoreDoc(doc));
+    allEvents[doc.documentID] = Event.fromFirestoreDoc(doc);
   }
 
   // Get all flagged events that are in current events and update their event property
   List<FlaggedEvent> allFlagged = [];
   // For each old event
-  for (Event newEvent in allEvents) {
+  for (String newEventID in allEvents.keys) {
     // check new events
     for (FlaggedEvent flagged in eventStore.flaggedList) {
       // whether there is a item with same id
-      if (flagged.event.id == newEvent.id) {
+      if (flagged.eventID == newEventID) {
         // if there is; add that event to flagged events because it is present in both lists
-        allFlagged.add(FlaggedEvent(newEvent, flagged.alarmStatus));
+        allFlagged.add(FlaggedEvent(newEventID, flagged.alarmStatus));
         break;
       }
     }
@@ -159,25 +160,27 @@ EventStore firestoreEventsAddedReducer(
 
   // Check for event detail changes [ID same but some other field different]
   // For each old event
-  for (Event oldEvent in eventStore.eventList) {
-    // If the same element exists in new list, stop; because it has not changed then
-    if (allEvents.any((v) => v.similar(oldEvent))) continue;
-    // If there is element with same id [Remember there cant be events with same id twice in list]
-    if (allEvents.any((v) => v.id == oldEvent.id)) {
-      // Add a notification
-      eventStore.notifications.add(
-        EventNotification(
-          "${oldEvent.organizer} changed some details in Event ${oldEvent.eventName}.",
-          NotificationType.CHANGE,
-          action.time,
-        ),
-      );
+  for (String oldEventID in eventStore.eventList.keys) {
+    if (allEvents.containsKey(oldEventID)) {
+      // If the same element exists in new list, stop; because it has not changed then
+      if (allEvents[oldEventID].similar(eventStore.eventList[oldEventID])) {
+        continue;
+      } else {
+        // If there is element with same id [Remember there cant be events with same id twice in list]
+        eventStore.notifications.add(
+          EventNotification(
+            "${allEvents[oldEventID].organizer} changed some details in Event ${allEvents[oldEventID].eventName}.",
+            NotificationType.CHANGE,
+            action.time,
+          ),
+        );
+      }
     } else {
       // No element with atlease same id
       // So this is removed
       eventStore.notifications.add(
         EventNotification(
-          "${oldEvent.organizer} removed Event: ${oldEvent.eventName}.",
+          "${eventStore.eventList[oldEventID].organizer} removed Event: ${eventStore.eventList[oldEventID].eventName}.",
           NotificationType.REMOVE,
           action.time,
         ),
@@ -186,17 +189,20 @@ EventStore firestoreEventsAddedReducer(
   }
 
   // For each new event
-  for (Event newEvent in allEvents) {
+  for (String newEventID in allEvents.keys) {
     // if its id contains in a old event pass
-    if (eventStore.eventList.any((v) => v.id == newEvent.id)) continue;
-    // If not add a notification
-    eventStore.notifications.add(
-      EventNotification(
-        "${newEvent.organizer} added a new Event: ${newEvent.eventName}.",
-        NotificationType.ADD,
-        action.time,
-      ),
-    );
+    if (eventStore.eventList.containsKey(newEventID)) {
+      continue;
+    } else {
+      // If not add a notification
+      eventStore.notifications.add(
+        EventNotification(
+          "${allEvents[newEventID].organizer} added a new Event: ${allEvents[newEventID].eventName}.",
+          NotificationType.ADD,
+          action.time,
+        ),
+      );
+    }
   }
 
   // TODO: Find changed data and add notifications

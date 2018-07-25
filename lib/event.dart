@@ -98,9 +98,9 @@ class Event {
     String str = "";
     List<String> months = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September','October', 'November', 'December'];
-    str += '${obj.year} ${months[obj.month]} ${obj.day}';
+    str += '${obj.year.toString()} ${months[obj.month]} ${obj.day.toString()} ';
     if (!isAllDay) 
-     str += 'at ${obj.hour % 12}:${obj.minute} ${obj.hour/12 == 0 ? "AM" : "PM"}';
+     str += 'at ${(obj.hour % 12).toString()}:${obj.minute.toString().padRight(2,'0')} ${obj.hour/12 == 0 ? "AM" : "PM"}';
     return str;
   }
 
@@ -165,13 +165,8 @@ class EventNotification {
 }
 
 class FlaggedEvent {
-  final Event event;
+  final String eventID;
   final bool alarmStatus;
 
-  FlaggedEvent(this.event, this.alarmStatus);
-
-  /// Compare 2 events by ID
-  bool equals(Event event) {
-    return this.event.id == event.id;
-  }
+  FlaggedEvent(this.eventID, this.alarmStatus);
 }

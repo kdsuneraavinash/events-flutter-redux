@@ -23,9 +23,9 @@ class EventFlaggedCard extends StatelessWidget {
   Widget buildEventFlaggedItemButton(
       BuildContext context, Store<EventStore> store) {
     return ExpansionTile(
-      key: Key(this.flaggedEvent.event.id),
+      key: Key(this.flaggedEvent.eventID),
       title: Text(
-        this.flaggedEvent.event.eventName,
+        store.state.eventList[this.flaggedEvent.eventID].eventName,
         style: TextStyle(color: Theme.of(context).primaryColor),
       ),
       trailing: this.flaggedEvent.alarmStatus
@@ -42,13 +42,14 @@ class EventFlaggedCard extends StatelessWidget {
         Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: Text(this.flaggedEvent.event.organizer),
+          child:
+              Text(store.state.eventList[this.flaggedEvent.eventID].organizer),
         ),
         Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
           child: Text(
-            'Starts at ${this.flaggedEvent.event.startTimeString}',
+            'Starts at ${store.state.eventList[this.flaggedEvent.eventID].startTimeString}',
             style: TextStyle(color: Theme.of(context).accentColor),
           ),
         ),
@@ -75,8 +76,8 @@ class EventFlaggedCard extends StatelessWidget {
       {IconData icon, Store<EventStore> store, Color color}) {
     return IconButton(
       icon: Icon(icon),
-      onPressed: () => store.dispatch(ChangeAlarmState(
-          this.flaggedEvent.event, !this.flaggedEvent.alarmStatus,  DateTime.now())),
+      onPressed: () => store.dispatch(ChangeAlarmState(this.flaggedEvent.eventID,
+          !this.flaggedEvent.alarmStatus, DateTime.now())),
       color: color,
     );
   }
@@ -97,15 +98,16 @@ class EventFlaggedCard extends StatelessWidget {
   void _handleViewPressed(BuildContext context, Store<EventStore> store) {
     TransitionMaker
         .fadeTransition(
-          destinationPageCall: () => EventImageView(this.flaggedEvent.event),
+          destinationPageCall: () => EventImageView(store.state.eventList[this.flaggedEvent.eventID]),
         )
         .start(context);
   }
 
   /// Will unpin Event
   void _handleUnpinPressed(BuildContext context, Store<EventStore> store) {
-    store.dispatch(RemoveFromFlaggedList(this.flaggedEvent.event,  DateTime.now()));
-    showSnackBar(context, "${this.flaggedEvent.event.eventName} Unpinned");
+    store.dispatch(
+        RemoveFromFlaggedList(this.flaggedEvent.eventID, DateTime.now()));
+    showSnackBar(context, "${store.state.eventList[this.flaggedEvent.eventID].eventName} Unpinned");
   }
 
   EventFlaggedCard(this.flaggedEvent);
