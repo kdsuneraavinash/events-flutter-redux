@@ -3,6 +3,7 @@ import 'package:event_app/event.dart' show Event;
 import 'package:event_app/screens/event_details/event_info.dart' show EventInfo;
 import 'package:event_app/screens/event_details/event_links.dart'
     show EventLinks;
+import 'package:event_app/screens/event_details/event_images.dart' show ImageGrid;
 
 /// Event Details Page which hosts a PageView to show all info
 class EventDetails extends StatefulWidget {
@@ -33,6 +34,7 @@ class EventDetailsState extends State<EventDetails> {
           onPageChanged: _handlePageChanged,
           children: <Widget>[
             EventInfo(widget.event),
+            ImageGrid(widget.event),
             EventLinks(),
           ],
         ),
@@ -45,6 +47,11 @@ class EventDetailsState extends State<EventDetails> {
           BottomNavigationBarItem(
             icon: Icon(Icons.event_note),
             title: Text("Event Info"),
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.image),
+            title: Text("Images"),
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
@@ -108,11 +115,18 @@ class EventDetailsState extends State<EventDetails> {
 
   /// Animate PageView when BottomNavigationBar is tapped
   void _handleBottomNavigationBarTap(int index) {
-    widget.pageController.animateToPage(
-      index,
-      duration: Duration(milliseconds: 200),
-      curve: Curves.easeIn,
-    );
+    if ((currentIndex - index).abs() > 1) {
+      // Jump to page if page is far away
+      widget.pageController.jumpToPage(
+        index,
+      );
+    } else {
+      widget.pageController.animateToPage(
+        index,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeIn,
+      );
+    }
     setState(() {
       currentIndex = index;
     });

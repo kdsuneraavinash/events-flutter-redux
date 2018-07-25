@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:event_app/event.dart' show Event;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
-import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
-import 'package:redux/redux.dart' show Store;
-import 'package:event_app/redux_store/actions.dart'
-    show FirestoreRefreshAll;
+import 'package:flutter_redux/flutter_redux.dart'
+    show StoreBuilder, StoreConnector;
+import 'package:event_app/redux_store/actions.dart' show FirestoreRefreshAll;
 
 /// Body of EventListWindow.
 /// Contains of a ListView consisting of Event Cards so Users can scroll
@@ -21,46 +20,61 @@ import 'package:event_app/redux_store/actions.dart'
 class EventListBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder<EventStore>(
-      builder: (context, store) => buildEventListBody(context, store),
+    return StoreConnector<EventStore, EventStore>(
+      builder: (context, state) => buildEventListBody(context, state),
+      converter: (store) => store.state,
     );
   }
 
-  Widget buildEventListBody(BuildContext context, Store<EventStore> store) {
-    Map<String, Event> events = store.state.eventList;
-    return RefreshIndicator(
+  Widget buildEventListBody(BuildContext context, EventStore store) {
+    Map<String, Event> events = store.eventList;
+    return RefreshAllPullToRefresh(
       child: events.length > 0
           ? ListView.builder(
               itemBuilder: (_, index) =>
-                  EventCard(events[events.keys.elementAt(index)]),
+                  EventCard(events.keys.elementAt(index)),
               itemCount: events.length,
             )
           : Center(
               child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    child: Text("Loading Data"),
-                    padding: EdgeInsets.all(16.0),
-                  ),
-                  SizedBox(
-                    child: LinearProgressIndicator(),
-                    width: MediaQuery.of(context).size.width / 2,
-                  ),
-                ],
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      child: Text("Loading Data"),
+                      padding: EdgeInsets.all(16.0),
+                    ),
+                    SizedBox(
+                      child: LinearProgressIndicator(),
+                      width: MediaQuery.of(context).size.width / 2,
+                    ),
+                  ],
+                ),
               ),
-            )),
-      onRefresh: () => _handleRefresh(context, store),
+            ),
     );
   }
+}
 
-  /// Refresh indicator method (Placeholder)
-  Future<Null> _handleRefresh(context, Store<EventStore> store) async {
-    // TODO: Add a method to detect FirestoreStartConnection success and close
-    store.dispatch(FirestoreRefreshAll());
-    // Currently implement to close after 4 seconds
-    await Future.delayed(Duration(seconds: 4));
-    return;
+class RefreshAllPullToRefresh extends StatelessWidget {
+  final Widget child;
+
+  const RefreshAllPullToRefresh({this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return StoreBuilder<EventStore>(
+      builder: (context, store) => RefreshIndicator(
+            child: this.child,
+            // Refresh indicator method (Placeholder)
+            onRefresh: () async {
+              // TODO: Add a method to detect FirestoreStartConnection success and close
+              store.dispatch(FirestoreRefreshAll());
+              // Currently implement to close after 4 seconds
+              await Future.delayed(Duration(seconds: 4));
+              return;
+            },
+          ),
+    );
   }
 }

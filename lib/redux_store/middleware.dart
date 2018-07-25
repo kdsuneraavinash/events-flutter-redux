@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:redux_epics/redux_epics.dart' show EpicStore;
-import 'package:rxdart/rxdart.dart' show Notification, Observable, TypeToken;
+import 'package:rxdart/rxdart.dart' show Observable, TypeToken;
 import 'package:event_app/redux_store/actions.dart'
     show FirestoreRefreshAll, FirestoreListenToUpdates, FirestoreDocumentsChanged;
 import 'package:cloud_firestore/cloud_firestore.dart'

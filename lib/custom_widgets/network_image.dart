@@ -8,8 +8,6 @@ class DefParameterNetworkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: this.imageUrl,
-      placeholder: Image.asset("images/placeholders/banner_placeholder.jpg"),
-      errorWidget: Image.asset("images/placeholders/banner_error.png"),
       fit: isCover ? BoxFit.cover : BoxFit.contain,
       width: MediaQuery.of(context).size.width,
       height: isCover ? MediaQuery.of(context).size.width/aspectRatio : null,

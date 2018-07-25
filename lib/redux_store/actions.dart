@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show QuerySnapshot;
-import 'package:rxdart/rxdart.dart' show Notification;
 
 /// Actions:
 /// Will only contain classes to distinguish each command for reducer and

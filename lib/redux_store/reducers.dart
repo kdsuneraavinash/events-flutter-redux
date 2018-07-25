@@ -1,5 +1,5 @@
 import 'package:event_app/redux_store/actions.dart';
-import 'package:cloud_firestore/cloud_firestore.dart' show DocumentChange, DocumentSnapshot;
+import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
 import 'package:event_app/event.dart'
     show Event, EventNotification, FlaggedEvent, NotificationType;
 import 'package:event_app/redux_store/store.dart' show EventStore;

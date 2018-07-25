@@ -1,3 +1,4 @@
+import 'package:event_app/screens/event_details.dart';
 import 'package:flutter/material.dart';
 import 'package:event_app/custom_widgets/custom_snackbar.dart'
     show showSnackBar;
@@ -7,7 +8,7 @@ import 'package:event_app/event.dart' show FlaggedEvent;
 import 'package:event_app/redux_store/actions.dart'
     show ChangeAlarmState, RemoveFromFlaggedList;
 import 'package:event_app/redux_store/store.dart' show EventStore;
-import 'package:event_app/screens/event_image_view.dart' show EventImageView;
+import 'package:event_app/screens/event_details.dart' show EventDetails;
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
 
@@ -76,8 +77,10 @@ class EventFlaggedCard extends StatelessWidget {
       {IconData icon, Store<EventStore> store, Color color}) {
     return IconButton(
       icon: Icon(icon),
-      onPressed: () => store.dispatch(ChangeAlarmState(this.flaggedEvent.eventID,
-          !this.flaggedEvent.alarmStatus, DateTime.now())),
+      onPressed: () => store.dispatch(ChangeAlarmState(
+          this.flaggedEvent.eventID,
+          !this.flaggedEvent.alarmStatus,
+          DateTime.now())),
       color: color,
     );
   }
@@ -97,8 +100,9 @@ class EventFlaggedCard extends StatelessWidget {
   /// Will show EventImageView
   void _handleViewPressed(BuildContext context, Store<EventStore> store) {
     TransitionMaker
-        .fadeTransition(
-          destinationPageCall: () => EventImageView(store.state.eventList[this.flaggedEvent.eventID]),
+        .slideTransition(
+          destinationPageCall: () =>
+              EventDetails(store.state.eventList[this.flaggedEvent.eventID]),
         )
         .start(context);
   }
@@ -107,7 +111,8 @@ class EventFlaggedCard extends StatelessWidget {
   void _handleUnpinPressed(BuildContext context, Store<EventStore> store) {
     store.dispatch(
         RemoveFromFlaggedList(this.flaggedEvent.eventID, DateTime.now()));
-    showSnackBar(context, "${store.state.eventList[this.flaggedEvent.eventID].eventName} Unpinned");
+    showSnackBar(context,
+        "${store.state.eventList[this.flaggedEvent.eventID].eventName} Unpinned");
   }
 
   EventFlaggedCard(this.flaggedEvent);
