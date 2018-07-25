@@ -1,5 +1,5 @@
 import 'package:event_app/redux_store/actions.dart';
-import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
+import 'package:cloud_firestore/cloud_firestore.dart' show DocumentChange, DocumentSnapshot;
 import 'package:event_app/event.dart'
     show Event, EventNotification, FlaggedEvent, NotificationType;
 import 'package:event_app/redux_store/store.dart' show EventStore;
@@ -17,7 +17,7 @@ EventStore reducers(EventStore eventStore, dynamic action) {
       return markNotificationsAsReadReducer(eventStore, action);
     case ClearNotifications:
       return clearNotificationsReducer(eventStore, action);
-    case FirestoreEventsAdded:
+    case FirestoreDocumentsChanged:
       return firestoreEventsAddedReducer(eventStore, action);
     default:
       return eventStore;
@@ -136,10 +136,11 @@ EventStore clearNotificationsReducer(
 /// * Detect newly added documents (Add a notification)
 /// TODO: Find if these can be done easily using Data Streams in FireStore
 EventStore firestoreEventsAddedReducer(
-    EventStore eventStore, FirestoreEventsAdded action) {
+    EventStore eventStore, FirestoreDocumentsChanged action) {
   // Get all events
   Map<String, Event> allEvents = {};
-  for (DocumentSnapshot doc in action.querySnapshot.documents) {
+  List<DocumentSnapshot> documents = action.querySnapshot.documents;
+  for (DocumentSnapshot doc in documents) {
     allEvents[doc.documentID] = Event.fromFirestoreDoc(doc);
   }
 
@@ -213,4 +214,3 @@ EventStore firestoreEventsAddedReducer(
   );
 }
 
-// FIX: W/linker  (19716): "/data/app/com.google.android.gms-rADQWXpGsd1vzZWseM1VqQ==/base.apk!/lib/x86/libconscrypt_gmscore_jni.so" unused DT entry: type 0xf arg 0x119

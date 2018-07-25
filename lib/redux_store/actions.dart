@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show QuerySnapshot;
+import 'package:rxdart/rxdart.dart' show Notification;
 
 /// Actions:
 /// Will only contain classes to distinguish each command for reducer and
@@ -33,13 +34,15 @@ class MarkNotificationsAsRead {}
 
 class ClearNotifications {}
 
-class FirestoreStartConnection {}
+class FirestoreListenToUpdates {}
+
+class FirestoreRefreshAll {}
 
 class FirestoreEndConnection {}
 
-class FirestoreEventsAdded {
+class FirestoreDocumentsChanged {
   final QuerySnapshot querySnapshot;
   final DateTime time;
 
-  FirestoreEventsAdded(this.querySnapshot, this.time);
+  FirestoreDocumentsChanged(this.querySnapshot, this.time);
 }
