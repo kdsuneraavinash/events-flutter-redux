@@ -34,7 +34,8 @@ Stream<dynamic> readAllDocuments(
       // Then stream is initialized
       // Stream will send Actions as Firestore sends undates
       .ofType(new TypeToken<FirestoreStartConnection>())
-      //
+      // Switch map will cancel operation done before and start new one
+      // So only one getAllEvents will run at a time
       .switchMap(
     // This function will take the FirestoreStartConnection and start the stream
     (FirestoreStartConnection requestAction) {

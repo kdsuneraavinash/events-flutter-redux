@@ -96,11 +96,11 @@ class Event {
   // Format Date to string
   static String getFormattedDate(DateTime obj, bool isAllDay) {
     String str = "";
-    List<String> months = ['January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September','October', 'November', 'December'];
-    str += '${obj.year.toString()} ${months[obj.month]} ${obj.day.toString()} ';
+    List<String> months = ['Jan', 'Feb', 'March', 'April', 'May', 'June',
+    'July', 'Aug', 'Sep','Oct', 'Nov', 'Dec'];
+    str += '${obj.year} ${months[obj.month]} ${obj.day} ';
     if (!isAllDay) 
-     str += 'at ${(obj.hour % 12).toString()}:${obj.minute.toString().padRight(2,'0')} ${obj.hour/12 == 0 ? "AM" : "PM"}';
+     str += 'at ${(obj.hour % 12)}:${obj.minute.toString().padRight(2,'0')} ${obj.hour/12 == 0 ? "AM" : "PM"}';
     return str;
   }
 
