@@ -50,11 +50,9 @@ class EventCard extends StatelessWidget {
   /// Builds CachedNetworkImage as Banner.
   /// This will also act as a Hero.
   Widget _buildImageBanner() {
-    return Hero(
-      tag: this.event,
-      child: DefParameterNetworkImage(
-        imageUrl: this.event.headerImage,
-      ),
+    return DefParameterNetworkImage(
+      imageUrl: this.event.headerImage,
+      isCover: true,
     );
   }
 
@@ -103,9 +101,9 @@ class EventCard extends StatelessWidget {
   void _handleFlagOnTap(
       BuildContext context, bool isFlagged, Store<EventStore> eventStore) {
     if (isFlagged) {
-      eventStore.dispatch(RemoveFromFlaggedList(this.event,  DateTime.now()));
+      eventStore.dispatch(RemoveFromFlaggedList(this.event, DateTime.now()));
     } else {
-      eventStore.dispatch(AddToFlaggedList(this.event,  DateTime.now()));
+      eventStore.dispatch(AddToFlaggedList(this.event, DateTime.now()));
     }
   }
 

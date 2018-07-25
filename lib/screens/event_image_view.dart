@@ -31,15 +31,12 @@ class EventImageView extends StatelessWidget {
   /// TODO: Add images Pan ability
   Widget _buildImageBox() {
     return Center(
-      child: Hero(
-        tag: this.event,
-        child: PageView(
-            children: this
-                .event
-                .images
-                .map((v) => DefParameterNetworkImage(imageUrl: v))
-                .toList()),
-      ),
+      child: PageView(
+          children: this
+              .event
+              .images
+              .map((v) => DefParameterNetworkImage(imageUrl: v))
+              .toList()),
     );
   }
 
