@@ -45,7 +45,7 @@ class CreditsBody extends StatelessWidget {
         _buildCreditsTile(
             "images/credits/deepana.png", "Deepana Ishtaweera", "CEO"),
         _buildCreditsTile("images/credits/ruchin.png",
-            "K. D. Sunera Avinash Chandrasiri", "Lead Programmer | CTO"),
+            "Ruchin Amarathunga", "COO"),
         _buildCreditsTile("images/credits/dinith.png",
             "Dinith Subasinshana Herath", "Product Manager"),
         _buildCreditsTile("images/credits/uvindu.jpg", "Uvindu Avishka",
