@@ -36,8 +36,21 @@ class EventListBody extends StatelessWidget {
               itemCount: events.length,
             )
           : Center(
-              child: CircularProgressIndicator(),
-            ),
+              child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    child: Text("Loading Data"),
+                    padding: EdgeInsets.all(16.0),
+                  ),
+                  SizedBox(
+                    child: LinearProgressIndicator(),
+                    width: MediaQuery.of(context).size.width / 2,
+                  ),
+                ],
+              ),
+            )),
       onRefresh: () => _handleRefresh(context, store),
     );
   }

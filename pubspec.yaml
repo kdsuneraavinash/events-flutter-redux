@@ -37,7 +37,7 @@ flutter:
 
   assets:
     - images/placeholders/banner_placeholder.jpg
-    - images/placeholders/banner_error.png
+    - images/placeholders/banner_error.jpg
     - images/credits/axys.jpg
     - images/credits/sunera.png
     - images/credits/deepana.png
