@@ -2,9 +2,12 @@ import 'dart:async';
 import 'package:redux_epics/redux_epics.dart' show EpicStore;
 import 'package:rxdart/rxdart.dart' show Observable, TypeToken;
 import 'package:event_app/redux_store/actions.dart'
-    show FirestoreRefreshAll, FirestoreListenToUpdates, FirestoreDocumentsChanged;
+    show
+        FirestoreRefreshAll,
+        FirestoreListenToUpdates,
+        FirestoreDocumentsChanged;
 import 'package:cloud_firestore/cloud_firestore.dart'
-    show Firestore, QuerySnapshot;
+    show Firestore, Query, QuerySnapshot;
 import 'package:event_app/redux_store/store.dart';
 
 Stream<dynamic> readAllDocuments(
@@ -20,7 +23,7 @@ Stream<dynamic> readAllDocuments(
       .switchMap(
     // This function will take the FirestoreStartConnection and start the stream
     (FirestoreRefreshAll requestAction) {
-      return getAllEvents()
+      return getAllEvents(store)
           // Send each sent update to a Action and dispatch it
           .map((querySnapshot) =>
               FirestoreDocumentsChanged(querySnapshot, DateTime.now()));
@@ -29,11 +32,11 @@ Stream<dynamic> readAllDocuments(
 }
 
 // Observe the stream and issue events
-Observable<QuerySnapshot> getAllEvents() {
+Observable<QuerySnapshot> getAllEvents(EpicStore<EventStore> store) {
   // Get documents
   // Convert resulting QuerySnapshot to a list of events
-  return Observable(Stream
-      .fromFuture(Firestore.instance.collection("events").getDocuments()));
+  return Observable(
+      Stream.fromFuture(getStream(store.state.searchOptions).getDocuments()));
 }
 
 // Starts the stream of listening to changes
@@ -48,7 +51,7 @@ Stream<dynamic> listenToChanges(
     // This function will start the stream of data
     (FirestoreListenToUpdates requestAction) {
       // If detected change get changed documents and do this on each
-      return getChanges().map(
+      return getChanges(store).map(
         (QuerySnapshot data) {
           // What to do to every document change
           return FirestoreDocumentsChanged(data, DateTime.now());
@@ -59,7 +62,26 @@ Stream<dynamic> listenToChanges(
 }
 
 // Observe the stream and issue events when document changed
-Observable<QuerySnapshot> getChanges() {
+Observable<QuerySnapshot> getChanges(EpicStore<EventStore> store) {
   // Get stream of changing snapshots
-  return Observable(Firestore.instance.collection("events").snapshots());
+  return Observable(getStream(store.state.searchOptions).snapshots());
+}
+
+Query getStream(Map<QueryOptions, String> options) {
+  Query query = Firestore.instance.collection("events");
+  bool isDescending = options.containsKey(QueryOptions.DESCENDING);
+
+  if (options.containsKey(QueryOptions.BYNAME)) {
+    query = query.orderBy("eventName", descending: isDescending);
+  } else if (options.containsKey(QueryOptions.BYSTART)) {
+    query = query.orderBy("start", descending: isDescending);
+  } else if (options.containsKey(QueryOptions.BYEND)) {
+    query = query.orderBy("end", descending: isDescending);
+  }
+
+  if (options.containsKey(QueryOptions.LIMIT)) {
+    query = query.limit(int.parse(options[QueryOptions.LIMIT]));
+  }
+
+  return query;
 }

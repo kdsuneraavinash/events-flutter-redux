@@ -37,12 +37,6 @@ flutter:
 
   assets:
     - images/credits/axys.jpg
-    - images/credits/sunera.png
-    - images/credits/deepana.png
-    - images/credits/ruchin.png
-    - images/credits/dinith.png
-    - images/credits/uvindu.jpg
-    - images/credits/ravikula.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

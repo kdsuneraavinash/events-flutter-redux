@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart'
+    show CachedNetworkImage;
 
 /**
  * MoraEvents App
@@ -40,18 +42,16 @@ class CreditsBody extends StatelessWidget {
             height: 100.0,
           ),
         ),
-        _buildCreditsTile("images/credits/sunera.png",
-            "K. D. Sunera Avinash Chandrasiri", "Lead Programmer | CTO"),
+        _buildCreditsTile("100013401603485", "K. D. Sunera Avinash Chandrasiri",
+            "Lead Programmer | CTO"),
+        _buildCreditsTile("100005312113806", "Deepana Ishtaweera", "CEO"),
+        _buildCreditsTile("100002491783271", "Ruchin Amarathunga", "COO"),
         _buildCreditsTile(
-            "images/credits/deepana.png", "Deepana Ishtaweera", "CEO"),
-        _buildCreditsTile("images/credits/ruchin.png",
-            "Ruchin Amarathunga", "COO"),
-        _buildCreditsTile("images/credits/dinith.png",
-            "Dinith Subasinshana Herath", "Product Manager"),
-        _buildCreditsTile("images/credits/uvindu.jpg", "Uvindu Avishka",
-            "LHead of Marketing"),
-        _buildCreditsTile("images/credits/ravikula.png", "Ravikula Silva",
-            "Head of Creative Design"),
+            "100001810054702", "Dinith Subasinshana Herath", "Product Manager"),
+        _buildCreditsTile(
+            "100013403053394", "Uvindu Avishka", "Head of Marketing"),
+        _buildCreditsTile(
+            "100003695970038", "Ravikula Silva", "Head of Creative Design"),
         Divider(),
         AboutListTile(
           icon: Icon(Icons.developer_board),
@@ -63,10 +63,14 @@ class CreditsBody extends StatelessWidget {
     );
   }
 
-  Widget _buildCreditsTile(String image, String title, String subtitle) {
+  Widget _buildCreditsTile(String facebookID, String title, String subtitle) {
     return ListTile(
       leading: ClipOval(
-        child: Image.asset(image, width: 50.0, fit: BoxFit.fitWidth),
+        child: CachedNetworkImage(
+          imageUrl:
+              "https://graph.facebook.com/$facebookID/picture?type=square",
+              fit: BoxFit.cover,
+        ),
       ),
       title: Text(title),
       subtitle: Text(subtitle),

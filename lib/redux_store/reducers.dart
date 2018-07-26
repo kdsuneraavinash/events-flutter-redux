@@ -19,6 +19,8 @@ EventStore reducers(EventStore eventStore, dynamic action) {
       return clearNotificationsReducer(eventStore, action);
     case FirestoreDocumentsChanged:
       return firestoreEventsAddedReducer(eventStore, action);
+    case SearchOptionsSet:
+      return searchOptionsSetReducer(eventStore, action);
     default:
       return eventStore;
   }
@@ -46,6 +48,7 @@ EventStore addToFlaggedListReducer(
           action.time,
         ),
       ),
+    eventStore.searchOptions,
   );
 }
 
@@ -69,6 +72,7 @@ EventStore removeFromFlaggedListReducer(
           action.time,
         ),
       ),
+    eventStore.searchOptions,
   );
 }
 
@@ -97,6 +101,7 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
           action.time,
         ),
       ),
+    eventStore.searchOptions,
   );
 }
 
@@ -111,6 +116,7 @@ EventStore markNotificationsAsReadReducer(
             // New notification mapping with marked as read
             EventNotification(v.message, v.type, v.timestamp)..markAsRead())
         .toList(),
+    eventStore.searchOptions,
   );
 }
 
@@ -122,6 +128,7 @@ EventStore clearNotificationsReducer(
     eventStore.flaggedList,
     // Empty list assigned to event list
     List(),
+    eventStore.searchOptions,
   );
 }
 
@@ -211,6 +218,16 @@ EventStore firestoreEventsAddedReducer(
     allEvents,
     allFlagged,
     eventStore.notifications,
+    eventStore.searchOptions,
   );
 }
 
+EventStore searchOptionsSetReducer(
+    EventStore eventStore, SearchOptionsSet action) {
+  return EventStore(
+    eventStore.eventList,
+    eventStore.flaggedList,
+    eventStore.notifications,
+    action.newSearchOptions,
+  );
+}
