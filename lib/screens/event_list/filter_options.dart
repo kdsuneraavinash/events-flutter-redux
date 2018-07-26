@@ -179,19 +179,21 @@ class FilterOptionsState extends State<FilterOptions> {
   /// Build Check box
   Widget _buildRadioButton(
       BuildContext context, String text, String group, String key) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-      child: Row(
-        children: <Widget>[
-          Radio(
-            value: key,
-            onChanged: (v) =>
-                setState(() => this.widget.searchOptions[group] = v),
-            activeColor: Theme.of(context).primaryColor,
-            groupValue: this.widget.searchOptions[group],
-          ),
-          Text(text),
-        ],
+    return InkWell(
+      onTap: () => setState(() => this.widget.searchOptions[group] = key),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+        child: Row(
+          children: <Widget>[
+            Radio(
+              value: key,
+              activeColor: Theme.of(context).primaryColor,
+              groupValue: this.widget.searchOptions[group],
+              onChanged: (v) => null,
+            ),
+            Text(text),
+          ],
+        ),
       ),
     );
   }

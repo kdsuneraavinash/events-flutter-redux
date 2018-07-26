@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
-void showSnackBar(BuildContext context, String message) {
+void showSnackBar(BuildContext context, String message,
+    [SnackBarAction action]) {
   Scaffold.of(context).showSnackBar(
         SnackBar(
-          content: Text(message),
-          backgroundColor: Theme.of(context).accentColor,
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          action: action,
         ),
       );
 }

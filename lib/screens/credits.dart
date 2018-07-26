@@ -68,8 +68,10 @@ class CreditsBody extends StatelessWidget {
       leading: ClipOval(
         child: CachedNetworkImage(
           imageUrl:
-              "https://graph.facebook.com/$facebookID/picture?type=square",
-              fit: BoxFit.cover,
+              "https://graph.facebook.com/$facebookID/picture?type=large",
+          fit: BoxFit.cover,
+          width: 50.0,
+          height: 50.0,
         ),
       ),
       title: Text(title),
