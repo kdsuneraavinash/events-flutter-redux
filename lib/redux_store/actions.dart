@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show QuerySnapshot;
+import 'package:event_app/event.dart' show NotificationType;
 import 'package:event_app/redux_store/store.dart';
 
 /// Actions:
@@ -28,6 +29,14 @@ class ChangeAlarmState {
   final DateTime time;
 
   ChangeAlarmState(this.alarmEventID, this.state, this.time);
+}
+
+class AddNotification {
+  final String text;
+  final NotificationType type;
+  final DateTime time;
+
+  AddNotification(this.text, this.type, this.time);
 }
 
 class MarkNotificationsAsRead {}

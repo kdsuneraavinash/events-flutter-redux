@@ -5,7 +5,7 @@ import 'package:flutter/material.dart' show IconData, Icons;
 /// Launch method for EventContact
 enum LaunchMethod { CALL, MESSAGE, WEB, FACEBOOK }
 
-enum NotificationType { ADD_FLAG, REM_FLAG, ALARM, CHANGE, REMOVE, ADD }
+enum NotificationType { ADD_FLAG, REM_FLAG, ALARM, CHANGE, REMOVE, ADD, MESSAGE }
 
 /// Hold Event Organizer Contact Data
 class EventContact {
@@ -158,6 +158,8 @@ class EventNotification {
         return Icons.remove;
       case NotificationType.ADD:
         return Icons.add;
+      case NotificationType.MESSAGE:
+        return Icons.message;
       default:
         return Icons.info;
     }

@@ -1,18 +1,18 @@
 import 'dart:async' show Future;
-
 import 'package:cloud_firestore/cloud_firestore.dart'
     show Firestore, DocumentSnapshot;
 import 'package:event_app/custom_widgets/custom_snackbar.dart'
     show showSnackBar;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
+import 'package:event_app/redux_store/actions.dart' show AddNotification;
 import 'package:event_app/screens/event_details.dart' show EventDetails;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:event_app/event.dart' show Event;
+import 'package:event_app/event.dart' show Event, NotificationType;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
-import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
+import 'package:redux/redux.dart' show Store;
 
 /// Body of EventListWindow.
 /// Contains of a ListView consisting of Event Cards so Users can scroll
@@ -25,6 +25,10 @@ import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
 /// Currently set to wait 3s and display a SnackBar.
 /// TODO: Add a real refresh method
 class EventListBody extends StatefulWidget {
+  final Store<EventStore> store;
+
+  EventListBody(this.store);
+
   @override
   EventListBodyState createState() {
     return new EventListBodyState();
@@ -32,8 +36,8 @@ class EventListBody extends StatefulWidget {
 
   final FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
 
-  Widget buildEventListBody(BuildContext context, EventStore store) {
-    Map<String, Event> events = store.eventList;
+  Widget buildEventListBody(BuildContext context) {
+    Map<String, Event> events = this.store.state.eventList;
     return events.length > 0
         ? ListView.builder(
             itemBuilder: (_, index) => EventCard(events.keys.elementAt(index)),
@@ -64,37 +68,46 @@ class EventListBody extends StatefulWidget {
       [bool snackbar = false]) async {
     // Function that shows event window
     dynamic showEvent = (event) => TransitionMaker
-        .slideTransition(
+        .fadeTransition(
           destinationPageCall: () => EventDetails(event),
         )
         .start(context);
+    String notification = "Notification Recieved";
+    NotificationType notificationType = NotificationType.MESSAGE;
 
     // Check type of message
     switch (message["type"]) {
       // Event was added
       case "EVENT_ADD":
         Event event = await getEventByID(message["eventID"]);
+        notification =
+            "${event.organizer} added a new Event: ${event.eventName}";
+        notificationType = NotificationType.ADD;
         if (snackbar) {
           // Show a snackbar
           showSnackBar(
             context,
-            "${event.organizer} added a new Event: ${event.eventName}",
-            SnackBarAction(
-              label: "View",
-              onPressed: () => showEvent(event),
-            ),
+            notification,
+            SnackBarAction(label: "View", onPressed: () => showEvent(event)),
           );
         } else {
           showEvent(event);
-          print("Message: $message");
         }
         break;
       // Normal message
       default:
         if (message.containsKey('message')) {
-          showSnackBar(context, "${message['message']}");
+          notification = "${message['message']}";
+          notificationType = NotificationType.MESSAGE;
+          showSnackBar(context, notification);
         }
     }
+
+    this.store.dispatch(AddNotification(
+          notification,
+          notificationType,
+          DateTime.now(),
+        ));
   }
 
   Future<Event> getEventByID(String eventID) async {
@@ -130,9 +143,6 @@ class EventListBodyState extends State<EventListBody> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<EventStore, EventStore>(
-      builder: (context, state) => widget.buildEventListBody(context, state),
-      converter: (store) => store.state,
-    );
+    return widget.buildEventListBody(context);
   }
 }

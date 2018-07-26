@@ -10,6 +10,7 @@ void showSnackBar(BuildContext context, String message,
           ),
           backgroundColor: Colors.white,
           action: action,
+          duration: action == null ? Duration(milliseconds: 1500) : Duration(seconds: 5),
         ),
       );
 }

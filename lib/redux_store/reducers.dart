@@ -1,7 +1,7 @@
 import 'package:event_app/redux_store/actions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
 import 'package:event_app/event.dart'
-    show Event, EventNotification, FlaggedEvent, NotificationType;
+    show Event, EventNotification, FlaggedEvent;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 
 /// Connect to all reducers
@@ -21,6 +21,8 @@ EventStore reducers(EventStore eventStore, dynamic action) {
       return firestoreEventsAddedReducer(eventStore, action);
     case SearchOptionsSet:
       return searchOptionsSetReducer(eventStore, action);
+    case AddNotification:
+      return addNotificationReducer(eventStore, action);
     default:
       return eventStore;
   }
@@ -31,7 +33,6 @@ EventStore reducers(EventStore eventStore, dynamic action) {
 EventStore addToFlaggedListReducer(
     EventStore eventStore, AddToFlaggedList action) {
   List<FlaggedEvent> flaggedList = eventStore.flaggedList;
-  List<EventNotification> notifications = eventStore.notifications;
   return EventStore(
     eventStore.eventList,
     List.from(flaggedList)
@@ -39,15 +40,7 @@ EventStore addToFlaggedListReducer(
         // Adds to flagged list: default alarm state is True
         FlaggedEvent(action.eventToAddID, true),
       ),
-    List.from(notifications)
-      ..add(
-        // Add a notification about it
-        EventNotification(
-          "${eventStore.eventList[action.eventToAddID].eventName} added to pinned events",
-          NotificationType.ADD_FLAG,
-          action.time,
-        ),
-      ),
+    eventStore.notifications,
     eventStore.searchOptions,
   );
 }
@@ -57,18 +50,28 @@ EventStore addToFlaggedListReducer(
 EventStore removeFromFlaggedListReducer(
     EventStore eventStore, RemoveFromFlaggedList action) {
   List<FlaggedEvent> flaggedList = eventStore.flaggedList;
-  List<EventNotification> notifications = eventStore.notifications;
   return EventStore(
     eventStore.eventList,
     // Remove item by event ID
     List.from(flaggedList)
       ..removeWhere((v) => v.eventID == action.eventToRemoveID),
-    List.from(notifications)
+    eventStore.notifications,
+    eventStore.searchOptions,
+  );
+}
+
+EventStore addNotificationReducer(
+    EventStore eventStore, AddNotification action) {
+  return EventStore(
+    eventStore.eventList,
+    // Remove item by event ID
+    eventStore.flaggedList,
+    List.from(eventStore.notifications)
       ..add(
-        // Add a notification about it
+        // Add a notification
         EventNotification(
-          "${eventStore.eventList[action.eventToRemoveID].eventName} removed from pinned events",
-          NotificationType.ADD_FLAG,
+          action.text,
+          action.type,
           action.time,
         ),
       ),
@@ -78,7 +81,6 @@ EventStore removeFromFlaggedListReducer(
 
 /// Alarm turned ON or turned OFF
 EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
-  List<EventNotification> notifications = eventStore.notifications;
   List<FlaggedEvent> flaggedList = List.from(eventStore.flaggedList);
 
   // Create new flagged item with alarm state off/on depending on state
@@ -91,16 +93,7 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
   return EventStore(
     eventStore.eventList,
     flaggedList,
-    List.from(notifications)
-      ..add(
-        // Add a notification
-        EventNotification(
-          "${eventStore.eventList[action.alarmEventID].eventName} alarm state changed to : ${action
-              .state ? "ON" : "OFF"}",
-          NotificationType.ALARM,
-          action.time,
-        ),
-      ),
+    eventStore.notifications,
     eventStore.searchOptions,
   );
 }
@@ -147,11 +140,7 @@ EventStore firestoreEventsAddedReducer(
   // Get all events
   Map<String, Event> allEvents = {};
   List<DocumentSnapshot> documents = action.querySnapshot.documents;
-
-  // TODO: Notifications when adding, removing editing events removed
-  // because it clashes with method to Query
-  // FIXME: Find a method to fix notification
-  // TODO: Maybe create a new document with notifications and sync with it?
+  
   for (DocumentSnapshot doc in documents) {
     allEvents[doc.documentID] = Event.fromFirestoreDoc(doc);
   }

@@ -91,7 +91,7 @@ class EventListWindow extends StatelessWidget {
         child: new Icon(Icons.filter_list),
         onPressed: () => _handleFilterAction(context, store),
       ),
-      body: EventListBody(),
+      body: EventListBody(store),
     );
   }
 
