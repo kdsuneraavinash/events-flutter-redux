@@ -1,7 +1,7 @@
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/event.dart' show Event;
-import 'package:event_app/screens/event_image_view.dart' show EventImageView;
+import 'package:event_app/screens/event_details/event_image_view.dart' show EventImageView;
 import 'package:flutter/material.dart';
 import 'package:event_app/custom_widgets/network_image.dart'
     show DefParameterNetworkImage;

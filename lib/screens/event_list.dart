@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/redux_store/actions.dart'
-    show FirestoreListenToUpdates, FirestoreEndConnection, FirestoreRefreshAll;
-import 'package:event_app/redux_store/store.dart' show EventStore;
+    show
+        FirestoreListenToUpdates,
+        FirestoreEndConnection,
+        FirestoreRefreshAll,
+        SearchOptionsSet;
+import 'package:event_app/redux_store/store.dart' show EventStore, QueryOptions;
 import 'package:event_app/screens/credits.dart' show Credits;
 import 'package:event_app/screens/event_flagged.dart' show FlaggedEventManager;
 import 'package:event_app/screens/event_list/event_list_body.dart'
@@ -12,6 +16,8 @@ import 'package:event_app/screens/event_notifications.dart'
     show EventNotificationsManager;
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
+import 'package:event_app/screens/event_list/filter_options.dart'
+    show FilterOptions;
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
@@ -20,7 +26,7 @@ class EventListWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreBuilder(
       builder: buildEventListWindow,
-      onInit: (store){
+      onInit: (store) {
         store.dispatch(FirestoreRefreshAll());
         store.dispatch(FirestoreListenToUpdates());
       },
@@ -28,9 +34,8 @@ class EventListWindow extends StatelessWidget {
     );
   }
 
-  Widget buildEventListWindow(
-      BuildContext context, Store<EventStore> storeEventStore) {
-    EventStore eventStore = storeEventStore.state;
+  Widget buildEventListWindow(BuildContext context, Store<EventStore> store) {
+    EventStore eventStore = store.state;
     return Scaffold(
       appBar: AppBar(
         title: Text("Mora Events"),
@@ -82,6 +87,10 @@ class EventListWindow extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: new Icon(Icons.filter_list),
+        onPressed: () => _handleFilterAction(context, store),
+      ),
       body: EventListBody(),
     );
   }
@@ -93,6 +102,20 @@ class EventListWindow extends StatelessWidget {
           destinationPageCall: () => Credits(),
         )
         .start(context);
+  }
+
+  void _handleFilterAction(
+      BuildContext context, Store<EventStore> store) async {
+    Map<QueryOptions, String> searchOptions = {};
+    searchOptions = await showDialog(
+      context: context,
+      builder: (context) =>
+          FilterOptions.fromEventStore(store.state.searchOptions),
+    );
+    if (searchOptions != null) {
+      store.dispatch(SearchOptionsSet(searchOptions));
+      store.dispatch(FirestoreRefreshAll());
+    }
   }
 
   /// Show alarms page

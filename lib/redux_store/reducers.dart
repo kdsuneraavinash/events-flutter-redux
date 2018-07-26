@@ -147,6 +147,11 @@ EventStore firestoreEventsAddedReducer(
   // Get all events
   Map<String, Event> allEvents = {};
   List<DocumentSnapshot> documents = action.querySnapshot.documents;
+
+  // TODO: Notifications when adding, removing editing events removed
+  // because it clashes with method to Query
+  // FIXME: Find a method to fix notification
+  // TODO: Maybe create a new document with notifications and sync with it?
   for (DocumentSnapshot doc in documents) {
     allEvents[doc.documentID] = Event.fromFirestoreDoc(doc);
   }
@@ -166,54 +171,6 @@ EventStore firestoreEventsAddedReducer(
     }
   }
 
-  // Check for event detail changes [ID same but some other field different]
-  // For each old event
-  for (String oldEventID in eventStore.eventList.keys) {
-    if (allEvents.containsKey(oldEventID)) {
-      // If the same element exists in new list, stop; because it has not changed then
-      if (allEvents[oldEventID].similar(eventStore.eventList[oldEventID])) {
-        continue;
-      } else {
-        // If there is element with same id [Remember there cant be events with same id twice in list]
-        eventStore.notifications.add(
-          EventNotification(
-            "${allEvents[oldEventID].organizer} changed some details in Event ${allEvents[oldEventID].eventName}.",
-            NotificationType.CHANGE,
-            action.time,
-          ),
-        );
-      }
-    } else {
-      // No element with atlease same id
-      // So this is removed
-      eventStore.notifications.add(
-        EventNotification(
-          "${eventStore.eventList[oldEventID].organizer} removed Event: ${eventStore.eventList[oldEventID].eventName}.",
-          NotificationType.REMOVE,
-          action.time,
-        ),
-      );
-    }
-  }
-
-  // For each new event
-  for (String newEventID in allEvents.keys) {
-    // if its id contains in a old event pass
-    if (eventStore.eventList.containsKey(newEventID)) {
-      continue;
-    } else {
-      // If not add a notification
-      eventStore.notifications.add(
-        EventNotification(
-          "${allEvents[newEventID].organizer} added a new Event: ${allEvents[newEventID].eventName}.",
-          NotificationType.ADD,
-          action.time,
-        ),
-      );
-    }
-  }
-
-  // TODO: Find changed data and add notifications
   return EventStore(
     allEvents,
     allFlagged,

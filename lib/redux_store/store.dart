@@ -10,8 +10,12 @@ class EventStore {
   final Map<QueryOptions, String> searchOptions;
 
   factory EventStore.empty() {
-    return EventStore(Map<String, Event>(), List<FlaggedEvent>(),
-        List<EventNotification>(), Map());
+    return EventStore(
+        Map<String, Event>(), List<FlaggedEvent>(), List<EventNotification>(), {
+      QueryOptions.BYNAME: "",
+      QueryOptions.ALL: "",
+      QueryOptions.ASCENDING: ""
+    });
   }
 
   EventStore(
@@ -25,6 +29,7 @@ enum QueryOptions {
   BYNAME,
   // Order Direction
   DESCENDING,
+  ASCENDING,
   // Limit to a number
   ALL,
   LIMIT,

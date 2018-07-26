@@ -98,7 +98,7 @@ class Event {
     String str = "";
     List<String> months = ['Jan', 'Feb', 'March', 'April', 'May', 'June',
     'July', 'Aug', 'Sep','Oct', 'Nov', 'Dec'];
-    str += '${obj.year} ${months[obj.month]} ${obj.day} ';
+    str += '${obj.year} ${months[obj.month - 1]} ${obj.day} ';
     if (!isAllDay) 
      str += 'at ${(obj.hour % 12)}:${obj.minute.toString().padRight(2,'0')} ${obj.hour/12 == 0 ? "AM" : "PM"}';
     return str;
