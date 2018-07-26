@@ -111,24 +111,9 @@ class FilterOptionsState extends State<FilterOptions> {
       icon: Icons.sort,
       title: "Sort",
       children: <Widget>[
-        _buildRadioButton(
-            context,
-            "Sort By Start Date",
-            "Will be sorted according to ascending/descending by event start date.",
-            "SORT",
-            "start"),
-        _buildRadioButton(
-            context,
-            "Sort By End Date",
-            "Will be sorted according to ascending/descending by event end date.",
-            "SORT",
-            "end"),
-        _buildRadioButton(
-            context,
-            "Sort By Event Name",
-            "Will be sorted according to ascending/descending by event name.",
-            "SORT",
-            "eventName"),
+        _buildRadioButton(context, "Sort By Start Date", "SORT", "start"),
+        _buildRadioButton(context, "Sort By End Date", "SORT", "end"),
+        _buildRadioButton(context, "Sort By Event Name", "SORT", "eventName"),
       ],
     );
   }
@@ -140,10 +125,8 @@ class FilterOptionsState extends State<FilterOptions> {
       icon: Icons.swap_vert,
       title: "Order",
       children: <Widget>[
-        _buildRadioButton(
-            context, "Ascending", "Increasing order.", "ORDER", "asc"),
-        _buildRadioButton(
-            context, "Descending", "Decresing order.", "ORDER", "desc"),
+        _buildRadioButton(context, "Ascending", "ORDER", "asc"),
+        _buildRadioButton(context, "Descending", "ORDER", "desc"),
       ],
     );
   }
@@ -194,16 +177,22 @@ class FilterOptionsState extends State<FilterOptions> {
   }
 
   /// Build Check box
-  Widget _buildRadioButton(BuildContext context, String text, String message,
-      String group, String key) {
-    return RadioListTile(
-      title: Text(text),
-      subtitle: Text(message),
-      isThreeLine: true,
-      value: key,
-      onChanged: (v) => setState(() => this.widget.searchOptions[group] = v),
-      activeColor: Theme.of(context).primaryColor,
-      groupValue: this.widget.searchOptions[group],
+  Widget _buildRadioButton(
+      BuildContext context, String text, String group, String key) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      child: Row(
+        children: <Widget>[
+          Radio(
+            value: key,
+            onChanged: (v) =>
+                setState(() => this.widget.searchOptions[group] = v),
+            activeColor: Theme.of(context).primaryColor,
+            groupValue: this.widget.searchOptions[group],
+          ),
+          Text(text),
+        ],
+      ),
     );
   }
 }
