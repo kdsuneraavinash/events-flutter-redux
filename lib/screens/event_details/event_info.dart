@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:event_app/custom_widgets/event_info_card.dart'
-    show EventInfoCard;
 import 'package:event_app/event.dart' show Event;
 
 /// Page to show Event Information/Description
@@ -31,4 +29,40 @@ class EventInfo extends StatelessWidget {
   final Event event;
 
   EventInfo(this.event);
+}
+
+/// Card to show event information in EventDetailsPage
+class EventInfoCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          leading: Icon(
+            this.icon,
+            color: Theme.of(context).primaryColor,
+          ),
+          title: Text(
+            this.title,
+          ),
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+          child: Text(this.description,
+              softWrap: true,
+              textAlign: TextAlign.justify),
+        )
+      ],
+    );
+  }
+
+  EventInfoCard(
+      {this.icon,
+      this.title,
+      this.description});
+
+  final IconData icon;
+  final String title;
+  final String description;
 }

@@ -19,6 +19,8 @@ dependencies:
   cloud_firestore: 0.7.3
   # Show notifications
   firebase_messaging: ^1.0.4
+  # Get network status
+  connectivity: ^0.3.1
 
 dev_dependencies:
   flutter_test:

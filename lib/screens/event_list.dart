@@ -1,3 +1,6 @@
+import 'dart:async' show Future, StreamSubscription;
+import 'package:http/http.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
@@ -18,6 +21,8 @@ import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
 import 'package:event_app/screens/event_list/filter_options.dart'
     show FilterOptions;
+import 'package:connectivity/connectivity.dart'
+    show Connectivity, ConnectivityResult;
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
@@ -47,6 +52,7 @@ class EventListWindow extends StatelessWidget {
             onPressed: () => _handleSearchAction(context),
           ),
           */
+          ConnectionStatusIcon(),
           IconButton(
             icon: new Icon(Icons.help),
             onPressed: () => _handleCreditsAction(context),
@@ -136,5 +142,65 @@ class EventListWindow extends StatelessWidget {
           destinationPageCall: () => EventNotificationsManager(),
         )
         .start(context);
+  }
+}
+
+class ConnectionStatusIcon extends StatefulWidget {
+  @override
+  _ConnectionStatusIconState createState() => _ConnectionStatusIconState();
+}
+
+class _ConnectionStatusIconState extends State<ConnectionStatusIcon> {
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  bool _isConnected = false;
+  Connectivity _connectivity = Connectivity();
+
+  @override
+  void initState() {
+    super.initState();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      if (result != ConnectivityResult.none) {
+        connectionDetected();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  // https://stackoverflow.com/questions/49648022/check-whether-there-is-an-internet-connection-available-on-flutter-app
+  Future<Null> connectionDetected() async {
+    bool _connected = await makeSureIsConnected();
+    setState(() {
+      this._isConnected = _connected;
+    });
+  }
+
+  Future<bool> makeSureIsConnected() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+      return false;
+    } on SocketException catch (_) {}
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return this._isConnected
+        ? Icon(
+            Icons.cloud,
+            color: Colors.lime,
+          )
+        : Icon(
+            Icons.cloud_off,
+            color: Colors.deepOrange,
+          );
   }
 }
