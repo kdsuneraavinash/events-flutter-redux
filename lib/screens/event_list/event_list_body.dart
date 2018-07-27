@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:event_app/event.dart' show Event, NotificationType;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
+import 'package:flutter/services.dart';
 import 'package:redux/redux.dart' show Store;
 
 /// Body of EventListWindow.
@@ -62,18 +63,69 @@ class EventListBody extends StatefulWidget {
           );
   }
 
+  Widget buildEventRecievedBottomSheet(BuildContext context, String title,
+      String message, String buttonText, VoidCallback buttonAction) {
+    return Container(
+      child: new Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 16.0),
+            child: Text(title, style: Theme.of(context).textTheme.title),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 8.0),
+            child: ListTile(
+              leading: new Icon(
+                Icons.info_outline,
+              ),
+              title: new Text(message),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                FlatButton(
+                  child: Text(
+                    "Close",
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                (buttonAction != null)
+                    ? FlatButton(
+                        child: Text(
+                          buttonText,
+                          style:
+                              TextStyle(color: Theme.of(context).accentColor),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          buttonAction();
+                        },
+                      )
+                    : null,
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // Handles when cloud message recieves
   Future<void> handleMessageRecieved(
-      Map<String, dynamic> message, BuildContext context,
-      [bool snackbar = false]) async {
+      Map<String, dynamic> message, BuildContext context) async {
     // Function that shows event window
     dynamic showEvent = (event) => TransitionMaker
         .fadeTransition(
           destinationPageCall: () => EventDetails(event),
         )
         .start(context);
-    String notification = "Notification Recieved";
-    NotificationType notificationType = NotificationType.MESSAGE;
+    String notification;
+    NotificationType notificationType;
 
     // Check type of message
     switch (message["type"]) {
@@ -83,23 +135,23 @@ class EventListBody extends StatefulWidget {
         notification =
             "${event.organizer} added a new Event: ${event.eventName}";
         notificationType = NotificationType.ADD;
-        if (snackbar) {
-          // Show a snackbar
-          showSnackBar(
-            context,
-            notification,
-            SnackBarAction(label: "View", onPressed: () => showEvent(event)),
-          );
-        } else {
-          showEvent(event);
-        }
+        // Show a bottom sheet
+        showBottomSheet(
+          builder: (_) => buildEventRecievedBottomSheet(context, "New Event",
+              notification, "View Event", () => showEvent(event)),
+          context: context,
+        );
         break;
       // Normal message
       default:
         if (message.containsKey('message')) {
           notification = "${message['message']}";
           notificationType = NotificationType.MESSAGE;
-          showSnackBar(context, notification);
+          showBottomSheet(
+            builder: (_) => buildEventRecievedBottomSheet(
+                context, "New Notification", notification, "", null),
+            context: context,
+          );
         }
     }
 
@@ -133,11 +185,10 @@ class EventListBodyState extends State<EventListBody> {
     // Message recieved Functions
     widget.firebaseMessaging.configure(
       // Message recieved when app in foreground
-      onMessage: (v) => widget.handleMessageRecieved(v, context, true),
+      onMessage: (v) => widget.handleMessageRecieved(v, context),
       onLaunch: (v) => widget.handleMessageRecieved(v, context),
       onResume: (v) => widget.handleMessageRecieved(v, context),
     );
-
     super.initState();
   }
 

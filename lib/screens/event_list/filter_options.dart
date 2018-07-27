@@ -32,7 +32,7 @@ class FilterOptions extends StatefulWidget {
       parsedSearchOptions["LIMITVAL"] = searchOptions[QueryOptions.LIMIT];
     } else {
       parsedSearchOptions["LIMITCHK"] = false;
-      parsedSearchOptions["LIMITVAL"] = "1";
+      parsedSearchOptions["LIMITVAL"] = "10";
     }
 
     // Factory return
