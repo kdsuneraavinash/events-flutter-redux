@@ -1,7 +1,6 @@
-import 'dart:async' show Future, StreamSubscription;
-import 'package:http/http.dart';
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'dart:async' show Future, StreamSubscription;
+import 'dart:io' show SocketException, InternetAddress;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/redux_store/actions.dart'
@@ -101,6 +100,32 @@ class EventListWindow extends StatelessWidget {
     );
   }
 
+  Widget _buildNoInternetDialog(BuildContext context) {
+    return AlertDialog(
+      content: Text(
+        "Please make sure that you are connected to internet. "
+            "Filter feature is available only in online mode",
+        style: Theme.of(context).textTheme.body1,
+      ),
+      contentPadding: EdgeInsets.all(16.0),
+      title: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(right: 16.0),
+          child: Icon(Icons.warning, color: Theme.of(context).accentColor,),
+        ),
+        Text("Filter"),
+      ]),
+      actions: <Widget>[
+        FlatButton(
+          child: Text("Close"),
+          onPressed: () => Navigator.pop(context),
+        )
+      ],
+    );
+  }
+
   /// Show credits window
   void _handleCreditsAction(BuildContext context) {
     TransitionMaker
@@ -112,12 +137,18 @@ class EventListWindow extends StatelessWidget {
 
   void _handleFilterAction(
       BuildContext context, Store<EventStore> store) async {
+    bool isConnected = await makeSureIsConnected();
+    if (!isConnected) {
+      await showDialog(context: context, builder: _buildNoInternetDialog);
+      return;
+    }
     Map<QueryOptions, String> searchOptions = {};
-    searchOptions = await showDialog(
-      context: context,
-      builder: (context) =>
-          FilterOptions.fromEventStore(store.state.searchOptions),
-    );
+    searchOptions = await TransitionMaker
+        .slideTransition(
+          destinationPageCall: () =>
+              FilterOptions.fromEventStore(store.state.searchOptions),
+        )
+        .startAndWait(context);
     if (searchOptions != null) {
       store.dispatch(SearchOptionsSet(searchOptions));
       store.dispatch(FirestoreRefreshAll());
@@ -180,17 +211,6 @@ class _ConnectionStatusIconState extends State<ConnectionStatusIcon> {
     });
   }
 
-  Future<bool> makeSureIsConnected() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
-      }
-      return false;
-    } on SocketException catch (_) {}
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return this._isConnected
@@ -203,4 +223,15 @@ class _ConnectionStatusIconState extends State<ConnectionStatusIcon> {
             color: Colors.deepOrange,
           );
   }
+}
+
+Future<bool> makeSureIsConnected() async {
+  try {
+    final result = await InternetAddress.lookup('google.com');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return true;
+    }
+    return false;
+  } on SocketException catch (_) {}
+  return false;
 }

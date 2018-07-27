@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 /// Builds a basic animated route transition
@@ -50,5 +52,18 @@ class TransitionMaker {
             transitionsBuilder: this.transitionBuilder,
           ),
         );
+  }
+
+  Future startAndWait(BuildContext context) async {
+    var result = await Navigator.of(context).push(
+          PageRouteBuilder(
+            opaque: false,
+            pageBuilder: (_, __, ___) {
+              return this.destinationPageCall();
+            },
+            transitionsBuilder: this.transitionBuilder,
+          ),
+        );
+    return result;
   }
 }

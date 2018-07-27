@@ -49,27 +49,131 @@ class FilterOptions extends StatefulWidget {
 class FilterOptionsState extends State<FilterOptions> {
   @override
   Widget build(BuildContext context) {
-    return _buildDialog(context);
+    return Scaffold(
+      appBar: new AppBar(
+        title: Text("Filter Results"),
+      ),
+      body: _buildOptions(context),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _handleSaveButtonPressed,
+        child: Icon(Icons.save_alt),
+      ),
+    );
   }
 
-  Widget _buildDialog(BuildContext context) {
-    return SimpleDialog(
-        children: <Widget>[
-          // To have the maximum width from the beginning
-          SizedBox.fromSize(size: Size(MediaQuery.of(context).size.width, 2.0)),
-          _buildSortByOptions(context),
-          _buildOrderByOptions(context),
-          _buildLimitOptions(context),
-        ],
-        title: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: OutlineButton(
-            child: Text("Save and Close"),
-            textColor: Theme.of(context).primaryColor,
-            onPressed: _handleSaveButtonPressed,
-            borderSide: BorderSide(color: Colors.black),
+  Widget _buildOptions(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        _buildLimitOptions(context),
+        _buildSortByOptions(context),
+        _buildOrderByOptions(context),
+      ],
+    );
+  }
+
+  /// Sort options
+  Widget _buildSortByOptions(BuildContext context) {
+    return _buildExpansionTile(
+      context: context,
+      icon: Icons.sort,
+      title: "Sort",
+      children: <Widget>[
+        _buildRadioButton(context, "Sort By Start Date",
+            "Will be sorted using start date/time", "SORT", "start"),
+        _buildRadioButton(context, "Sort By End Date",
+            "Will be sorted using end date/time", "SORT", "end"),
+        _buildRadioButton(context, "Sort By Event Name",
+            "Will be sorted using name of event", "SORT", "eventName"),
+      ],
+    );
+  }
+
+  /// Order options
+  Widget _buildOrderByOptions(BuildContext context) {
+    return _buildExpansionTile(
+      context: context,
+      icon: Icons.swap_vert,
+      title: "Order",
+      children: <Widget>[
+        _buildRadioButton(context, "Ascending",
+            "Will be sorted in increasing order", "ORDER", "asc"),
+        _buildRadioButton(context, "Descending",
+            "Will be sorted in increasing order", "ORDER", "desc"),
+      ],
+    );
+  }
+
+  /// Limit options
+  Widget _buildLimitOptions(BuildContext context) {
+    return _buildExpansionTile(
+      context: context,
+      icon: Icons.plus_one,
+      title: "Limit Results",
+      children: <Widget>[
+        _buildCheckBox(
+          context,
+          "Limit Results",
+          "Limits result to a number. If unchecked all results will be shown.",
+          "LIMITCHK",
+        ),
+        // Slider box to get limit
+        Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Slider(
+            value: double.parse(this.widget.searchOptions["LIMITVAL"]),
+            max: 100.0,
+            min: 10.0,
+            divisions: 9,
+            onChanged: this.widget.searchOptions["LIMITCHK"]
+                ? (v) => setState(() => this.widget.searchOptions["LIMITVAL"] =
+                    v.toInt().toString())
+                : null,
+            label: this.widget.searchOptions["LIMITVAL"].toString(),
           ),
-        ));
+        ),
+      ],
+    );
+  }
+
+  /// Build Check box
+  Widget _buildCheckBox(
+      BuildContext context, String text, String message, String key) {
+    return CheckboxListTile(
+      title: Text(text),
+      subtitle: Text(message),
+      value: this.widget.searchOptions[key],
+      onChanged: (v) => setState(() => this.widget.searchOptions[key] = v),
+      activeColor: Theme.of(context).primaryColor,
+    );
+  }
+
+  /// Build Check box
+  Widget _buildRadioButton(BuildContext context, String text, String subtitle,
+      String group, String key) {
+    return RadioListTile(
+      value: key,
+      activeColor: Theme.of(context).primaryColor,
+      groupValue: this.widget.searchOptions[group],
+      onChanged: (v) => setState(() => this.widget.searchOptions[group] = key),
+      title: Text(text),
+      subtitle: Text(subtitle),
+    );
+  }
+
+  Widget _buildExpansionTile(
+      {BuildContext context,
+      IconData icon,
+      String title,
+      List<Widget> children}) {
+    return ExpansionTile(
+      title: Text(title),
+      leading: Icon(
+        icon,
+        color: Theme.of(context).accentColor,
+      ),
+      children: children,
+      initiallyExpanded: true,
+    );
   }
 
   // Save and Close dialog
@@ -103,113 +207,4 @@ class FilterOptionsState extends State<FilterOptions> {
     // Return value
     Navigator.pop(context, parsedSearchOptions);
   }
-
-  /// Sort options
-  Widget _buildSortByOptions(BuildContext context) {
-    return _buildExpansionTile(
-      context: context,
-      icon: Icons.sort,
-      title: "Sort",
-      children: <Widget>[
-        _buildRadioButton(context, "Sort By Start Date", "SORT", "start"),
-        _buildRadioButton(context, "Sort By End Date", "SORT", "end"),
-        _buildRadioButton(context, "Sort By Event Name", "SORT", "eventName"),
-      ],
-    );
-  }
-
-  /// Order options
-  Widget _buildOrderByOptions(BuildContext context) {
-    return _buildExpansionTile(
-      context: context,
-      icon: Icons.swap_vert,
-      title: "Order",
-      children: <Widget>[
-        _buildRadioButton(context, "Ascending", "ORDER", "asc"),
-        _buildRadioButton(context, "Descending", "ORDER", "desc"),
-      ],
-    );
-  }
-
-  /// Limit options
-  Widget _buildLimitOptions(BuildContext context) {
-    return _buildExpansionTile(
-      context: context,
-      icon: Icons.plus_one,
-      title: "Limit Results",
-      children: <Widget>[
-        _buildCheckBox(
-          context,
-          "Limit Results",
-          "Limits result to a number. If unchecked all results will be shown.",
-          "LIMITCHK",
-        ),
-        // Slider box to get limit
-        Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Slider(
-            value: double.parse(this.widget.searchOptions["LIMITVAL"]),
-            max: 100.0,
-            min: 1.0,
-            divisions: 100,
-            onChanged: this.widget.searchOptions["LIMITCHK"]
-                ? (v) => setState(() => this.widget.searchOptions["LIMITVAL"] =
-                    v.toInt().toString())
-                : null,
-            label: this.widget.searchOptions["LIMITVAL"],
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Build Check box
-  Widget _buildCheckBox(
-      BuildContext context, String text, String message, String key) {
-    return CheckboxListTile(
-      title: Text(text),
-      subtitle: Text(message),
-      isThreeLine: true,
-      value: this.widget.searchOptions[key],
-      onChanged: (v) => setState(() => this.widget.searchOptions[key] = v),
-      activeColor: Theme.of(context).primaryColor,
-    );
-  }
-
-  /// Build Check box
-  Widget _buildRadioButton(
-      BuildContext context, String text, String group, String key) {
-    return InkWell(
-      onTap: () => setState(() => this.widget.searchOptions[group] = key),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-        child: Row(
-          children: <Widget>[
-            Radio(
-              value: key,
-              activeColor: Theme.of(context).primaryColor,
-              groupValue: this.widget.searchOptions[group],
-              onChanged: (v) => null,
-            ),
-            Text(text),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-Widget _buildExpansionTile(
-    {BuildContext context,
-    IconData icon,
-    String title,
-    List<Widget> children}) {
-  return ExpansionTile(
-    title: Text(title),
-    leading: Icon(
-      icon,
-      color: Theme.of(context).accentColor,
-    ),
-    children: children,
-  );
 }
