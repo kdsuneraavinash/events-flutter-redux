@@ -157,7 +157,7 @@ class EventNotification {
       case NotificationType.REMOVE:
         return Icons.remove;
       case NotificationType.ADD:
-        return Icons.add;
+        return Icons.event;
       case NotificationType.MESSAGE:
         return Icons.message;
       default:

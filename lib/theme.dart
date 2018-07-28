@@ -30,6 +30,5 @@ ThemeData buildTheme(BuildContext context) {
       primaryColorDark: Colors.black,
       secondaryHeaderColor: Colors.black,
       platform: defaultTargetPlatform,
-      bottomAppBarColor: Colors.grey[200],
       brightness: Brightness.light);
 }

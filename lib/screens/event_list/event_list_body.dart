@@ -1,8 +1,6 @@
 import 'dart:async' show Future;
 import 'package:cloud_firestore/cloud_firestore.dart'
     show Firestore, DocumentSnapshot;
-import 'package:event_app/custom_widgets/custom_snackbar.dart'
-    show showSnackBar;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/redux_store/actions.dart' show AddNotification;
@@ -12,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:event_app/event.dart' show Event, NotificationType;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
-import 'package:flutter/services.dart';
 import 'package:redux/redux.dart' show Store;
 
 /// Body of EventListWindow.
@@ -65,52 +62,50 @@ class EventListBody extends StatefulWidget {
 
   Widget buildEventRecievedBottomSheet(BuildContext context, String title,
       String message, String buttonText, VoidCallback buttonAction) {
-    return Container(
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 16.0),
-            child: Text(title, style: Theme.of(context).textTheme.title),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 8.0),
-            child: ListTile(
-              leading: new Icon(
-                Icons.info_outline,
-              ),
-              title: new Text(message),
+    return Theme(
+      data: ThemeData.dark(),
+      child: Container(
+        color: Theme.of(context).primaryColor,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 16.0),
+              child: Text(title,
+                  style: TextStyle(fontSize: 24.0, color: Colors.white)),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(bottom: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                FlatButton(
-                  child: Text(
-                    "Close",
-                    style: TextStyle(color: Theme.of(context).accentColor),
-                  ),
-                  onPressed: () => Navigator.pop(context),
+            Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: ListTile(
+                leading: Icon(
+                  Icons.info_outline,
                 ),
-                (buttonAction != null)
-                    ? FlatButton(
-                        child: Text(
-                          buttonText,
-                          style:
-                              TextStyle(color: Theme.of(context).accentColor),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          buttonAction();
-                        },
-                      )
-                    : null,
-              ],
+                title: Text(message),
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  (buttonAction != null)
+                      ? OutlineButton(
+                          child: Text(buttonText),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            buttonAction();
+                          },
+                        )
+                      : Container(),
+                  OutlineButton(
+                    child: Text("Close"),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -136,7 +131,7 @@ class EventListBody extends StatefulWidget {
             "${event.organizer} added a new Event: ${event.eventName}";
         notificationType = NotificationType.ADD;
         // Show a bottom sheet
-        showBottomSheet(
+        showModalBottomSheet(
           builder: (_) => buildEventRecievedBottomSheet(context, "New Event",
               notification, "View Event", () => showEvent(event)),
           context: context,
@@ -147,7 +142,7 @@ class EventListBody extends StatefulWidget {
         if (message.containsKey('message')) {
           notification = "${message['message']}";
           notificationType = NotificationType.MESSAGE;
-          showBottomSheet(
+          showModalBottomSheet(
             builder: (_) => buildEventRecievedBottomSheet(
                 context, "New Notification", notification, "", null),
             context: context,
