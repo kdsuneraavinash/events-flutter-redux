@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:event_app/event.dart' show FlaggedEvent;
+import 'package:event_app/state/flagged.dart';
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_flagged/event_flagged_card.dart'
     show EventFlaggedCard;

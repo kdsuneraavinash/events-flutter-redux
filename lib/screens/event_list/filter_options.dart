@@ -1,46 +1,17 @@
-import 'package:event_app/redux_store/store.dart' show QueryOptions;
+import 'package:event_app/state/query.dart';
 import 'package:flutter/material.dart';
 
 /// * Search settings dialog
 class FilterOptions extends StatefulWidget {
-  factory FilterOptions.fromEventStore(
-      Map<QueryOptions, String> searchOptions) {
+  factory FilterOptions.fromEventStore(QueryOptions searchOptions) {
     // Parse all data to a map to be used in dialog
     // TODO: Clean this code by directly using this type of object in store
     // or using store data directly here
-    Map parsedSearchOptions = {};
-
-    // Sort data
-    if (searchOptions.containsKey(QueryOptions.BYSTART)) {
-      parsedSearchOptions["SORT"] = "start";
-    } else if (searchOptions.containsKey(QueryOptions.BYEND)) {
-      parsedSearchOptions["SORT"] = "end";
-    } else {
-      parsedSearchOptions["SORT"] = "eventName";
-    }
-
-    // Order data
-    if (searchOptions.containsKey(QueryOptions.DESCENDING)) {
-      parsedSearchOptions["ORDER"] = "desc";
-    } else {
-      parsedSearchOptions["ORDER"] = "asc";
-    }
-
-    // Limit data
-    if (searchOptions.containsKey(QueryOptions.LIMIT)) {
-      parsedSearchOptions["LIMITCHK"] = true;
-      parsedSearchOptions["LIMITVAL"] = searchOptions[QueryOptions.LIMIT];
-    } else {
-      parsedSearchOptions["LIMITCHK"] = false;
-      parsedSearchOptions["LIMITVAL"] = "10";
-    }
-
-    // Factory return
-    return FilterOptions(parsedSearchOptions);
+    return FilterOptions(searchOptions.toMap());
   }
 
   FilterOptions(this.searchOptions);
-  final Map searchOptions;
+  final Map<String, dynamic> searchOptions;
 
   @override
   State<StatefulWidget> createState() => FilterOptionsState();
@@ -56,7 +27,7 @@ class FilterOptionsState extends State<FilterOptions> {
       body: _buildOptions(context),
       floatingActionButton: FloatingActionButton(
         onPressed: _handleSaveButtonPressed,
-        child: Icon(Icons.save_alt),
+        child: Icon(Icons.save),
       ),
     );
   }
@@ -79,11 +50,11 @@ class FilterOptionsState extends State<FilterOptions> {
       title: "Sort",
       children: <Widget>[
         _buildRadioButton(context, "Sort By Start Date",
-            "Will be sorted using start date/time", "SORT", "start"),
+            "Will be sorted using start date/time", "sortOption", "start"),
         _buildRadioButton(context, "Sort By End Date",
-            "Will be sorted using end date/time", "SORT", "end"),
+            "Will be sorted using end date/time", "sortOption", "end"),
         _buildRadioButton(context, "Sort By Event Name",
-            "Will be sorted using name of event", "SORT", "eventName"),
+            "Will be sorted using name of event", "sortOption", "name"),
       ],
     );
   }
@@ -96,9 +67,9 @@ class FilterOptionsState extends State<FilterOptions> {
       title: "Order",
       children: <Widget>[
         _buildRadioButton(context, "Ascending",
-            "Will be sorted in increasing order", "ORDER", "asc"),
+            "Will be sorted in increasing order", "orderOption", "ascending"),
         _buildRadioButton(context, "Descending",
-            "Will be sorted in increasing order", "ORDER", "desc"),
+            "Will be sorted in increasing order", "orderOption", "descending"),
       ],
     );
   }
@@ -114,21 +85,22 @@ class FilterOptionsState extends State<FilterOptions> {
           context,
           "Limit Results",
           "Limits result to a number. If unchecked all results will be shown.",
-          "LIMITCHK",
+          "limitOption",
         ),
         // Slider box to get limit
         Padding(
           padding: EdgeInsets.all(16.0),
           child: Slider(
-            value: double.parse(this.widget.searchOptions["LIMITVAL"]),
+            value: double.parse(this.widget.searchOptions["limitOptionData"]),
             max: 100.0,
             min: 10.0,
             divisions: 9,
-            onChanged: this.widget.searchOptions["LIMITCHK"]
-                ? (v) => setState(() => this.widget.searchOptions["LIMITVAL"] =
-                    v.toInt().toString())
+            onChanged: this.widget.searchOptions["limitOption"] == "limit"
+                ? (v) => setState(() => this
+                    .widget
+                    .searchOptions["limitOptionData"] = v.toInt().toString())
                 : null,
-            label: this.widget.searchOptions["LIMITVAL"].toString(),
+            label: this.widget.searchOptions["limitOptionData"].toString(),
           ),
         ),
       ],
@@ -141,8 +113,9 @@ class FilterOptionsState extends State<FilterOptions> {
     return CheckboxListTile(
       title: Text(text),
       subtitle: Text(message),
-      value: this.widget.searchOptions[key],
-      onChanged: (v) => setState(() => this.widget.searchOptions[key] = v),
+      value: this.widget.searchOptions[key] == "limit",
+      onChanged: (v) =>
+          setState(() => this.widget.searchOptions[key] = v ? "limit" : "all"),
       activeColor: Theme.of(context).primaryColor,
     );
   }
@@ -180,29 +153,8 @@ class FilterOptionsState extends State<FilterOptions> {
   // Tapping elsewhere will close without saving
   void _handleSaveButtonPressed() {
     // Parse back to store data format
-    Map<QueryOptions, String> parsedSearchOptions = {};
-
-    // Sort Option
-    if (this.widget.searchOptions["SORT"] == "start") {
-      parsedSearchOptions[QueryOptions.BYSTART] = "";
-    } else if (this.widget.searchOptions["SORT"] == "end") {
-      parsedSearchOptions[QueryOptions.BYEND] = "";
-    } else {
-      parsedSearchOptions[QueryOptions.BYNAME] = "";
-    }
-
-    // Order Option
-    if (this.widget.searchOptions["ORDER"] == "desc") {
-      parsedSearchOptions[QueryOptions.DESCENDING] = "";
-    }
-
-    // Limit Option
-    if (this.widget.searchOptions["LIMITCHK"] == true) {
-      parsedSearchOptions[QueryOptions.LIMIT] =
-          this.widget.searchOptions["LIMITVAL"];
-    } else {
-      parsedSearchOptions[QueryOptions.ALL] = "";
-    }
+    QueryOptions parsedSearchOptions =
+        QueryOptions.fromMap(this.widget.searchOptions);
 
     // Return value
     Navigator.pop(context, parsedSearchOptions);

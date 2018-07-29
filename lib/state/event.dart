@@ -5,8 +5,6 @@ import 'package:flutter/material.dart' show IconData, Icons;
 /// Launch method for EventContact
 enum LaunchMethod { CALL, MESSAGE, WEB, FACEBOOK }
 
-enum NotificationType { ADD, MESSAGE }
-
 /// Hold Event Organizer Contact Data
 class EventContact {
   Map<LaunchMethod, List> _methodToPropertyMap = {
@@ -98,7 +96,7 @@ class Event {
     return Event(
       json["eventName"], // String
       json["organizer"], // String
-      // Connot convert staright to HSon
+      // Connot convert staright to JSon
       // So will remember MillisecondsSinceEpoch and
       // Use that to convert back
       DateTime.fromMillisecondsSinceEpoch(
@@ -182,89 +180,5 @@ class Event {
         other.organizer == this.organizer &&
         other.eventName == this.eventName &&
         other.id == this.id;
-  }
-}
-
-class EventNotification {
-  final String message;
-  final NotificationType type;
-  final DateTime timestamp;
-  bool read = false;
-
-  EventNotification(this.message, this.type, this.timestamp);
-
-  void markAsRead() {
-    read = true;
-  }
-
-  IconData getIcon() {
-    switch (this.type) {
-      case NotificationType.ADD:
-        return Icons.event;
-      case NotificationType.MESSAGE:
-        return Icons.message;
-      default:
-        return Icons.info;
-    }
-  }
-
-  static NotificationType getTypeFromString(String type) {
-    switch (type) {
-      case 'ADD':
-        return NotificationType.ADD;
-      case 'MESSAGE':
-      default:
-        return NotificationType.MESSAGE;
-    }
-  }
-
-  static String getStringFromType(NotificationType type) {
-    switch (type) {
-      case NotificationType.ADD:
-        return 'ADD';
-      case NotificationType.MESSAGE:
-      default:
-        return 'MESSAGE';
-    }
-  }
-
-  // Parse from JSON
-  factory EventNotification.fromJson(Map<String, dynamic> json) {
-    // Notification type convert from String
-    return EventNotification(
-      json["message"], // String
-      EventNotification.getTypeFromString(json["type"]), // NotificationType
-      DateTime.fromMillisecondsSinceEpoch(json["timestamp"]), // Date Time
-    );
-  }
-
-  Map toJson() {
-    return {
-      "message": this.message,
-      "type": getStringFromType(this.type),
-      "timestamp": this.timestamp.millisecondsSinceEpoch
-    };
-  }
-}
-
-class FlaggedEvent {
-  final String eventID;
-  final bool alarmStatus;
-
-  // Parse from JSON
-  FlaggedEvent(this.eventID, this.alarmStatus);
-
-  factory FlaggedEvent.fromJson(Map<String, dynamic> json) {
-    return FlaggedEvent(
-      json["eventID"], // String
-      json["alarmStatus"], // bool
-    );
-  }
-
-  Map toJson() {
-    return {
-      "eventID": this.eventID,
-      "alarmStatus": this.alarmStatus,
-    };
   }
 }

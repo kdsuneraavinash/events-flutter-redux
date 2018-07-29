@@ -1,7 +1,8 @@
 import 'package:event_app/redux_store/actions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
-import 'package:event_app/event.dart'
-    show Event, EventNotification, FlaggedEvent;
+import 'package:event_app/state/event.dart';
+import 'package:event_app/state/flagged.dart';
+import 'package:event_app/state/notification.dart';
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:redux_persist/redux_persist.dart' show PersistLoadedAction;
 
@@ -26,7 +27,6 @@ EventStore reducers(EventStore eventStore, dynamic action) {
   } else if (action is PersistLoadedAction<EventStore>) {
     return persistLoadedActionReducer(eventStore, action);
   } else {
-    print("UNHANDLED DISPATCH: " + action.runtimeType.toString());
     return eventStore.copyWith();
   }
 }

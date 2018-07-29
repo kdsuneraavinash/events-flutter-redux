@@ -4,7 +4,7 @@ import 'package:event_app/custom_widgets/custom_snackbar.dart'
     show showSnackBar;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
-import 'package:event_app/event.dart' show FlaggedEvent;
+import 'package:event_app/state/flagged.dart';
 import 'package:event_app/redux_store/actions.dart'
     show ChangeAlarmState, RemoveFromFlaggedList;
 import 'package:event_app/redux_store/store.dart' show EventStore;

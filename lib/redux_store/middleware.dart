@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:event_app/state/query.dart';
 import 'package:redux_epics/redux_epics.dart' show EpicStore;
 import 'package:rxdart/rxdart.dart' show Observable, TypeToken;
 import 'package:event_app/redux_store/actions.dart'
@@ -8,7 +9,7 @@ import 'package:event_app/redux_store/actions.dart'
         FirestoreDocumentsChanged;
 import 'package:cloud_firestore/cloud_firestore.dart'
     show Firestore, Query, QuerySnapshot;
-import 'package:event_app/redux_store/store.dart';
+import 'package:event_app/redux_store/store.dart' show EventStore;
 
 Stream<dynamic> readAllDocuments(
     Stream<dynamic> actions, EpicStore<EventStore> store) {
@@ -67,20 +68,24 @@ Observable<QuerySnapshot> getChanges(EpicStore<EventStore> store) {
   return Observable(getStream(store.state.searchOptions).snapshots());
 }
 
-Query getStream(Map<QueryOptions, String> options) {
+Query getStream(QueryOptions options) {
   Query query = Firestore.instance.collection("events");
-  bool isDescending = options.containsKey(QueryOptions.DESCENDING);
+  bool isDescending = options.orderOption == QueryOptionsOrder.DESCENDING;
 
-  if (options.containsKey(QueryOptions.BYNAME)) {
-    query = query.orderBy("eventName", descending: isDescending);
-  } else if (options.containsKey(QueryOptions.BYSTART)) {
-    query = query.orderBy("start", descending: isDescending);
-  } else if (options.containsKey(QueryOptions.BYEND)) {
-    query = query.orderBy("end", descending: isDescending);
+  switch (options.sortOption) {
+    case QueryOptionsSort.START:
+      query = query.orderBy("start", descending: isDescending);
+      break;
+    case QueryOptionsSort.END:
+      query = query.orderBy("end", descending: isDescending);
+      break;
+    case QueryOptionsSort.NAME:
+      query = query.orderBy("eventName", descending: isDescending);
+      break;
   }
 
-  if (options.containsKey(QueryOptions.LIMIT)) {
-    query = query.limit(int.parse(options[QueryOptions.LIMIT]));
+  if (options.limitOption == QueryOptionsLimit.LIMIT) {
+    query = query.limit(options.limitOptionData);
   }
 
   return query;

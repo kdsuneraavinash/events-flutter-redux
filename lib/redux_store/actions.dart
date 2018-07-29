@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show QuerySnapshot;
-import 'package:event_app/event.dart' show NotificationType;
-import 'package:event_app/redux_store/store.dart';
+import 'package:event_app/state/notification.dart';
+import 'package:event_app/state/query.dart';
 
 /// Actions:
 /// Will only contain classes to distinguish each command for reducer and
@@ -53,7 +53,7 @@ class FirestoreRefreshAll {
   final String type;
 
   FirestoreRefreshAll({this.type});
-  }
+}
 
 class FirestoreEndConnection {}
 
@@ -64,8 +64,8 @@ class FirestoreDocumentsChanged {
   FirestoreDocumentsChanged(this.querySnapshot, this.time);
 }
 
-class SearchOptionsSet{
-  final Map<QueryOptions, String> newSearchOptions;
+class SearchOptionsSet {
+  final QueryOptions newSearchOptions;
 
   SearchOptionsSet(this.newSearchOptions);
 }

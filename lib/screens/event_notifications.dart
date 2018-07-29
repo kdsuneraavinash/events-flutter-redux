@@ -1,4 +1,4 @@
-import 'package:event_app/event.dart' show EventNotification;
+import 'package:event_app/state/notification.dart' show EventNotification;
 import 'package:event_app/redux_store/actions.dart'
     show MarkNotificationsAsRead, ClearNotifications;
 import 'package:event_app/redux_store/store.dart' show EventStore;

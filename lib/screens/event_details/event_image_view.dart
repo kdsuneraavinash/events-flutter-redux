@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:event_app/custom_widgets/network_image.dart'
     show DefParameterNetworkImage;
-import 'package:event_app/event.dart' show Event;
+import 'package:event_app/state/event.dart';
 
 /// Hosts PageView and buttons.
 class EventImageView extends StatelessWidget {

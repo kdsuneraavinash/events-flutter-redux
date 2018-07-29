@@ -1,3 +1,4 @@
+import 'package:event_app/state/query.dart';
 import 'package:flutter/material.dart';
 import 'dart:async' show Future;
 import 'dart:io' show SocketException, InternetAddress;
@@ -9,7 +10,7 @@ import 'package:event_app/redux_store/actions.dart'
         FirestoreEndConnection,
         FirestoreRefreshAll,
         SearchOptionsSet;
-import 'package:event_app/redux_store/store.dart' show EventStore, QueryOptions;
+import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/credits.dart' show Credits;
 import 'package:event_app/screens/event_flagged.dart' show FlaggedEventManager;
 import 'package:event_app/screens/event_list/event_list_body.dart'
@@ -105,12 +106,13 @@ class EventListWindow extends StatelessWidget {
         style: Theme.of(context).textTheme.body1,
       ),
       contentPadding: EdgeInsets.all(16.0),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+      title: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
         Padding(
           padding: EdgeInsets.only(right: 16.0),
-          child: Icon(Icons.warning, color: Theme.of(context).accentColor,),
+          child: Icon(
+            Icons.warning,
+            color: Theme.of(context).accentColor,
+          ),
         ),
         Text("Filter"),
       ]),
@@ -139,7 +141,7 @@ class EventListWindow extends StatelessWidget {
       await showDialog(context: context, builder: _buildNoInternetDialog);
       return;
     }
-    Map<QueryOptions, String> searchOptions = {};
+    QueryOptions searchOptions = QueryOptions.original();
     searchOptions = await TransitionMaker
         .slideTransition(
           destinationPageCall: () =>

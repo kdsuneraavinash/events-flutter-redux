@@ -1,5 +1,7 @@
-import 'package:event_app/event.dart'
-    show Event, EventNotification, FlaggedEvent;
+import 'package:event_app/state/event.dart';
+import 'package:event_app/state/flagged.dart';
+import 'package:event_app/state/notification.dart';
+import 'package:event_app/state/query.dart';
 
 /// The main store object
 /// Here this also is the VIew Model (No separate class for view modal)
@@ -7,15 +9,10 @@ class EventStore {
   final Map<String, Event> eventList;
   final List<FlaggedEvent> flaggedList;
   final List<EventNotification> notifications;
-  final Map<QueryOptions, String> searchOptions;
+  final QueryOptions searchOptions;
 
   factory EventStore.empty() {
-    return EventStore(
-        Map<String, Event>(), List<FlaggedEvent>(), List<EventNotification>(), {
-      QueryOptions.BYNAME: "",
-      QueryOptions.ALL: "",
-      QueryOptions.ASCENDING: ""
-    });
+    return EventStore({}, [], [], QueryOptions.original());
   }
 
   EventStore(
@@ -25,7 +22,7 @@ class EventStore {
       {Map<String, Event> eventList,
       List<FlaggedEvent> flaggedList,
       List<EventNotification> notifications,
-      Map<QueryOptions, String> searchOptions}) {
+      QueryOptions searchOptions}) {
     eventList ??= this.eventList;
     flaggedList ??= this.flaggedList;
     notifications ??= this.notifications;
@@ -39,7 +36,7 @@ class EventStore {
   /// 'eventList':[{'eventName':'Event 101', 'organizer': 'Nobody', ...}, {..}, ...]
   /// 'flaggedList': [{'eventID':'HHfd8sDDS', 'alarmStatus': true}, {..}, ...]
   /// 'notifications' : [{'message':'Event Added by Boo Boo', 'type': 'ADD'}, {..}, ...]
-  /// TODO: Add Query Options
+  /// 'queryOptions' : {'sortOption': 'start', 'orderOption': 'descending', ..}
   /// }
   ///
   static EventStore fromJson(dynamic json) {
@@ -63,8 +60,9 @@ class EventStore {
       notifications.add(EventNotification.fromJson(parsedNotification));
     }
 
-    // TODO: Add Query Options parse
-    return EventStore(eventList, flaggedList, notifications, Map());
+    QueryOptions searchOptions = QueryOptions.fromMap(json['searchOptions']);
+
+    return EventStore(eventList, flaggedList, notifications, searchOptions);
   }
 
   // Convert to Json
@@ -93,21 +91,8 @@ class EventStore {
     }
     json['notifications'] = toParseNotificationsList;
 
-    json['searchOptions'] = {};
+    json['searchOptions'] = this.searchOptions.toMap();
 
     return json;
   }
-}
-
-enum QueryOptions {
-  // Order by
-  BYSTART,
-  BYEND,
-  BYNAME,
-  // Order Direction
-  DESCENDING,
-  ASCENDING,
-  // Limit to a number
-  ALL,
-  LIMIT,
 }

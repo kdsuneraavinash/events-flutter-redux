@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:event_app/event.dart' show Event;
+import 'package:event_app/state/event.dart';
 
 /// Page to show Event Information/Description
 class EventInfo extends StatelessWidget {
@@ -50,17 +50,13 @@ class EventInfoCard extends StatelessWidget {
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
           child: Text(this.description,
-              softWrap: true,
-              textAlign: TextAlign.justify),
+              softWrap: true, textAlign: TextAlign.justify),
         )
       ],
     );
   }
 
-  EventInfoCard(
-      {this.icon,
-      this.title,
-      this.description});
+  EventInfoCard({this.icon, this.title, this.description});
 
   final IconData icon;
   final String title;

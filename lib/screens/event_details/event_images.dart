@@ -1,7 +1,8 @@
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
-import 'package:event_app/event.dart' show Event;
-import 'package:event_app/screens/event_details/event_image_view.dart' show EventImageView;
+import 'package:event_app/state/event.dart';
+import 'package:event_app/screens/event_details/event_image_view.dart'
+    show EventImageView;
 import 'package:flutter/material.dart';
 import 'package:event_app/custom_widgets/network_image.dart'
     show DefParameterNetworkImage;
@@ -13,7 +14,7 @@ class ImageGrid extends StatelessWidget {
     for (int index = 0; index < event.images.length; index++) {
       String url = event.images[index];
       images.add(InkWell(
-        child: DefParameterNetworkImage( 
+        child: DefParameterNetworkImage(
           imageUrl: url,
           isCover: true,
         ),
