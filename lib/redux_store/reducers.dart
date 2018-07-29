@@ -35,6 +35,7 @@ EventStore reducers(EventStore eventStore, dynamic action) {
 /// flutter_redux_persist action
 EventStore persistLoadedActionReducer(
     EventStore eventStore, PersistLoadedAction action) {
+  if (action.state == null) return eventStore;
   return action.state;
 }
 
