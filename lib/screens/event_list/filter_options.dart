@@ -51,11 +51,11 @@ class FilterOptionsState extends State<FilterOptions> {
       title: "Sort",
       children: <Widget>[
         _buildRadioButton(context, "Sort By Start Date",
-            "Will be sorted using start date/time", "sortOption", "start", Icons.date_range),
+            "Will be sorted using start date/time", "sortOption", "start"),
         _buildRadioButton(context, "Sort By End Date",
-            "Will be sorted using end date/time", "sortOption", "end", Icons.date_range),
+            "Will be sorted using end date/time", "sortOption", "end"),
         _buildRadioButton(context, "Sort By Event Name",
-            "Will be sorted using name of event", "sortOption", "name", Icons.details),
+            "Will be sorted using name of event", "sortOption", "name"),
       ],
     );
   }
@@ -64,13 +64,13 @@ class FilterOptionsState extends State<FilterOptions> {
   Widget _buildOrderByOptions(BuildContext context) {
     return _buildExpansionTile(
       context: context,
-      icon: Icons.swap_vert,
+      icon: FontAwesomeIcons.sortAlphaUp,
       title: "Order",
       children: <Widget>[
         _buildRadioButton(context, "Ascending",
-            "Will be sorted in increasing order", "orderOption", "ascending", FontAwesomeIcons.sortAlphaUp),
+            "Will be sorted in increasing order", "orderOption", "ascending"),
         _buildRadioButton(context, "Descending",
-            "Will be sorted in increasing order", "orderOption", "descending", FontAwesomeIcons.sortAlphaDown),
+            "Will be sorted in increasing order", "orderOption", "descending"),
       ],
     );
   }
@@ -123,7 +123,7 @@ class FilterOptionsState extends State<FilterOptions> {
 
   /// Build Check box
   Widget _buildRadioButton(BuildContext context, String text, String subtitle,
-      String group, String key, IconData icon) {
+      String group, String key) {
     return RadioListTile(
       value: key,
       activeColor: Theme.of(context).primaryColor,
@@ -131,7 +131,6 @@ class FilterOptionsState extends State<FilterOptions> {
       onChanged: (v) => setState(() => this.widget.searchOptions[group] = key),
       title: Text(text),
       subtitle: Text(subtitle),
-      secondary: Icon(icon),
     );
   }
 

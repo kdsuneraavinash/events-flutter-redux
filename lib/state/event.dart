@@ -75,6 +75,22 @@ class Event {
       this.location,
       this.id);
 
+  factory Event.empty() {
+    return Event(
+        "[eventName]",
+        "[organizer]",
+        DateTime.now(),
+        DateTime.now(),
+        "[startTimeString]",
+        "[endTimeString]",
+        false,
+        ["[images]"],
+        "[headerImage]",
+        "[description]",
+        "[location]",
+        "[id]");
+  }
+
   factory Event.fromFirestoreDoc(DocumentSnapshot doc) {
     return new Event(
         doc.data['eventName'],
