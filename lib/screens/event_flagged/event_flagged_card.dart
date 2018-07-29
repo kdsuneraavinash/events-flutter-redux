@@ -12,7 +12,6 @@ import 'package:event_app/screens/event_details.dart' show EventDetails;
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
 
-// TODO: Add comments and implement this tool
 class EventFlaggedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -27,18 +26,14 @@ class EventFlaggedCard extends StatelessWidget {
       key: Key(this.flaggedEvent.eventID),
       title: Text(
         store.state.eventList[this.flaggedEvent.eventID].eventName,
-        style: TextStyle(color: Theme.of(context).primaryColor),
       ),
       trailing: this.flaggedEvent.alarmStatus
           ? _buildAlarmDispatchButton(
               icon: Icons.alarm_on,
-              color: Theme.of(context).primaryColor,
               store: store,
             )
           : _buildAlarmDispatchButton(
-              icon: Icons.alarm_off,
-              store: store,
-            ),
+              icon: Icons.alarm_off, store: store, color: Colors.grey),
       children: <Widget>[
         Container(
           alignment: Alignment.centerLeft,
@@ -58,15 +53,15 @@ class EventFlaggedCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             _buildActionButtonButton(
-              icon: Icons.slideshow,
-              label: "View",
-              onPressed: () => _handleViewPressed(context, store),
-            ),
+                icon: Icons.remove_red_eye,
+                label: "View",
+                onPressed: () => _handleViewPressed(context, store),
+                context: context),
             _buildActionButtonButton(
-              icon: Icons.delete_outline,
-              label: "Unpin",
-              onPressed: () => _handleUnpinPressed(context, store),
-            ),
+                icon: Icons.delete_outline,
+                label: "Unpin",
+                onPressed: () => _handleUnpinPressed(context, store),
+                context: context),
           ],
         ),
       ],
@@ -76,20 +71,26 @@ class EventFlaggedCard extends StatelessWidget {
   Widget _buildAlarmDispatchButton(
       {IconData icon, Store<EventStore> store, Color color}) {
     return IconButton(
-      icon: Icon(icon),
+      icon: CircleAvatar(
+        child: Icon(icon),
+        backgroundColor: color,
+      ),
       onPressed: () => store.dispatch(ChangeAlarmState(
           this.flaggedEvent.eventID,
           !this.flaggedEvent.alarmStatus,
           DateTime.now())),
-      color: color,
     );
   }
 
   Widget _buildActionButtonButton(
-      {IconData icon, String label, VoidCallback onPressed}) {
+      {IconData icon,
+      String label,
+      VoidCallback onPressed,
+      BuildContext context}) {
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: FlatButton.icon(
+      child: OutlineButton.icon(
+        borderSide: BorderSide(color: Theme.of(context).primaryColor),
         icon: Icon(icon),
         label: Text(label),
         onPressed: onPressed,

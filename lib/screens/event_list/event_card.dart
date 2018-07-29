@@ -12,6 +12,7 @@ import 'package:event_app/screens/event_details.dart' show EventDetails;
 import 'package:flutter_redux/flutter_redux.dart'
     show StoreBuilder, StoreConnector;
 import 'package:redux/redux.dart' show Store;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// Individual Card.
 /// Displays a Banner, Event Title and Organizers, and Time and Date.
@@ -105,7 +106,9 @@ class FlaggingButton extends StatelessWidget {
         bool isFlagged = flaggedList.any((v) => v.eventID == this.eventID);
         return IconButton(
           icon: Icon(
-            isFlagged ? Icons.bookmark : Icons.bookmark_border,
+            isFlagged
+                ? FontAwesomeIcons.solidBookmark
+                : FontAwesomeIcons.bookmark,
             color: isFlagged ? Theme.of(context).accentColor : null,
           ),
           onPressed: () => _handleFlagOnTap(context, isFlagged, eventStore),

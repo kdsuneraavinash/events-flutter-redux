@@ -21,6 +21,8 @@ dependencies:
   firebase_messaging: ^1.0.4
   # Persist app state
   redux_persist_flutter: ^0.6.0-rc.1
+  # Add additional Icon set
+  font_awesome_flutter: ^7.1.0
 
 dev_dependencies:
   flutter_test:

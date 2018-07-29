@@ -21,6 +21,7 @@ import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
 import 'package:event_app/screens/event_list/filter_options.dart'
     show FilterOptions;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
@@ -51,7 +52,7 @@ class EventListWindow extends StatelessWidget {
           ),
           */
           IconButton(
-            icon: new Icon(Icons.help),
+            icon: Icon(FontAwesomeIcons.questionCircle),
             onPressed: () => _handleCreditsAction(context),
           ),
         ],
@@ -82,7 +83,7 @@ class EventListWindow extends StatelessWidget {
               onTap: () => _handleNotificationsAction(context),
             ),
             ListTile(
-              leading: Icon(Icons.book),
+              leading: Icon(FontAwesomeIcons.mapPin),
               title: Text("Pinned Events"),
               subtitle: Text("Show events that you pinned"),
               onTap: () => _handleFlaggedAction(context),
@@ -91,7 +92,7 @@ class EventListWindow extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: new Icon(Icons.filter_list),
+        child: new Icon(FontAwesomeIcons.filter),
         onPressed: () => _handleFilterAction(context, store),
       ),
       body: EventListBody(store),

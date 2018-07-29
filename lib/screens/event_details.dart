@@ -5,6 +5,7 @@ import 'package:event_app/screens/event_details/event_links.dart'
     show EventLinks;
 import 'package:event_app/screens/event_details/event_images.dart'
     show ImageGrid;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// Event Details Page which hosts a PageView to show all info
 class EventDetails extends StatefulWidget {
@@ -46,17 +47,17 @@ class EventDetailsState extends State<EventDetails> {
         currentIndex: this.currentIndex,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.event_note),
+            icon: Icon(FontAwesomeIcons.database),
             title: Text("Event Info"),
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.image),
+            icon: Icon(FontAwesomeIcons.images),
             title: Text("Images"),
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.link),
+            icon: Icon(FontAwesomeIcons.link),
             title: Text("Contact"),
             backgroundColor: Theme.of(context).primaryColor,
           ),
@@ -73,13 +74,13 @@ class EventDetailsState extends State<EventDetails> {
         _buildInlineListTile(
           "Start Date",
           event.startTimeString,
-          Icons.hourglass_full,
+          FontAwesomeIcons.hourglassStart,
           context,
         ),
         _buildInlineListTile(
           "End Date",
           event.endTimeString,
-          Icons.hourglass_empty,
+          FontAwesomeIcons.hourglassEnd,
           context,
         ),
         Expanded(

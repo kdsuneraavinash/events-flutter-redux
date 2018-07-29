@@ -12,6 +12,7 @@ import 'package:event_app/state/notification.dart';
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
 import 'package:redux/redux.dart' show Store;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// Body of EventListWindow.
 /// Contains of a ListView consisting of Event Cards so Users can scroll
@@ -79,7 +80,7 @@ class EventListBody extends StatefulWidget {
               padding: EdgeInsets.only(top: 8.0),
               child: ListTile(
                 leading: Icon(
-                  Icons.info_outline,
+                  FontAwesomeIcons.infoCircle,
                 ),
                 title: Text(message),
               ),

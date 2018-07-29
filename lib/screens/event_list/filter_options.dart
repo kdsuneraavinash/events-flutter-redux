@@ -1,5 +1,6 @@
 import 'package:event_app/state/query.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// * Search settings dialog
 class FilterOptions extends StatefulWidget {
@@ -27,7 +28,7 @@ class FilterOptionsState extends State<FilterOptions> {
       body: _buildOptions(context),
       floatingActionButton: FloatingActionButton(
         onPressed: _handleSaveButtonPressed,
-        child: Icon(Icons.save),
+        child: Icon(FontAwesomeIcons.solidSave),
       ),
     );
   }
@@ -50,11 +51,11 @@ class FilterOptionsState extends State<FilterOptions> {
       title: "Sort",
       children: <Widget>[
         _buildRadioButton(context, "Sort By Start Date",
-            "Will be sorted using start date/time", "sortOption", "start"),
+            "Will be sorted using start date/time", "sortOption", "start", Icons.date_range),
         _buildRadioButton(context, "Sort By End Date",
-            "Will be sorted using end date/time", "sortOption", "end"),
+            "Will be sorted using end date/time", "sortOption", "end", Icons.date_range),
         _buildRadioButton(context, "Sort By Event Name",
-            "Will be sorted using name of event", "sortOption", "name"),
+            "Will be sorted using name of event", "sortOption", "name", Icons.details),
       ],
     );
   }
@@ -67,9 +68,9 @@ class FilterOptionsState extends State<FilterOptions> {
       title: "Order",
       children: <Widget>[
         _buildRadioButton(context, "Ascending",
-            "Will be sorted in increasing order", "orderOption", "ascending"),
+            "Will be sorted in increasing order", "orderOption", "ascending", FontAwesomeIcons.sortAlphaUp),
         _buildRadioButton(context, "Descending",
-            "Will be sorted in increasing order", "orderOption", "descending"),
+            "Will be sorted in increasing order", "orderOption", "descending", FontAwesomeIcons.sortAlphaDown),
       ],
     );
   }
@@ -122,7 +123,7 @@ class FilterOptionsState extends State<FilterOptions> {
 
   /// Build Check box
   Widget _buildRadioButton(BuildContext context, String text, String subtitle,
-      String group, String key) {
+      String group, String key, IconData icon) {
     return RadioListTile(
       value: key,
       activeColor: Theme.of(context).primaryColor,
@@ -130,6 +131,7 @@ class FilterOptionsState extends State<FilterOptions> {
       onChanged: (v) => setState(() => this.widget.searchOptions[group] = key),
       title: Text(text),
       subtitle: Text(subtitle),
+      secondary: Icon(icon),
     );
   }
 

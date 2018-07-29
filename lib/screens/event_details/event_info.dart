@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:event_app/state/event.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// Page to show Event Information/Description
 class EventInfo extends StatelessWidget {
@@ -8,17 +9,17 @@ class EventInfo extends StatelessWidget {
     return ListView(
       children: <Widget>[
         EventInfoCard(
-          icon: Icons.location_city,
+          icon: FontAwesomeIcons.mapMarkedAlt,
           title: "Venue",
           description: this.event.location,
         ),
         EventInfoCard(
-          icon: Icons.people,
+          icon: FontAwesomeIcons.users,
           title: "Organizers",
           description: this.event.organizer,
         ),
         EventInfoCard(
-          icon: Icons.description,
+          icon: FontAwesomeIcons.readme,
           title: "Description",
           description: this.event.description,
         ),
