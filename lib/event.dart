@@ -5,7 +5,7 @@ import 'package:flutter/material.dart' show IconData, Icons;
 /// Launch method for EventContact
 enum LaunchMethod { CALL, MESSAGE, WEB, FACEBOOK }
 
-enum NotificationType { ADD_FLAG, REM_FLAG, ALARM, CHANGE, REMOVE, ADD, MESSAGE }
+enum NotificationType { ADD, MESSAGE }
 
 /// Hold Event Organizer Contact Data
 class EventContact {
@@ -93,14 +93,67 @@ class Event {
         doc.documentID);
   }
 
+  // Parse from JSON
+  factory Event.fromJson(dynamic json) {
+    return Event(
+      json["eventName"], // String
+      json["organizer"], // String
+      // Connot convert staright to HSon
+      // So will remember MillisecondsSinceEpoch and
+      // Use that to convert back
+      DateTime.fromMillisecondsSinceEpoch(
+          int.parse(json['startTime'])), // Date Time
+      DateTime
+          .fromMillisecondsSinceEpoch(int.parse(json['endTime'])), // Date Time
+      json["startTimeString"], // String
+      json["endTimeString"], // String
+      json["isAllDay"], // bool
+      List<String>.from(json["images"]), // List
+      json["headerImage"], // String
+      json["description"], // String
+      json["location"], // String
+      json["id"], // String
+    );
+  }
+
+  Map toJson() {
+    return {
+      "eventName": this.eventName,
+      "organizer": this.organizer,
+      "startTime": this.startTime.millisecondsSinceEpoch.toString(),
+      "endTime": this.endTime.millisecondsSinceEpoch.toString(),
+      "startTimeString": this.startTimeString,
+      "endTimeString": this.endTimeString,
+      "isAllDay": this.isAllDay,
+      "images": this.images,
+      "headerImage": this.headerImage,
+      "description": this.description,
+      "location": this.location,
+      "id": this.id,
+    };
+  }
+
   // Format Date to string
   static String getFormattedDate(DateTime obj, bool isAllDay) {
     String str = "";
-    List<String> months = ['Jan', 'Feb', 'March', 'April', 'May', 'June',
-    'July', 'Aug', 'Sep','Oct', 'Nov', 'Dec'];
+    List<String> months = [
+      'Jan',
+      'Feb',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
     str += '${obj.year} ${months[obj.month - 1]} ${obj.day} ';
-    if (!isAllDay) 
-     str += 'at ${(obj.hour % 12)}:${obj.minute.toString().padRight(2,'0')} ${obj.hour/12 == 0 ? "AM" : "PM"}';
+    if (!isAllDay)
+      str +=
+          'at ${(obj.hour % 12)}:${obj.minute.toString().padRight(2,'0')} ${obj.hour/12 == 0 ? "AM" : "PM"}';
     return str;
   }
 
@@ -146,16 +199,6 @@ class EventNotification {
 
   IconData getIcon() {
     switch (this.type) {
-      case NotificationType.ADD_FLAG:
-        return Icons.flag;
-      case NotificationType.REM_FLAG:
-        return Icons.outlined_flag;
-      case NotificationType.ALARM:
-        return Icons.alarm;
-      case NotificationType.CHANGE:
-        return Icons.edit;
-      case NotificationType.REMOVE:
-        return Icons.remove;
       case NotificationType.ADD:
         return Icons.event;
       case NotificationType.MESSAGE:
@@ -164,11 +207,64 @@ class EventNotification {
         return Icons.info;
     }
   }
+
+  static NotificationType getTypeFromString(String type) {
+    switch (type) {
+      case 'ADD':
+        return NotificationType.ADD;
+      case 'MESSAGE':
+      default:
+        return NotificationType.MESSAGE;
+    }
+  }
+
+  static String getStringFromType(NotificationType type) {
+    switch (type) {
+      case NotificationType.ADD:
+        return 'ADD';
+      case NotificationType.MESSAGE:
+      default:
+        return 'MESSAGE';
+    }
+  }
+
+  // Parse from JSON
+  factory EventNotification.fromJson(Map<String, dynamic> json) {
+    // Notification type convert from String
+    return EventNotification(
+      json["message"], // String
+      EventNotification.getTypeFromString(json["type"]), // NotificationType
+      DateTime.fromMillisecondsSinceEpoch(json["timestamp"]), // Date Time
+    );
+  }
+
+  Map toJson() {
+    return {
+      "message": this.message,
+      "type": getStringFromType(this.type),
+      "timestamp": this.timestamp.millisecondsSinceEpoch
+    };
+  }
 }
 
 class FlaggedEvent {
   final String eventID;
   final bool alarmStatus;
 
+  // Parse from JSON
   FlaggedEvent(this.eventID, this.alarmStatus);
+
+  factory FlaggedEvent.fromJson(Map<String, dynamic> json) {
+    return FlaggedEvent(
+      json["eventID"], // String
+      json["alarmStatus"], // bool
+    );
+  }
+
+  Map toJson() {
+    return {
+      "eventID": this.eventID,
+      "alarmStatus": this.alarmStatus,
+    };
+  }
 }

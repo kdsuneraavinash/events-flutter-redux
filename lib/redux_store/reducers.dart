@@ -3,45 +3,51 @@ import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
 import 'package:event_app/event.dart'
     show Event, EventNotification, FlaggedEvent;
 import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:redux_persist/redux_persist.dart' show PersistLoadedAction;
 
 /// Connect to all reducers
 EventStore reducers(EventStore eventStore, dynamic action) {
-  switch (action.runtimeType) {
-    case AddToFlaggedList:
-      return addToFlaggedListReducer(eventStore, action);
-    case RemoveFromFlaggedList:
-      return removeFromFlaggedListReducer(eventStore, action);
-    case ChangeAlarmState:
-      return changeAlarmState(eventStore, action);
-    case MarkNotificationsAsRead:
-      return markNotificationsAsReadReducer(eventStore, action);
-    case ClearNotifications:
-      return clearNotificationsReducer(eventStore, action);
-    case FirestoreDocumentsChanged:
-      return firestoreEventsAddedReducer(eventStore, action);
-    case SearchOptionsSet:
-      return searchOptionsSetReducer(eventStore, action);
-    case AddNotification:
-      return addNotificationReducer(eventStore, action);
-    default:
-      return eventStore;
+  if (action is AddToFlaggedList) {
+    return addToFlaggedListReducer(eventStore, action);
+  } else if (action is RemoveFromFlaggedList) {
+    return removeFromFlaggedListReducer(eventStore, action);
+  } else if (action is ChangeAlarmState) {
+    return changeAlarmState(eventStore, action);
+  } else if (action is MarkNotificationsAsRead) {
+    return markNotificationsAsReadReducer(eventStore, action);
+  } else if (action is ClearNotifications) {
+    return clearNotificationsReducer(eventStore, action);
+  } else if (action is FirestoreDocumentsChanged) {
+    return firestoreEventsAddedReducer(eventStore, action);
+  } else if (action is SearchOptionsSet) {
+    return searchOptionsSetReducer(eventStore, action);
+  } else if (action is AddNotification) {
+    return addNotificationReducer(eventStore, action);
+  } else if (action is PersistLoadedAction<EventStore>) {
+    return persistLoadedActionReducer(eventStore, action);
+  } else {
+    print("UNHANDLED DISPATCH: " + action.runtimeType.toString());
+    return eventStore.copyWith();
   }
+}
+
+/// Event Store Loaded
+/// flutter_redux_persist action
+EventStore persistLoadedActionReducer(
+    EventStore eventStore, PersistLoadedAction action) {
+  return action.state;
 }
 
 /// Add event to flagged events list
 /// returns a copy of original list
 EventStore addToFlaggedListReducer(
     EventStore eventStore, AddToFlaggedList action) {
-  List<FlaggedEvent> flaggedList = eventStore.flaggedList;
-  return EventStore(
-    eventStore.eventList,
-    List.from(flaggedList)
+  return eventStore.copyWith(
+    flaggedList: List.from(eventStore.flaggedList)
       ..add(
         // Adds to flagged list: default alarm state is True
         FlaggedEvent(action.eventToAddID, true),
       ),
-    eventStore.notifications,
-    eventStore.searchOptions,
   );
 }
 
@@ -49,24 +55,16 @@ EventStore addToFlaggedListReducer(
 /// returns a copy of original list
 EventStore removeFromFlaggedListReducer(
     EventStore eventStore, RemoveFromFlaggedList action) {
-  List<FlaggedEvent> flaggedList = eventStore.flaggedList;
-  return EventStore(
-    eventStore.eventList,
-    // Remove item by event ID
-    List.from(flaggedList)
+  return eventStore.copyWith(
+    flaggedList: List.from(eventStore.flaggedList)
       ..removeWhere((v) => v.eventID == action.eventToRemoveID),
-    eventStore.notifications,
-    eventStore.searchOptions,
   );
 }
 
 EventStore addNotificationReducer(
     EventStore eventStore, AddNotification action) {
-  return EventStore(
-    eventStore.eventList,
-    // Remove item by event ID
-    eventStore.flaggedList,
-    List.from(eventStore.notifications)
+  return eventStore.copyWith(
+    notifications: List.from(eventStore.notifications)
       ..add(
         // Add a notification
         EventNotification(
@@ -75,7 +73,6 @@ EventStore addNotificationReducer(
           action.time,
         ),
       ),
-    eventStore.searchOptions,
   );
 }
 
@@ -90,39 +87,25 @@ EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
     }
   }
 
-  return EventStore(
-    eventStore.eventList,
-    flaggedList,
-    eventStore.notifications,
-    eventStore.searchOptions,
-  );
+  return eventStore.copyWith(flaggedList: flaggedList);
 }
 
 ///Marks all notifications as read
 EventStore markNotificationsAsReadReducer(
     EventStore eventStore, MarkNotificationsAsRead action) {
-  return EventStore(
-    eventStore.eventList,
-    eventStore.flaggedList,
-    eventStore.notifications
+  return eventStore.copyWith(
+    notifications: eventStore.notifications
         .map((v) =>
             // New notification mapping with marked as read
             EventNotification(v.message, v.type, v.timestamp)..markAsRead())
         .toList(),
-    eventStore.searchOptions,
   );
 }
 
 /// Empty all notifications
 EventStore clearNotificationsReducer(
     EventStore eventStore, ClearNotifications action) {
-  return EventStore(
-    eventStore.eventList,
-    eventStore.flaggedList,
-    // Empty list assigned to event list
-    List(),
-    eventStore.searchOptions,
-  );
+  return eventStore.copyWith(notifications: List());
 }
 
 /// Loaded all events from Firebase
@@ -140,7 +123,7 @@ EventStore firestoreEventsAddedReducer(
   // Get all events
   Map<String, Event> allEvents = {};
   List<DocumentSnapshot> documents = action.querySnapshot.documents;
-  
+
   for (DocumentSnapshot doc in documents) {
     allEvents[doc.documentID] = Event.fromFirestoreDoc(doc);
   }
@@ -159,21 +142,10 @@ EventStore firestoreEventsAddedReducer(
       }
     }
   }
-
-  return EventStore(
-    allEvents,
-    allFlagged,
-    eventStore.notifications,
-    eventStore.searchOptions,
-  );
+  return eventStore.copyWith(eventList: allEvents, flaggedList: allFlagged);
 }
 
 EventStore searchOptionsSetReducer(
     EventStore eventStore, SearchOptionsSet action) {
-  return EventStore(
-    eventStore.eventList,
-    eventStore.flaggedList,
-    eventStore.notifications,
-    action.newSearchOptions,
-  );
+  return eventStore.copyWith(searchOptions: action.newSearchOptions);
 }
