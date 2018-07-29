@@ -34,7 +34,7 @@ class EventListBody extends StatefulWidget {
     return new EventListBodyState();
   }
 
-  final FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   Widget buildEventListBody(BuildContext context) {
     Map<String, Event> events = this.store.state.eventList;

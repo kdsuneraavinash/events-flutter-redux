@@ -23,7 +23,7 @@ class FilterOptionsState extends State<FilterOptions> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: Text("Filter Results"),
+        title: Text("Filter Options"),
       ),
       body: _buildOptions(context),
       floatingActionButton: FloatingActionButton(
@@ -51,9 +51,9 @@ class FilterOptionsState extends State<FilterOptions> {
       title: "Sort",
       children: <Widget>[
         _buildRadioButton(context, "Sort By Start Date",
-            "Will be sorted using start date/time", "sortOption", "start"),
+            "Will be sorted using start date and time", "sortOption", "start"),
         _buildRadioButton(context, "Sort By End Date",
-            "Will be sorted using end date/time", "sortOption", "end"),
+            "Will be sorted using end date and time", "sortOption", "end"),
         _buildRadioButton(context, "Sort By Event Name",
             "Will be sorted using name of event", "sortOption", "name"),
       ],
@@ -86,6 +86,7 @@ class FilterOptionsState extends State<FilterOptions> {
           context,
           "Limit Results",
           "Limits result to a number. If unchecked all results will be shown.",
+          "*Changing this option might affect some functinalities of the App.",
           "limitOption",
         ),
         // Slider box to get limit
@@ -109,11 +110,17 @@ class FilterOptionsState extends State<FilterOptions> {
   }
 
   /// Build Check box
-  Widget _buildCheckBox(
-      BuildContext context, String text, String message, String key) {
+  Widget _buildCheckBox(BuildContext context, String text, String message,
+      String subMessage, String key) {
     return CheckboxListTile(
       title: Text(text),
-      subtitle: Text(message),
+      subtitle: Padding(
+        padding: EdgeInsets.symmetric(vertical:8.0),
+        child: Column(children: <Widget>[
+          Text(message),
+          Text(subMessage, style: TextStyle(fontWeight: FontWeight.w700))
+        ]),
+      ),
       value: this.widget.searchOptions[key] == "limit",
       onChanged: (v) =>
           setState(() => this.widget.searchOptions[key] = v ? "limit" : "all"),

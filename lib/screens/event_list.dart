@@ -22,6 +22,7 @@ import 'package:redux/redux.dart' show Store;
 import 'package:event_app/screens/event_list/filter_options.dart'
     show FilterOptions;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
 
 /// Main Page that displays a list of available Events.
 /// TODO: Implement a action element in AppBar => PopupMenuButton
@@ -40,23 +41,21 @@ class EventListWindow extends StatelessWidget {
 
   Widget buildEventListWindow(BuildContext context, Store<EventStore> store) {
     EventStore eventStore = store.state;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Mora Events"),
-        actions: <Widget>[
-          // TODO: Implement Searchbutton
-          /*
+    return SearchBoxedScaffold(
+      appBarTitle: Text("Mora Events"),
+      appBarActions: <Widget>[
+        // TODO: Implement Searchbutton
+        /*
           IconButton(
             icon: new Icon(Icons.search),
             onPressed: () => _handleSearchAction(context),
           ),
           */
-          IconButton(
-            icon: Icon(FontAwesomeIcons.questionCircle),
-            onPressed: () => _handleCreditsAction(context),
-          ),
-        ],
-      ),
+        IconButton(
+          icon: Icon(Icons.settings),
+          onPressed: () => _handleFilterAction(context, store),
+        ),
+      ],
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
@@ -88,12 +87,14 @@ class EventListWindow extends StatelessWidget {
               subtitle: Text("Show events that you pinned"),
               onTap: () => _handleFlaggedAction(context),
             ),
+            ListTile(
+              leading: Icon(FontAwesomeIcons.questionCircle),
+              title: Text("Credits"),
+              subtitle: Text("About our team"),
+              onTap: () => _handleCreditsAction(context),
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: new Icon(FontAwesomeIcons.filter),
-        onPressed: () => _handleFilterAction(context, store),
       ),
       body: EventListBody(store),
     );
@@ -128,6 +129,7 @@ class EventListWindow extends StatelessWidget {
 
   /// Show credits window
   void _handleCreditsAction(BuildContext context) {
+    Navigator.pop(context);
     TransitionMaker
         .slideTransition(
           destinationPageCall: () => Credits(),
@@ -185,4 +187,46 @@ Future<bool> makeSureIsConnected() async {
     return false;
   } on SocketException catch (_) {}
   return false;
+}
+
+class SearchBoxedScaffold extends StatefulWidget {
+  @override
+  _SearchBoxedScaffoldState createState() => _SearchBoxedScaffoldState();
+
+  final Widget appBarTitle;
+  final List<Widget> appBarActions;
+  final Widget drawer;
+  final Widget body;
+  SearchBoxedScaffold(
+      {this.appBarTitle, this.appBarActions, this.drawer, this.body});
+}
+
+class _SearchBoxedScaffoldState extends State<SearchBoxedScaffold> {
+  SearchBar searchBar;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: searchBar.build(context),
+      drawer: widget.drawer,
+      body: widget.body,
+    );
+  }
+
+  _SearchBoxedScaffoldState() {
+    searchBar = SearchBar(
+      inBar: true,
+      setState: setState,
+      onSubmitted: print,
+      buildDefaultAppBar: (_) => buildAppBar(),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      title: widget.appBarTitle,
+      actions: List.from(widget.appBarActions)
+        ..add(searchBar.getSearchAction(context)),
+    );
+  }
 }

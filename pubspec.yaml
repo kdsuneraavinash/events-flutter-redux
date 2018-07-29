@@ -21,6 +21,8 @@ dependencies:
   cloud_firestore: 0.7.3
   # Show notifications
   firebase_messaging: ^1.0.4
+  # Flutter search bar
+  flutter_search_bar: ^2.0.4
 
 dev_dependencies:
   flutter_test:
