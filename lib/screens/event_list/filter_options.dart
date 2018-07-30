@@ -70,7 +70,7 @@ class FilterOptionsState extends State<FilterOptions> {
         _buildRadioButton(context, "Ascending",
             "Will be sorted in increasing order", "orderOption", "ascending"),
         _buildRadioButton(context, "Descending",
-            "Will be sorted in increasing order", "orderOption", "descending"),
+            "Will be sorted in decreasing order", "orderOption", "descending"),
       ],
     );
   }
