@@ -173,7 +173,6 @@ class Event {
 
   /// Create an event for test purposes
   /*
-    TODO: Add functionality later in web
     for (List<String> _contact in eventData[7]) {
       this.contact.add(
             new EventContact.fromList(_contact),

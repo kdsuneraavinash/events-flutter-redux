@@ -18,13 +18,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 /// Body of EventListWindow.
 /// Contains of a ListView consisting of Event Cards so Users can scroll
 /// through Events.
-/// TODO: Use a firestore connection to load events.
 /// Also contains a RefreshIndicator so users can refresh Event Content.
-/// TODO: Add Event Refresh Process
-/// Async function which will update Events when refreshed with
-/// RefreshIndicator.
-/// Currently set to wait 3s and display a SnackBar.
-/// TODO: Add a real refresh method
+/// Will automatically update
 class EventListBody extends StatefulWidget {
   final Store<EventStore> store;
   // Variable needed to Levenshtein Distance

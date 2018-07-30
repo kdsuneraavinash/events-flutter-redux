@@ -116,11 +116,7 @@ EventStore clearNotificationsReducer(
 /// * load all events to allEvents
 /// * Filter flagged items which are only present in both
 /// (Remove flagged items which are not in new list)
-/// * Detect unchanged documents
-/// * Detect changed content documents (Add a notification)
-/// * Detect removed documents (Add a notification)
-/// * Detect newly added documents (Add a notification)
-/// TODO: Find if these can be done easily using Data Streams in FireStore
+/// TODO: Optimize this to retrieve and change only document changes
 EventStore firestoreEventsAddedReducer(
     EventStore eventStore, FirestoreDocumentsChanged action) {
   // Get all events

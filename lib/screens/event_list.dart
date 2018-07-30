@@ -26,7 +26,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 
 /// Main Page that displays a list of available Events.
-/// TODO: Implement a action element in AppBar => PopupMenuButton
 class EventListWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

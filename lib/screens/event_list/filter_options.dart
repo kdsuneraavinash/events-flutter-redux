@@ -6,7 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class FilterOptions extends StatefulWidget {
   factory FilterOptions.fromEventStore(QueryOptions searchOptions) {
     // Parse all data to a map to be used in dialog
-    // TODO: Clean this code by directly using this type of object in store
     // or using store data directly here
     return FilterOptions(searchOptions.toMap());
   }

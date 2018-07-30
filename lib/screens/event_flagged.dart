@@ -6,9 +6,7 @@ import 'package:event_app/screens/event_flagged/event_flagged_card.dart'
 import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
 
 /// Window to show pinned events to toggle alarms
-/// TODO: All toggle alarms
-/// TODO: Remember alarm states
-/// TODO Change design
+/// TODO: Add notifications on Alarm times
 class FlaggedEventManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 /// Image will act as a Hero.
 /// When clicked on Time and Date, shows a calendar showing the date.
 /// User can add this event straight to Google Calendars from here.
-/// TODO: Implement Calendar Viewing
 /// TODO: Implement Google Calendar event adding
 class EventCard extends StatelessWidget {
   @override

@@ -66,7 +66,6 @@ class QueryOptions {
 
   Map<String, dynamic> toMap() {
     // Parse all data to a map to be used in dialog
-    // TODO: Clean this code by directly using this type of object in store
     // or using store data directly here
     Map<String, dynamic> parsedSearchOptions = {};
 
