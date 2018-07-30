@@ -69,3 +69,9 @@ class SearchOptionsSet {
 
   SearchOptionsSet(this.newSearchOptions);
 }
+
+class SearchStringSet {
+  final String searchString;
+
+  SearchStringSet(this.searchString);
+}

@@ -6,10 +6,11 @@ import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/redux_store/actions.dart'
     show
-        FirestoreListenToUpdates,
         FirestoreEndConnection,
+        FirestoreListenToUpdates,
         FirestoreRefreshAll,
-        SearchOptionsSet;
+        SearchOptionsSet,
+        SearchStringSet;
 import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:event_app/screens/credits.dart' show Credits;
 import 'package:event_app/screens/event_flagged.dart' show FlaggedEventManager;
@@ -44,15 +45,8 @@ class EventListWindow extends StatelessWidget {
     return SearchBoxedScaffold(
       appBarTitle: Text("Mora Events"),
       appBarActions: <Widget>[
-        // TODO: Implement Searchbutton
-        /*
-          IconButton(
-            icon: new Icon(Icons.search),
-            onPressed: () => _handleSearchAction(context),
-          ),
-          */
         IconButton(
-          icon: Icon(Icons.settings),
+          icon: Icon(Icons.filter_list),
           onPressed: () => _handleFilterAction(context, store),
         ),
       ],
@@ -97,6 +91,7 @@ class EventListWindow extends StatelessWidget {
         ),
       ),
       body: EventListBody(store),
+      store: store,
     );
   }
 
@@ -197,12 +192,18 @@ class SearchBoxedScaffold extends StatefulWidget {
   final List<Widget> appBarActions;
   final Widget drawer;
   final Widget body;
+  final Store<EventStore> store;
   SearchBoxedScaffold(
-      {this.appBarTitle, this.appBarActions, this.drawer, this.body});
+      {this.appBarTitle,
+      this.appBarActions,
+      this.drawer,
+      this.body,
+      this.store});
 }
 
 class _SearchBoxedScaffoldState extends State<SearchBoxedScaffold> {
   SearchBar searchBar;
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -213,20 +214,38 @@ class _SearchBoxedScaffoldState extends State<SearchBoxedScaffold> {
     );
   }
 
+  void textChanged() {
+    widget.store.dispatch(SearchStringSet(controller.text));
+  }
+
   _SearchBoxedScaffoldState() {
+    controller.addListener(textChanged);
     searchBar = SearchBar(
       inBar: true,
       setState: setState,
-      onSubmitted: print,
-      buildDefaultAppBar: (_) => buildAppBar(),
+      buildDefaultAppBar: (_) => buildDefaultAppBar(),
+      clearOnSubmit: false,
+      closeOnSubmit: false,
+      controller: controller,
     );
   }
 
-  AppBar buildAppBar() {
+  AppBar buildDefaultAppBar() {
+    // When showing default bar, search string = ""
+    controller.text = "";
+    IconButton searchButton = IconButton(
+      icon: Icon(FontAwesomeIcons.search),
+      onPressed: searchBar.getSearchAction(context).onPressed,
+    );
     return AppBar(
       title: widget.appBarTitle,
-      actions: List.from(widget.appBarActions)
-        ..add(searchBar.getSearchAction(context)),
+      actions: List.from(widget.appBarActions)..add(searchButton),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(textChanged);
+    super.dispose();
   }
 }

@@ -10,24 +10,29 @@ class EventStore {
   final List<FlaggedEvent> flaggedList;
   final List<EventNotification> notifications;
   final QueryOptions searchOptions;
+  // Will not be saved persistantly
+  final String searchString;
 
   factory EventStore.empty() {
-    return EventStore({}, [], [], QueryOptions.original());
+    return EventStore({}, [], [], QueryOptions.original(), "");
   }
 
-  EventStore(
-      this.eventList, this.flaggedList, this.notifications, this.searchOptions);
+  EventStore(this.eventList, this.flaggedList, this.notifications,
+      this.searchOptions, this.searchString);
 
   EventStore copyWith(
       {Map<String, Event> eventList,
       List<FlaggedEvent> flaggedList,
       List<EventNotification> notifications,
-      QueryOptions searchOptions}) {
+      QueryOptions searchOptions,
+      String searchString}) {
     eventList ??= this.eventList;
     flaggedList ??= this.flaggedList;
     notifications ??= this.notifications;
     searchOptions ??= this.searchOptions;
-    return EventStore(eventList, flaggedList, notifications, searchOptions);
+    searchString ??= this.searchString;
+    return EventStore(
+        eventList, flaggedList, notifications, searchOptions, searchString);
   }
 
   ///
@@ -62,7 +67,10 @@ class EventStore {
 
     QueryOptions searchOptions = QueryOptions.fromMap(json['searchOptions']);
 
-    return EventStore(eventList, flaggedList, notifications, searchOptions);
+    String emptySearchString = "";
+
+    return EventStore(eventList, flaggedList, notifications, searchOptions,
+        emptySearchString);
   }
 
   // Convert to Json

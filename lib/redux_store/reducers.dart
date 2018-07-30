@@ -22,6 +22,8 @@ EventStore reducers(EventStore eventStore, dynamic action) {
     return firestoreEventsAddedReducer(eventStore, action);
   } else if (action is SearchOptionsSet) {
     return searchOptionsSetReducer(eventStore, action);
+  } else if (action is SearchStringSet) {
+    return searchStringSetReducer(eventStore, action);
   } else if (action is AddNotification) {
     return addNotificationReducer(eventStore, action);
   } else if (action is PersistLoadedAction<EventStore>) {
@@ -149,4 +151,9 @@ EventStore firestoreEventsAddedReducer(
 EventStore searchOptionsSetReducer(
     EventStore eventStore, SearchOptionsSet action) {
   return eventStore.copyWith(searchOptions: action.newSearchOptions);
+}
+
+EventStore searchStringSetReducer(
+    EventStore eventStore, SearchStringSet action) {
+  return eventStore.copyWith(searchString: action.searchString);
 }

@@ -5,6 +5,7 @@ import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/redux_store/actions.dart' show AddNotification;
 import 'package:event_app/screens/event_details.dart' show EventDetails;
+import 'package:event_app/screens/event_list/search_algo.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:event_app/state/event.dart';
@@ -26,6 +27,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 /// TODO: Add a real refresh method
 class EventListBody extends StatefulWidget {
   final Store<EventStore> store;
+  // Variable needed to Levenshtein Distance
 
   EventListBody(this.store);
 
@@ -37,29 +39,35 @@ class EventListBody extends StatefulWidget {
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   Widget buildEventListBody(BuildContext context) {
-    Map<String, Event> events = this.store.state.eventList;
-    return events.length > 0
+    List<Event> eventsToShow = buildEventsToShow();
+    return eventsToShow.length > 0 || this.store.state.searchString != ""
         ? ListView.builder(
-            itemBuilder: (_, index) => EventCard(events.keys.elementAt(index)),
-            itemCount: events.length,
+            itemBuilder: (_, index) => EventCard(eventsToShow[index].id),
+            itemCount: eventsToShow.length,
           )
         : Center(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    child: Text("Loading Data"),
-                    padding: EdgeInsets.all(16.0),
-                  ),
-                  SizedBox(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  child: Text("Loading Data"),
+                  padding: EdgeInsets.all(16.0),
+                ),
+                SizedBox(
                     child: LinearProgressIndicator(),
-                    width: MediaQuery.of(context).size.width / 2,
-                  ),
-                ],
-              ),
+                    width: MediaQuery.of(context).size.width / 2),
+              ],
             ),
           );
+  }
+
+  List<Event> buildEventsToShow() {
+    Map<String, Event> events = this.store.state.eventList;
+    String searchString = this.store.state.searchString;
+    // If no search query return as it is
+    if (searchString == "") return events.values.toList();
+
+    return getSortedEventList(searchString, events.values.toList());
   }
 
   Widget buildEventRecievedBottomSheet(BuildContext context, String title,
