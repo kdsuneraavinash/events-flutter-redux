@@ -8,7 +8,7 @@ class EventNotification {
   final DateTime timestamp;
   bool read = false;
 
-  EventNotification(this.message, this.type, this.timestamp);
+  EventNotification(this.message, this.type, this.timestamp, [this.read = false]);
 
   void markAsRead() {
     read = true;
@@ -52,6 +52,7 @@ class EventNotification {
       json["message"], // String
       EventNotification.getTypeFromString(json["type"]), // NotificationType
       DateTime.fromMillisecondsSinceEpoch(json["timestamp"]), // Date Time
+      json["read"] ?? false // Boolean [Patch for old version]
     );
   }
 
@@ -59,7 +60,8 @@ class EventNotification {
     return {
       "message": this.message,
       "type": getStringFromType(this.type),
-      "timestamp": this.timestamp.millisecondsSinceEpoch
+      "timestamp": this.timestamp.millisecondsSinceEpoch,
+      "read": this.read
     };
   }
 }

@@ -56,7 +56,7 @@ class CreditsBody extends StatelessWidget {
         AboutListTile(
           icon: Icon(Icons.developer_board),
           applicationName: "MoraEvents",
-          applicationVersion: "Prototype",
+          applicationVersion: "v0.2.0-alpha",
           applicationLegalese: "Team Axys",
         ),
       ],
