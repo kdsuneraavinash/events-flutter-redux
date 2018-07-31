@@ -5,6 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import 'package:cached_network_image/cached_network_image.dart';
+
 /// Author : perlatus
 ///
 /// Source code taken from :
@@ -12,25 +14,17 @@ import 'package:flutter/rendering.dart';
 ///
 /// Modified for use in app
 class ZoomableImage extends StatefulWidget {
-  final ImageProvider image;
+  final String url;
   final double maxScale;
   final GestureTapCallback onTap;
   final Color backgroundColor;
-  final Widget placeholder;
 
   ZoomableImage(
-    this.image, {
+    this.url, {
     Key key,
-    @deprecated double scale,
-
-    /// Maximum ratio to blow up image pixels. A value of 2.0 means that the
-    /// a single device pixel will be rendered as up to 4 logical pixels.
     this.maxScale = 2.0,
     this.onTap,
     this.backgroundColor = Colors.black,
-
-    /// Placeholder widget to be used while [image] is being resolved.
-    this.placeholder,
   }) : super(key: key);
 
   @override
@@ -55,6 +49,9 @@ class _ZoomableImageState extends State<ZoomableImage> {
 
   Size _canvasSize;
 
+  double _defaultScale = -1.0;
+  MediaQueryData _mediaQuery;
+
   void _centerAndScaleImage() {
     _imageSize = new Size(
       _image.width.toDouble(),
@@ -73,7 +70,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
     Offset delta = _canvasSize - fitted;
     _offset = delta / 2.0; // Centers the image
 
-    print(_scale);
+    _defaultScale = _scale;
   }
 
   Function() _handleDoubleTap(BuildContext ctx) {
@@ -99,7 +96,6 @@ class _ZoomableImageState extends State<ZoomableImage> {
   }
 
   void _handleScaleStart(ScaleStartDetails d) {
-    print("starting scale at ${d.focalPoint} from $_offset $_scale");
     _startingFocalPoint = d.focalPoint;
     _previousOffset = _offset;
     _previousScale = _scale;
@@ -110,11 +106,37 @@ class _ZoomableImageState extends State<ZoomableImage> {
     if (newScale > widget.maxScale) {
       return;
     }
+    if (newScale < _defaultScale) {
+      // Don't zoom out than original
+      return;
+    }
 
     // Ensure that item under the focal point stays in the same place despite zooming
     final Offset normalizedOffset =
         (_startingFocalPoint - _previousOffset) / _previousScale;
     final Offset newOffset = d.focalPoint - normalizedOffset * newScale;
+
+    double padding = 100.0;
+    double _boundMinX = _mediaQuery.size.width - _imageSize.width *_scale - padding;
+    double _boundMinY = 0.0 - padding;
+    double _boundMaxX = 0.0 + padding;
+    double _boundMaxY = _mediaQuery.size.height -  _imageSize.height *_scale + padding;
+    if (newOffset.dx < _boundMinX || newOffset.dy < _boundMinY) {
+      double _new_dx = math.max(_boundMinX, newOffset.dx);
+      double _new_dy = math.max(_boundMinY, newOffset.dy);
+      setState(() {
+        _offset = Offset(_new_dx, _new_dy);
+      });
+      return;
+    }
+    if (newOffset.dx > _boundMaxX || newOffset.dy > _boundMaxY) {
+      double _new_dx = math.min(_boundMaxX, newOffset.dx);
+      double _new_dy = math.min(_boundMaxY, newOffset.dy);
+      setState(() {
+        _offset = Offset(_new_dx, _new_dy);
+      });
+      return;
+    }
 
     setState(() {
       _scale = newScale;
@@ -124,6 +146,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
 
   @override
   Widget build(BuildContext ctx) {
+    _mediaQuery = MediaQuery.of(context);
     Widget paintWidget() {
       return new CustomPaint(
         child: new Container(color: widget.backgroundColor),
@@ -136,7 +159,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
     }
 
     if (_image == null) {
-      return widget.placeholder;
+      return CircularProgressIndicator();
     }
 
     return new LayoutBuilder(builder: (ctx, constraints) {
@@ -170,12 +193,12 @@ class _ZoomableImageState extends State<ZoomableImage> {
   }
 
   void _resolveImage() {
-    _imageStream = widget.image.resolve(createLocalImageConfiguration(context));
+    _imageStream = CachedNetworkImageProvider(widget.url)
+        .resolve(createLocalImageConfiguration(context));
     _imageStream.addListener(_handleImageLoaded);
   }
 
   void _handleImageLoaded(ImageInfo info, bool synchronousCall) {
-    print("image loaded: $info");
     setState(() {
       _image = info.image;
     });

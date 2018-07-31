@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:event_app/state/event.dart';
-import 'package:event_app/custom_widgets/network_image.dart';
+import 'package:event_app/custom_widgets/zoomable_image.dart';
 
 /// Hosts PageView and buttons.
 class EventImageView extends StatelessWidget {
@@ -22,17 +22,9 @@ class EventImageView extends StatelessWidget {
   }
 
   /// Build Page View with Images
-  /// TODO: Add images Pan ability
   Widget _buildImageBox() {
     return Center(
-      child: PageView(
-        children: this
-            .event
-            .images
-            .map((v) => DefParameterNetworkImage(imageUrl: v))
-            .toList(),
-        controller: PageController(initialPage: currentIndex),
-      ),
+      child: ZoomableImage(this.event.images[this.currentIndex]),
     );
   }
 
