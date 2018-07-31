@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show IconData, Icons;
+import 'package:flutter/material.dart';
 
 /// Type of notification. Will change icon.
 enum NotificationType { ADD, MESSAGE }

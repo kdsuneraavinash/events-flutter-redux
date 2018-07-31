@@ -1,6 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart' show QuerySnapshot;
-import 'package:event_app/state/notification.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:event_app/state/query.dart';
+import 'package:event_app/state/notification.dart';
 
 // Actions:
 //  Will only contain classes to distinguish each command for reducer and

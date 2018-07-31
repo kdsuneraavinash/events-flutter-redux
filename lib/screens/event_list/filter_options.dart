@@ -1,6 +1,8 @@
-import 'package:event_app/state/query.dart';
 import 'package:flutter/material.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:event_app/state/query.dart';
 
 /// Search settings dialog
 class FilterOptions extends StatefulWidget {
@@ -114,7 +116,7 @@ class FilterOptionsState extends State<FilterOptions> {
     return CheckboxListTile(
       title: Text(text),
       subtitle: Padding(
-        padding: EdgeInsets.symmetric(vertical:8.0),
+        padding: EdgeInsets.symmetric(vertical: 8.0),
         child: Column(children: <Widget>[
           Text(message),
           Text(subMessage, style: TextStyle(fontWeight: FontWeight.w700))

@@ -1,21 +1,20 @@
-import 'package:event_app/screens/event_details.dart';
 import 'package:flutter/material.dart';
-import 'package:event_app/custom_widgets/transition_maker.dart'
-    show TransitionMaker;
+
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+
+import 'package:event_app/redux_store/actions.dart';
+import 'package:event_app/redux_store/store.dart';
 import 'package:event_app/state/flagged.dart';
-import 'package:event_app/redux_store/actions.dart'
-    show ChangeAlarmState, RemoveFromFlaggedList;
-import 'package:event_app/redux_store/store.dart' show EventState;
-import 'package:event_app/screens/event_details.dart' show EventDetails;
-import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
-import 'package:redux/redux.dart' show Store;
+import 'package:event_app/screens/event_details.dart';
+import 'package:event_app/custom_widgets/transition_maker.dart';
 
 class EventFlaggedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder<EventState>(
       builder: (context, eventStore) =>
-    _buildEventFlaggedItemButton(context, eventStore),
+          _buildEventFlaggedItemButton(context, eventStore),
     );
   }
 

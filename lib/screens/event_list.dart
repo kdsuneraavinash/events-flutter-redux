@@ -1,24 +1,22 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io' as IO;
-import 'package:event_app/state/query.dart' show QueryOptions;
-import 'package:event_app/custom_widgets/transition_maker.dart'
-    show TransitionMaker;
+
+import 'package:flutter/material.dart';
+
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_search_bar/flutter_search_bar.dart';
+
 import 'package:event_app/redux_store/actions.dart' as Actions;
-import 'package:event_app/redux_store/store.dart' show EventState;
-import 'package:event_app/screens/credits.dart' show Credits;
-import 'package:event_app/screens/event_flagged.dart' show FlaggedEventManager;
-import 'package:event_app/screens/event_list/event_list_body.dart'
-    show EventListBody;
-import 'package:event_app/screens/event_notifications.dart'
-    show EventNotificationsManager;
-import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
-import 'package:redux/redux.dart' show Store;
-import 'package:event_app/screens/event_list/filter_options.dart'
-    show FilterOptions;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart'
-    show FontAwesomeIcons;
-import 'package:flutter_search_bar/flutter_search_bar.dart' show SearchBar;
+import 'package:event_app/redux_store/store.dart';
+import 'package:event_app/state/query.dart';
+import 'package:event_app/screens/credits.dart';
+import 'package:event_app/screens/event_flagged.dart';
+import 'package:event_app/screens/event_list/event_list_body.dart';
+import 'package:event_app/screens/event_notifications.dart';
+import 'package:event_app/screens/event_list/filter_options.dart';
+import 'package:event_app/custom_widgets/transition_maker.dart';
 
 /// Main Page that displays a list of available Events.
 /// Will connect [StoreBuilder].

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter_redux/flutter_redux.dart';
+
 import 'package:event_app/state/flagged.dart';
-import 'package:event_app/redux_store/store.dart' show EventState;
-import 'package:event_app/screens/event_flagged/event_flagged_card.dart'
-    show EventFlaggedCard;
-import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
+import 'package:event_app/redux_store/store.dart';
+import 'package:event_app/screens/event_flagged/event_flagged_card.dart';
 
 /// Window to show pinned events to toggle alarms
 /// TODO: Add notifications on Alarm times

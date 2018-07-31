@@ -1,11 +1,9 @@
-import 'package:event_app/custom_widgets/transition_maker.dart'
-    show TransitionMaker;
-import 'package:event_app/state/event.dart';
-import 'package:event_app/screens/event_details/event_image_view.dart'
-    show EventImageView;
 import 'package:flutter/material.dart';
-import 'package:event_app/custom_widgets/network_image.dart'
-    show DefParameterNetworkImage;
+
+import 'package:event_app/state/event.dart';
+import 'package:event_app/screens/event_details/event_image_view.dart';
+import 'package:event_app/custom_widgets/network_image.dart';
+import 'package:event_app/custom_widgets/transition_maker.dart';
 
 /// Creates an Image Grid
 class ImageGrid extends StatelessWidget {

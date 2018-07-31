@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart'
-    show CachedNetworkImage;
 import 'package:flutter/material.dart';
+
+import 'package:cached_network_image/cached_network_image.dart';
 
 /// Creates an Cached Network Image with default placeholder
 /// Will have a fixed aspect ratio
@@ -11,7 +11,7 @@ class DefParameterNetworkImage extends StatelessWidget {
       imageUrl: this.imageUrl,
       fit: isCover ? BoxFit.cover : BoxFit.contain,
       width: MediaQuery.of(context).size.width,
-      height: isCover ? MediaQuery.of(context).size.width/aspectRatio : null,
+      height: isCover ? MediaQuery.of(context).size.width / aspectRatio : null,
     );
   }
 
@@ -19,5 +19,5 @@ class DefParameterNetworkImage extends StatelessWidget {
 
   final String imageUrl;
   final bool isCover;
-  final aspectRatio = 16/9;
+  final aspectRatio = 16 / 9;
 }

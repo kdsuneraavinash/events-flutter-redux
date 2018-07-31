@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:event_app/custom_widgets/network_image.dart'
-    show DefParameterNetworkImage;
-import 'package:event_app/custom_widgets/transition_maker.dart'
-    show TransitionMaker;
+
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:event_app/redux_store/actions.dart' as Actions;
+import 'package:event_app/redux_store/store.dart';
 import 'package:event_app/state/event.dart';
 import 'package:event_app/state/flagged.dart';
-import 'package:event_app/redux_store/actions.dart' as Actions;
-import 'package:event_app/redux_store/store.dart' show EventState;
-import 'package:event_app/screens/event_details.dart' show EventDetails;
-import 'package:flutter_redux/flutter_redux.dart'
-    show StoreBuilder, StoreConnector;
-import 'package:redux/redux.dart' show Store;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:event_app/custom_widgets/network_image.dart';
+import 'package:event_app/custom_widgets/transition_maker.dart';
+import 'package:event_app/screens/event_details.dart';
 
 /// Individual Card.
 /// Displays a Banner, Event Title and Organizers, and Time and Date.

@@ -1,11 +1,12 @@
 import 'dart:async';
+
+import 'package:redux_epics/redux_epics.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:event_app/state/query.dart';
+import 'package:event_app/redux_store/store.dart';
 import 'package:event_app/redux_store/actions.dart' as Actions;
-import 'package:redux_epics/redux_epics.dart' show EpicStore;
-import 'package:rxdart/rxdart.dart' show Observable, TypeToken;
-import 'package:cloud_firestore/cloud_firestore.dart'
-    show Firestore, Query, QuerySnapshot;
-import 'package:event_app/redux_store/store.dart' show EventState;
 
 /// Reads all documents once.
 /// Fired when FirestoreStartConnection is dispatched.

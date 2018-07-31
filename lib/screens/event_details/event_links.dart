@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:event_app/state/event.dart' show EventContact;
-import 'package:url_launcher/url_launcher.dart' show canLaunch, launch;
+
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:event_app/state/event.dart';
 
 /// Page to show Event Contact Links/Phone Numbers
 class EventLinks extends StatelessWidget {

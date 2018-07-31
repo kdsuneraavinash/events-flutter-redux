@@ -1,7 +1,7 @@
 import 'package:event_app/state/event.dart';
+import 'package:event_app/state/query.dart';
 import 'package:event_app/state/flagged.dart';
 import 'package:event_app/state/notification.dart';
-import 'package:event_app/state/query.dart';
 
 /// The main store object
 /// Here this also is the VIew Model (No separate class for view modal)

@@ -1,10 +1,11 @@
-import 'package:event_app/redux_store/actions.dart';
-import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:redux_persist/redux_persist.dart';
+
 import 'package:event_app/state/event.dart';
 import 'package:event_app/state/flagged.dart';
 import 'package:event_app/state/notification.dart';
-import 'package:event_app/redux_store/store.dart' show EventState;
-import 'package:redux_persist/redux_persist.dart' show PersistLoadedAction;
+import 'package:event_app/redux_store/store.dart';
+import 'package:event_app/redux_store/actions.dart';
 
 /// Connect to all reducers
 EventState reducers(EventState eventState, dynamic action) {

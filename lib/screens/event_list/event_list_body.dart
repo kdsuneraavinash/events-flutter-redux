@@ -1,20 +1,20 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+import 'package:redux/redux.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:event_app/custom_widgets/transition_maker.dart';
+
+import 'package:event_app/redux_store/actions.dart' as Actions;
+import 'package:event_app/redux_store/store.dart';
 import 'package:event_app/state/event.dart';
 import 'package:event_app/state/notification.dart';
+import 'package:event_app/screens/event_details.dart';
+import 'package:event_app/screens/event_list/event_card.dart';
 import 'package:event_app/screens/event_list/search_algo.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:event_app/redux_store/actions.dart' as Actions;
-import 'package:firebase_messaging/firebase_messaging.dart'
-    show FirebaseMessaging, IosNotificationSettings;
-import 'package:redux/redux.dart' show Store;
-import 'package:cloud_firestore/cloud_firestore.dart'
-    show Firestore, DocumentSnapshot;
-import 'package:event_app/custom_widgets/transition_maker.dart'
-    show TransitionMaker;
-import 'package:event_app/screens/event_details.dart' show EventDetails;
-import 'package:event_app/redux_store/store.dart' show EventState;
-import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
 
 /// Body of EventListWindow.
 /// Contains of a ListView consisting of Event Cards so Users can scroll

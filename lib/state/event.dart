@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
-import 'package:flutter/material.dart' show IconData, Icons;
+import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Launch method for EventContact
 enum LaunchMethod { CALL, MESSAGE, WEB, FACEBOOK }

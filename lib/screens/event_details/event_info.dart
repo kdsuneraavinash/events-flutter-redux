@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:event_app/state/event.dart';
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:event_app/state/event.dart';
 
 /// Page to show Event Information/Description
 class EventInfo extends StatelessWidget {

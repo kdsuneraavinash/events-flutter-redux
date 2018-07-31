@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+
 import 'package:event_app/redux_store/actions.dart' as Actions;
-import 'package:event_app/state/notification.dart' show EventNotification;
-import 'package:event_app/redux_store/store.dart' show EventState;
-import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
-import 'package:redux/redux.dart' show Store;
+import 'package:event_app/redux_store/store.dart';
+import 'package:event_app/state/notification.dart';
 
 /// [EventNotificationsManager] which will connect to [StoreBuilder].
 class EventNotificationsManager extends StatelessWidget {

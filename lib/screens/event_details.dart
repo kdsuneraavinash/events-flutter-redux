@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:event_app/state/event.dart';
-import 'package:event_app/screens/event_details/event_info.dart' show EventInfo;
-import 'package:event_app/screens/event_details/event_links.dart'
-    show EventLinks;
-import 'package:event_app/screens/event_details/event_images.dart'
-    show ImageGrid;
+
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:event_app/state/event.dart';
+import 'package:event_app/screens/event_details/event_info.dart';
+import 'package:event_app/screens/event_details/event_links.dart';
+import 'package:event_app/screens/event_details/event_images.dart';
 
 /// Event Details Page which hosts a PageView to show all info
 class EventDetails extends StatefulWidget {

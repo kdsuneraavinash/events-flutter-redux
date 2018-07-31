@@ -1,11 +1,11 @@
-import 'package:event_app/redux_store/store_declaration.dart'
-    show baseStore, persistor;
 import 'package:flutter/material.dart';
-import 'package:event_app/screens/event_list.dart' show EventListWindow;
+
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux_persist_flutter/redux_persist_flutter.dart';
+
 import 'package:event_app/theme.dart' as Theme;
-import 'package:flutter_redux/flutter_redux.dart' show StoreProvider;
-import 'package:redux_persist_flutter/redux_persist_flutter.dart'
-    show PersistorGate;
+import 'package:event_app/screens/event_list.dart';
+import 'package:event_app/redux_store/store_declaration.dart';
 
 /// Run main App
 void main() {
