@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart' show IconData, Icons;
 
+/// Type of notification. Will change icon.
 enum NotificationType { ADD, MESSAGE }
 
+/// Class to hold notification data
 class EventNotification {
   final String message;
   final NotificationType type;
@@ -10,10 +12,12 @@ class EventNotification {
 
   EventNotification(this.message, this.type, this.timestamp, [this.read = false]);
 
+  /// Marks as read
   void markAsRead() {
     read = true;
   }
 
+  /// Choose Icon by notification type
   IconData getIcon() {
     switch (this.type) {
       case NotificationType.ADD:
@@ -25,6 +29,7 @@ class EventNotification {
     }
   }
 
+  /// Parse type from String
   static NotificationType getTypeFromString(String type) {
     switch (type) {
       case 'ADD':
@@ -35,6 +40,7 @@ class EventNotification {
     }
   }
 
+  /// Parse string from type
   static String getStringFromType(NotificationType type) {
     switch (type) {
       case NotificationType.ADD:
@@ -56,6 +62,7 @@ class EventNotification {
     );
   }
 
+  /// Parse to JSON
   Map toJson() {
     return {
       "message": this.message,

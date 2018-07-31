@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:event_app/state/flagged.dart';
-import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:event_app/redux_store/store.dart' show EventState;
 import 'package:event_app/screens/event_flagged/event_flagged_card.dart'
     show EventFlaggedCard;
 import 'package:flutter_redux/flutter_redux.dart' show StoreConnector;
@@ -14,15 +14,15 @@ class FlaggedEventManager extends StatelessWidget {
       appBar: AppBar(
         title: Text("Pinned Events"),
       ),
-      body: StoreConnector<EventStore, EventStore>(
+      body: StoreConnector<EventState, EventState>(
         converter: (store) => store.state,
         builder: (context, eventStore) =>
-            buildAlarmButtons(eventStore.flaggedList),
+            _buildAlarmButtons(eventStore.flaggedList),
       ),
     );
   }
 
-  Widget buildAlarmButtons(List<FlaggedEvent> alarmList) {
+  Widget _buildAlarmButtons(List<FlaggedEvent> alarmList) {
     List<Widget> list = [];
     for (FlaggedEvent alarm in alarmList) {
       list.add(EventFlaggedCard(alarm));

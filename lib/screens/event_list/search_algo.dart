@@ -1,6 +1,9 @@
 import 'package:event_app/state/event.dart';
 
-int compareEventValues(List a, List b) {
+/// Comparator for sorting.
+/// Will first compare first value.
+/// If it is equal, will compare second value.
+int _compareEventValues(List a, List b) {
   // First Compare main value
   if (a[0] > b[0])
     return 1;
@@ -17,16 +20,17 @@ int compareEventValues(List a, List b) {
   }
 }
 
+/// Sort event list according to a search string.
 List<Event> getSortedEventList(String searchString, List<Event> eventList) {
   List<List> helperList = [];
   for (Event event in eventList) {
-    List similarityPoints =
-        getTotalSimilarityPoints(searchString.toLowerCase(), event.eventName.toLowerCase());
+    List similarityPoints = _getTotalSimilarityPoints(
+        searchString.toLowerCase(), event.eventName.toLowerCase());
     List<dynamic> keyedList = [similarityPoints[0], similarityPoints[1], event];
     helperList.add(keyedList);
   }
 
-  helperList.sort(compareEventValues);
+  helperList.sort(_compareEventValues);
 
   List<Event> result = [];
   for (List internal in helperList) {
@@ -36,28 +40,30 @@ List<Event> getSortedEventList(String searchString, List<Event> eventList) {
   return result.reversed.toList();
 }
 
-List<double> getTotalSimilarityPoints(String s, String t) {
+/// Similarity points are sum of percentages of euality
+/// of each permuation of pairs of words.
+List<double> _getTotalSimilarityPoints(String s, String t) {
   List<String> s_words = s.split(" ");
   List<String> t_words = t.split(" ");
   double total_dist = 0.0;
   for (String s_word in s_words) {
     for (String t_word in t_words) {
-      double dist = levenshteinDistancePercentage(s_word, t_word);
+      double dist = _levenshteinDistancePercentage(s_word, t_word);
       if (dist < 50) continue;
       total_dist += dist;
     }
   }
-  return [total_dist, levenshteinDistancePercentage(s, t)];
+  return [total_dist, _levenshteinDistancePercentage(s, t)];
 }
 
 /// Get levenshteinDistance as persentage of longest
-double levenshteinDistancePercentage(String s, String t) {
+double _levenshteinDistancePercentage(String s, String t) {
   int longestLen = s.length > t.length ? s.length : t.length;
-  return (1 - levenshteinDistance(s, t) / longestLen) * 100;
+  return (1 - _levenshteinDistance(s, t) / longestLen) * 100;
 }
 
-/// Get minimum distance between 2 strings
-int levenshteinDistance(String s, String t) {
+/// Get minimum distance between 2 strings.
+int _levenshteinDistance(String s, String t) {
   // Minimum function
   var min = (int p, int q) => p > q ? q : p;
   // for all i and j, d[i,j] will hold the Levenshtein distance between

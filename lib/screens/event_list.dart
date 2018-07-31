@@ -1,17 +1,11 @@
-import 'package:event_app/state/query.dart';
 import 'package:flutter/material.dart';
-import 'dart:async' show Future;
-import 'dart:io' show SocketException, InternetAddress;
+import 'dart:async';
+import 'dart:io' as IO;
+import 'package:event_app/state/query.dart' show QueryOptions;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
-import 'package:event_app/redux_store/actions.dart'
-    show
-        FirestoreEndConnection,
-        FirestoreListenToUpdates,
-        FirestoreRefreshAll,
-        SearchOptionsSet,
-        SearchStringSet;
-import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:event_app/redux_store/actions.dart' as Actions;
+import 'package:event_app/redux_store/store.dart' show EventState;
 import 'package:event_app/screens/credits.dart' show Credits;
 import 'package:event_app/screens/event_flagged.dart' show FlaggedEventManager;
 import 'package:event_app/screens/event_list/event_list_body.dart'
@@ -22,36 +16,48 @@ import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
 import 'package:event_app/screens/event_list/filter_options.dart'
     show FilterOptions;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_search_bar/flutter_search_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'
+    show FontAwesomeIcons;
+import 'package:flutter_search_bar/flutter_search_bar.dart' show SearchBar;
 
 /// Main Page that displays a list of available Events.
+/// Will connect [StoreBuilder].
+/// On init will start to listen to updates
+/// and on dispose will stop listening
 class EventListWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreBuilder(
-      builder: buildEventListWindow,
-      onInit: (store) {
-        store.dispatch(FirestoreRefreshAll());
-        store.dispatch(FirestoreListenToUpdates());
+      builder: _buildEventListWindow,
+      onInit: (eventStore) {
+        // Commenting this out
+        eventStore.dispatch(Actions.FirestoreRefreshAll());
+        eventStore.dispatch(Actions.FirestoreListenToUpdates());
       },
-      onDispose: (store) => store.dispatch(FirestoreEndConnection()),
+      onDispose: (eventStore) =>
+          eventStore.dispatch(Actions.FirestoreEndConnection()),
     );
   }
 
-  Widget buildEventListWindow(BuildContext context, Store<EventStore> store) {
-    EventStore eventStore = store.state;
+  /// Builds scaffold with searchbar, drawer and other action buttons
+  Widget _buildEventListWindow(
+      BuildContext context, Store<EventState> eventStore) {
+    // SearchBoxedScaffold is a widget that will
+    // enclose a scaffold with a search button inside.
+    // SearchBoxedScaffold is statefull
     return SearchBoxedScaffold(
       appBarTitle: Text("Mora Events"),
       appBarActions: <Widget>[
+        // Filter Settings Button
         IconButton(
           icon: Icon(Icons.filter_list),
-          onPressed: () => _handleFilterAction(context, store),
+          onPressed: () => _handleFilterAction(context, eventStore),
         ),
       ],
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
+            // Drawer heading
             DrawerHeader(
               child: Text(
                 "Mora Events",
@@ -63,8 +69,9 @@ class EventListWindow extends StatelessWidget {
               ),
               decoration: BoxDecoration(color: Theme.of(context).primaryColor),
             ),
+            // Notifications button
             ListTile(
-              leading: eventStore.notifications.any((v) => !v.read)
+              leading: eventStore.state.notifications.any((v) => !v.read)
                   ? Icon(
                       Icons.notifications_active,
                       color: Theme.of(context).accentColor,
@@ -74,12 +81,14 @@ class EventListWindow extends StatelessWidget {
               subtitle: Text("View latest event notifications"),
               onTap: () => _handleNotificationsAction(context),
             ),
+            // Flagged events button
             ListTile(
               leading: Icon(FontAwesomeIcons.mapPin),
               title: Text("Pinned Events"),
               subtitle: Text("Show events that you pinned"),
               onTap: () => _handleFlaggedAction(context),
             ),
+            // Credits button
             ListTile(
               leading: Icon(FontAwesomeIcons.questionCircle),
               title: Text("Credits"),
@@ -89,11 +98,14 @@ class EventListWindow extends StatelessWidget {
           ],
         ),
       ),
-      body: EventListBody(store),
-      store: store,
+      body: EventListBody(eventStore),
+      // Passing store inside to searchString dispatch
+      eventStore: eventStore,
     );
   }
 
+  /// Alert box to inform that there isn't an internet connection
+  /// Sometimes it may take some time in order for alert box to show up
   Widget _buildNoInternetDialog(BuildContext context) {
     return AlertDialog(
       content: Text(
@@ -131,27 +143,38 @@ class EventListWindow extends StatelessWidget {
         .start(context);
   }
 
+  /// Show filter settings buttons and set the options.
+  /// This will first make sure user is connected.
+  /// If not will show a alertbox.
   void _handleFilterAction(
-      BuildContext context, Store<EventStore> store) async {
-    bool isConnected = await makeSureIsConnected();
+      BuildContext context, Store<EventState> eventStore) async {
+    // Make sure person is connected
+    bool isConnected = await _makeSureIsConnected();
     if (!isConnected) {
+      // Not connected to internet. Abort.
       await showDialog(context: context, builder: _buildNoInternetDialog);
       return;
     }
-    QueryOptions searchOptions = QueryOptions.original();
+    // Get a instance of query options
+    QueryOptions searchOptions = eventStore.state.searchOptions;
+    // Shows the window and lets user choose options
+    // Will wait until user closes the options box
     searchOptions = await TransitionMaker
         .slideTransition(
           destinationPageCall: () =>
-              FilterOptions.fromEventStore(store.state.searchOptions),
+              FilterOptions.fromEventStore(searchOptions),
         )
         .startAndWait(context);
+    // searchOptions will be null if user pressed back button instead of Save
     if (searchOptions != null) {
-      store.dispatch(SearchOptionsSet(searchOptions));
-      store.dispatch(FirestoreRefreshAll());
+      // User has pressed save.
+      // So save settings and refresh.
+      eventStore.dispatch(Actions.SearchOptionsSet(searchOptions));
+      eventStore.dispatch(Actions.FirestoreRefreshAll());
     }
   }
 
-  /// Show alarms page
+  /// Show flagged events page
   void _handleFlaggedAction(BuildContext context) {
     Navigator.pop(context);
     TransitionMaker
@@ -172,17 +195,32 @@ class EventListWindow extends StatelessWidget {
   }
 }
 
-Future<bool> makeSureIsConnected() async {
+/// Makes sure user is connected to internet.
+/// Will never fire false negatives.
+Future<bool> _makeSureIsConnected() async {
   try {
-    final result = await InternetAddress.lookup('google.com');
+    // Try to connect
+    final result = await IO.InternetAddress.lookup('google.com');
     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      // Got a result
+      // *Possibly* connected
+      // Not 100% accurate
       return true;
     }
+  } catch (_) {
+    // Nothing
+    // Silents the error
+  } finally {
+    // Connecting failed
+    // No internet
     return false;
-  } on SocketException catch (_) {}
-  return false;
+  }
 }
 
+/// Custom widget to enclose the whole widget tree with a search box
+/// Will show a search button at the end of app bar
+/// when pressed, will show a text box which will update [store.state.searchString]
+/// in real time.
 class SearchBoxedScaffold extends StatefulWidget {
   @override
   _SearchBoxedScaffoldState createState() => _SearchBoxedScaffoldState();
@@ -191,15 +229,16 @@ class SearchBoxedScaffold extends StatefulWidget {
   final List<Widget> appBarActions;
   final Widget drawer;
   final Widget body;
-  final Store<EventStore> store;
+  final Store<EventState> eventStore;
   SearchBoxedScaffold(
       {this.appBarTitle,
       this.appBarActions,
       this.drawer,
       this.body,
-      this.store});
+      this.eventStore});
 }
 
+// State
 class _SearchBoxedScaffoldState extends State<SearchBoxedScaffold> {
   SearchBar searchBar;
   TextEditingController controller = TextEditingController();
@@ -213,27 +252,32 @@ class _SearchBoxedScaffoldState extends State<SearchBoxedScaffold> {
     );
   }
 
-  void textChanged() {
-    widget.store.dispatch(SearchStringSet(controller.text));
+  void _textChanged() {
+    widget.eventStore.dispatch(Actions.SearchStringSet(controller.text));
   }
 
+  /// On init
+  /// - Adds a listener to check text change
+  /// - create search bar
   _SearchBoxedScaffoldState() {
-    controller.addListener(textChanged);
+    controller.addListener(_textChanged);
     searchBar = SearchBar(
       inBar: true,
       setState: setState,
-      buildDefaultAppBar: (_) => buildDefaultAppBar(),
+      buildDefaultAppBar: (_) => _buildDefaultAppBar(),
       clearOnSubmit: false,
       closeOnSubmit: false,
       controller: controller,
     );
   }
 
-  AppBar buildDefaultAppBar() {
+  /// Default app bar.
+  /// will be also fired when user pressed Back or Close.
+  AppBar _buildDefaultAppBar() {
     // When showing default bar, search string = ""
     controller.text = "";
     IconButton searchButton = IconButton(
-      icon: Icon(FontAwesomeIcons.search),
+      icon: Icon(Icons.search),
       onPressed: searchBar.getSearchAction(context).onPressed,
     );
     return AppBar(
@@ -242,9 +286,10 @@ class _SearchBoxedScaffoldState extends State<SearchBoxedScaffold> {
     );
   }
 
+  /// Remove listners
   @override
   void dispose() {
-    controller.removeListener(textChanged);
+    controller.removeListener(_textChanged);
     super.dispose();
   }
 }

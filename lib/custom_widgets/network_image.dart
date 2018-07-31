@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart'
 import 'package:flutter/material.dart';
 
 /// Creates an Cached Network Image with default placeholder
+/// Will have a fixed aspect ratio
 class DefParameterNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

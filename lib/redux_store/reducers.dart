@@ -3,50 +3,50 @@ import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
 import 'package:event_app/state/event.dart';
 import 'package:event_app/state/flagged.dart';
 import 'package:event_app/state/notification.dart';
-import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:event_app/redux_store/store.dart' show EventState;
 import 'package:redux_persist/redux_persist.dart' show PersistLoadedAction;
 
 /// Connect to all reducers
-EventStore reducers(EventStore eventStore, dynamic action) {
+EventState reducers(EventState eventState, dynamic action) {
   if (action is AddToFlaggedList) {
-    return addToFlaggedListReducer(eventStore, action);
+    return addToFlaggedListReducer(eventState, action);
   } else if (action is RemoveFromFlaggedList) {
-    return removeFromFlaggedListReducer(eventStore, action);
+    return removeFromFlaggedListReducer(eventState, action);
   } else if (action is ChangeAlarmState) {
-    return changeAlarmState(eventStore, action);
+    return changeAlarmState(eventState, action);
   } else if (action is MarkNotificationsAsRead) {
-    return markNotificationsAsReadReducer(eventStore, action);
+    return markNotificationsAsReadReducer(eventState, action);
   } else if (action is ClearNotifications) {
-    return clearNotificationsReducer(eventStore, action);
+    return clearNotificationsReducer(eventState, action);
   } else if (action is FirestoreDocumentsChanged) {
-    return firestoreEventsAddedReducer(eventStore, action);
+    return firestoreEventsAddedReducer(eventState, action);
   } else if (action is SearchOptionsSet) {
-    return searchOptionsSetReducer(eventStore, action);
+    return searchOptionsSetReducer(eventState, action);
   } else if (action is SearchStringSet) {
-    return searchStringSetReducer(eventStore, action);
+    return searchStringSetReducer(eventState, action);
   } else if (action is AddNotification) {
-    return addNotificationReducer(eventStore, action);
-  } else if (action is PersistLoadedAction<EventStore>) {
-    return persistLoadedActionReducer(eventStore, action);
+    return addNotificationReducer(eventState, action);
+  } else if (action is PersistLoadedAction<EventState>) {
+    return persistLoadedActionReducer(eventState, action);
   } else {
-    return eventStore.copyWith();
+    return eventState.copyWith();
   }
 }
 
 /// Event Store Loaded
 /// flutter_redux_persist action
-EventStore persistLoadedActionReducer(
-    EventStore eventStore, PersistLoadedAction action) {
-  if (action.state == null) return eventStore;
+EventState persistLoadedActionReducer(
+    EventState eventState, PersistLoadedAction action) {
+  if (action.state == null) return eventState;
   return action.state;
 }
 
 /// Add event to flagged events list
 /// returns a copy of original list
-EventStore addToFlaggedListReducer(
-    EventStore eventStore, AddToFlaggedList action) {
-  return eventStore.copyWith(
-    flaggedList: List.from(eventStore.flaggedList)
+EventState addToFlaggedListReducer(
+    EventState eventState, AddToFlaggedList action) {
+  return eventState.copyWith(
+    flaggedList: List.from(eventState.flaggedList)
       ..add(
         // Adds to flagged list: default alarm state is True
         FlaggedEvent(action.eventToAddID, true),
@@ -56,18 +56,18 @@ EventStore addToFlaggedListReducer(
 
 /// Remove event from flagged events list
 /// returns a copy of original list
-EventStore removeFromFlaggedListReducer(
-    EventStore eventStore, RemoveFromFlaggedList action) {
-  return eventStore.copyWith(
-    flaggedList: List.from(eventStore.flaggedList)
+EventState removeFromFlaggedListReducer(
+    EventState eventState, RemoveFromFlaggedList action) {
+  return eventState.copyWith(
+    flaggedList: List.from(eventState.flaggedList)
       ..removeWhere((v) => v.eventID == action.eventToRemoveID),
   );
 }
 
-EventStore addNotificationReducer(
-    EventStore eventStore, AddNotification action) {
-  return eventStore.copyWith(
-    notifications: List.from(eventStore.notifications)
+EventState addNotificationReducer(
+    EventState eventState, AddNotification action) {
+  return eventState.copyWith(
+    notifications: List.from(eventState.notifications)
       ..add(
         // Add a notification
         EventNotification(
@@ -80,24 +80,24 @@ EventStore addNotificationReducer(
 }
 
 /// Alarm turned ON or turned OFF
-EventStore changeAlarmState(EventStore eventStore, ChangeAlarmState action) {
-  List<FlaggedEvent> flaggedList = List.from(eventStore.flaggedList);
+EventState changeAlarmState(EventState eventState, ChangeAlarmState action) {
+  List<FlaggedEvent> flaggedList = List.from(eventState.flaggedList);
 
   // Create new flagged item with alarm state off/on depending on state
-  for (int index = 0; index < eventStore.flaggedList.length; index++) {
+  for (int index = 0; index < eventState.flaggedList.length; index++) {
     if (flaggedList[index].eventID == action.alarmEventID) {
       flaggedList[index] = FlaggedEvent(action.alarmEventID, action.state);
     }
   }
 
-  return eventStore.copyWith(flaggedList: flaggedList);
+  return eventState.copyWith(flaggedList: flaggedList);
 }
 
 ///Marks all notifications as read
-EventStore markNotificationsAsReadReducer(
-    EventStore eventStore, MarkNotificationsAsRead action) {
-  return eventStore.copyWith(
-    notifications: eventStore.notifications
+EventState markNotificationsAsReadReducer(
+    EventState eventState, MarkNotificationsAsRead action) {
+  return eventState.copyWith(
+    notifications: eventState.notifications
         .map((v) =>
             // New notification mapping with marked as read
             EventNotification(v.message, v.type, v.timestamp)..markAsRead())
@@ -106,9 +106,9 @@ EventStore markNotificationsAsReadReducer(
 }
 
 /// Empty all notifications
-EventStore clearNotificationsReducer(
-    EventStore eventStore, ClearNotifications action) {
-  return eventStore.copyWith(notifications: List());
+EventState clearNotificationsReducer(
+    EventState eventState, ClearNotifications action) {
+  return eventState.copyWith(notifications: List());
 }
 
 /// Loaded all events from Firebase
@@ -117,8 +117,8 @@ EventStore clearNotificationsReducer(
 /// * Filter flagged items which are only present in both
 /// (Remove flagged items which are not in new list)
 /// TODO: Optimize this to retrieve and change only document changes
-EventStore firestoreEventsAddedReducer(
-    EventStore eventStore, FirestoreDocumentsChanged action) {
+EventState firestoreEventsAddedReducer(
+    EventState eventState, FirestoreDocumentsChanged action) {
   // Get all events
   Map<String, Event> allEvents = {};
   List<DocumentSnapshot> documents = action.querySnapshot.documents;
@@ -127,12 +127,12 @@ EventStore firestoreEventsAddedReducer(
     allEvents[doc.documentID] = Event.fromFirestoreDoc(doc);
   }
 
-  // Get all flagged events that are in current events and update their event property
+  /// Get all flagged events that are in current events and update their event property
   List<FlaggedEvent> allFlagged = [];
   // For each old event
   for (String newEventID in allEvents.keys) {
     // check new events
-    for (FlaggedEvent flagged in eventStore.flaggedList) {
+    for (FlaggedEvent flagged in eventState.flaggedList) {
       // whether there is a item with same id
       if (flagged.eventID == newEventID) {
         // if there is; add that event to flagged events because it is present in both lists
@@ -141,15 +141,17 @@ EventStore firestoreEventsAddedReducer(
       }
     }
   }
-  return eventStore.copyWith(eventList: allEvents, flaggedList: allFlagged);
+  return eventState.copyWith(eventList: allEvents, flaggedList: allFlagged);
 }
 
-EventStore searchOptionsSetReducer(
-    EventStore eventStore, SearchOptionsSet action) {
-  return eventStore.copyWith(searchOptions: action.newSearchOptions);
+/// User set search options (Filter dialog)
+EventState searchOptionsSetReducer(
+    EventState eventState, SearchOptionsSet action) {
+  return eventState.copyWith(searchOptions: action.newSearchOptions);
 }
 
-EventStore searchStringSetReducer(
-    EventStore eventStore, SearchStringSet action) {
-  return eventStore.copyWith(searchString: action.searchString);
+/// User set search strings (Search box)
+EventState searchStringSetReducer(
+    EventState eventState, SearchStringSet action) {
+  return eventState.copyWith(searchString: action.searchString);
 }

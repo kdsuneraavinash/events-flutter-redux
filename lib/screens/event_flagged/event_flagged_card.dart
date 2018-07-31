@@ -1,13 +1,11 @@
 import 'package:event_app/screens/event_details.dart';
 import 'package:flutter/material.dart';
-import 'package:event_app/custom_widgets/custom_snackbar.dart'
-    show showSnackBar;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/state/flagged.dart';
 import 'package:event_app/redux_store/actions.dart'
     show ChangeAlarmState, RemoveFromFlaggedList;
-import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:event_app/redux_store/store.dart' show EventState;
 import 'package:event_app/screens/event_details.dart' show EventDetails;
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
@@ -15,37 +13,41 @@ import 'package:redux/redux.dart' show Store;
 class EventFlaggedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder<EventStore>(
-      builder: (context, store) => buildEventFlaggedItemButton(context, store),
+    return StoreBuilder<EventState>(
+      builder: (context, eventStore) =>
+    _buildEventFlaggedItemButton(context, eventStore),
     );
   }
 
-  Widget buildEventFlaggedItemButton(
-      BuildContext context, Store<EventStore> store) {
+  /// Flagged Item
+  Widget _buildEventFlaggedItemButton(
+      BuildContext context, Store<EventState> eventStore) {
     return ExpansionTile(
       key: Key(this.flaggedEvent.eventID),
       title: Text(
-        store.state.eventList[this.flaggedEvent.eventID].eventName,
+        eventStore.state.eventList[this.flaggedEvent.eventID].eventName,
       ),
       trailing: this.flaggedEvent.alarmStatus
           ? _buildAlarmDispatchButton(
               icon: Icons.alarm_on,
-              store: store,
+              eventStore: eventStore,
             )
           : _buildAlarmDispatchButton(
-              icon: Icons.alarm_off, store: store, color: Colors.grey),
+              icon: Icons.alarm_off,
+              eventStore: eventStore,
+              color: Colors.grey),
       children: <Widget>[
         Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child:
-              Text(store.state.eventList[this.flaggedEvent.eventID].organizer),
+          child: Text(
+              eventStore.state.eventList[this.flaggedEvent.eventID].organizer),
         ),
         Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
           child: Text(
-            'Starts at ${store.state.eventList[this.flaggedEvent.eventID].startTimeString}',
+            'Starts at ${eventStore.state.eventList[this.flaggedEvent.eventID].startTimeString}',
             style: TextStyle(color: Theme.of(context).accentColor),
           ),
         ),
@@ -55,12 +57,12 @@ class EventFlaggedCard extends StatelessWidget {
             _buildActionButtonButton(
                 icon: Icons.remove_red_eye,
                 label: "View",
-                onPressed: () => _handleViewPressed(context, store),
+                onPressed: () => _handleViewPressed(context, eventStore),
                 context: context),
             _buildActionButtonButton(
                 icon: Icons.delete_outline,
                 label: "Unpin",
-                onPressed: () => _handleUnpinPressed(context, store),
+                onPressed: () => _handleUnpinPressed(context, eventStore),
                 context: context),
           ],
         ),
@@ -68,20 +70,22 @@ class EventFlaggedCard extends StatelessWidget {
     );
   }
 
+  /// Alarm ON/OFF Button
   Widget _buildAlarmDispatchButton(
-      {IconData icon, Store<EventStore> store, Color color}) {
+      {IconData icon, Store<EventState> eventStore, Color color}) {
     return IconButton(
       icon: CircleAvatar(
         child: Icon(icon),
         backgroundColor: color,
       ),
-      onPressed: () => store.dispatch(ChangeAlarmState(
+      onPressed: () => eventStore.dispatch(ChangeAlarmState(
           this.flaggedEvent.eventID,
           !this.flaggedEvent.alarmStatus,
           DateTime.now())),
     );
   }
 
+  /// Buttons in Flagged Card
   Widget _buildActionButtonButton(
       {IconData icon,
       String label,
@@ -99,21 +103,29 @@ class EventFlaggedCard extends StatelessWidget {
   }
 
   /// Will show EventImageView
-  void _handleViewPressed(BuildContext context, Store<EventStore> store) {
+  void _handleViewPressed(BuildContext context, Store<EventState> eventStore) {
     TransitionMaker
         .slideTransition(
-          destinationPageCall: () =>
-              EventDetails(store.state.eventList[this.flaggedEvent.eventID]),
+          destinationPageCall: () => EventDetails(
+              eventStore.state.eventList[this.flaggedEvent.eventID]),
         )
         .start(context);
   }
 
-  /// Will unpin Event
-  void _handleUnpinPressed(BuildContext context, Store<EventStore> store) {
-    store.dispatch(
+  /// Will unpin Event ans show a snackbar
+  void _handleUnpinPressed(BuildContext context, Store<EventState> eventStore) {
+    ThemeData currentTheme = Theme.of(context);
+    eventStore.dispatch(
         RemoveFromFlaggedList(this.flaggedEvent.eventID, DateTime.now()));
-    showSnackBar(context,
-        "${store.state.eventList[this.flaggedEvent.eventID].eventName} Unpinned");
+    Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "${eventStore.state.eventList[this.flaggedEvent.eventID].eventName} Unpinned",
+              style: TextStyle(color: currentTheme.scaffoldBackgroundColor),
+            ),
+            backgroundColor: currentTheme.accentColor,
+          ),
+        );
   }
 
   EventFlaggedCard(this.flaggedEvent);

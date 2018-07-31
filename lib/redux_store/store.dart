@@ -5,7 +5,7 @@ import 'package:event_app/state/query.dart';
 
 /// The main store object
 /// Here this also is the VIew Model (No separate class for view modal)
-class EventStore {
+class EventState {
   final Map<String, Event> eventList;
   final List<FlaggedEvent> flaggedList;
   final List<EventNotification> notifications;
@@ -13,14 +13,16 @@ class EventStore {
   // Will not be saved persistantly
   final String searchString;
 
-  factory EventStore.empty() {
-    return EventStore({}, [], [], QueryOptions.original(), "");
+  factory EventState.empty() {
+    return EventState({}, [], [], QueryOptions.original(), "");
   }
 
-  EventStore(this.eventList, this.flaggedList, this.notifications,
+  /// Contructor
+  EventState(this.eventList, this.flaggedList, this.notifications,
       this.searchOptions, this.searchString);
 
-  EventStore copyWith(
+  /// Copy state
+  EventState copyWith(
       {Map<String, Event> eventList,
       List<FlaggedEvent> flaggedList,
       List<EventNotification> notifications,
@@ -31,7 +33,7 @@ class EventStore {
     notifications ??= this.notifications;
     searchOptions ??= this.searchOptions;
     searchString ??= this.searchString;
-    return EventStore(
+    return EventState(
         eventList, flaggedList, notifications, searchOptions, searchString);
   }
 
@@ -44,7 +46,7 @@ class EventStore {
   /// 'queryOptions' : {'sortOption': 'start', 'orderOption': 'descending', ..}
   /// }
   ///
-  static EventStore fromJson(dynamic json) {
+  static EventState fromJson(dynamic json) {
     // Parse Events
     Map<String, Event> eventList = {};
     for (Map<String, dynamic> parsedEvent in List.from(json["eventList"])) {
@@ -69,7 +71,7 @@ class EventStore {
 
     String emptySearchString = "";
 
-    return EventStore(eventList, flaggedList, notifications, searchOptions,
+    return EventState(eventList, flaggedList, notifications, searchOptions,
         emptySearchString);
   }
 

@@ -2,7 +2,7 @@ import 'package:event_app/state/query.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-/// * Search settings dialog
+/// Search settings dialog
 class FilterOptions extends StatefulWidget {
   factory FilterOptions.fromEventStore(QueryOptions searchOptions) {
     // Parse all data to a map to be used in dialog

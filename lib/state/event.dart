@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show DocumentSnapshot;
-import 'package:collection/collection.dart' show IterableEquality;
 import 'package:flutter/material.dart' show IconData, Icons;
 
 /// Launch method for EventContact
@@ -61,6 +60,7 @@ class Event {
   //List<EventContact> contact = [];
   final List<String> tags = [];
 
+  /// Main constructor
   Event(
       this.eventName,
       this.organizer,
@@ -75,22 +75,7 @@ class Event {
       this.location,
       this.id);
 
-  factory Event.empty() {
-    return Event(
-        "[eventName]",
-        "[organizer]",
-        DateTime.now(),
-        DateTime.now(),
-        "[startTimeString]",
-        "[endTimeString]",
-        false,
-        ["[images]"],
-        "[headerImage]",
-        "[description]",
-        "[location]",
-        "[id]");
-  }
-
+  /// Create from Firestore Doc
   factory Event.fromFirestoreDoc(DocumentSnapshot doc) {
     return new Event(
         doc.data['eventName'],
@@ -130,6 +115,7 @@ class Event {
     );
   }
 
+  /// Parse to JSON
   Map toJson() {
     return {
       "eventName": this.eventName,
@@ -182,18 +168,4 @@ class Event {
     this.tags.add("Test");
     this.tags.add("Event");
     */
-  /// Find if 2 events have same objects (Content)
-  bool similar(Event other) {
-    // Event name cannot change, but include here for the sako of consitancy
-    return other.description == this.description &&
-        other.startTime == this.startTime &&
-        other.endTime == this.endTime &&
-        other.isAllDay == this.isAllDay &&
-        IterableEquality()
-            .equals(other.images, this.images) && // Checking for list equality
-        other.location == this.location &&
-        other.organizer == this.organizer &&
-        other.eventName == this.eventName &&
-        other.id == this.id;
-  }
 }

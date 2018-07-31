@@ -16,7 +16,14 @@ import 'package:cached_network_image/cached_network_image.dart'
  * University of Moratuwa
  */
 
-/// Credits Page Scaffold
+/// MoraEvents App
+/// --------------
+///
+/// - Project MoraEvents
+/// - Programmed By K. D. Sunera Avinash Chandrasiri
+/// - kdsuneraavinash@gmail.com
+/// - (c) 2018 on behalf of teamaxys
+/// - University of Moratuwa
 class Credits extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -63,12 +70,13 @@ class CreditsBody extends StatelessWidget {
     );
   }
 
+  /// Build each credits tile.
+  /// Get Images from facebook.
   Widget _buildCreditsTile(String facebookID, String title, String subtitle) {
     return ListTile(
       leading: ClipOval(
         child: CachedNetworkImage(
-          imageUrl:
-              "https://graph.facebook.com/$facebookID/picture?type=large",
+          imageUrl: "https://graph.facebook.com/$facebookID/picture?type=large",
           fit: BoxFit.cover,
           width: 50.0,
           height: 50.0,

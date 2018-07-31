@@ -14,6 +14,8 @@ void main() {
 
 /// App Main Entry Point
 /// Sets up theme
+/// Will connect Store Provider and Persistor
+/// to the [MaterialApp].
 class MoraEventsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,8 @@ class MoraEventsApp extends StatelessWidget {
     );
   }
 
+  /// Initializer which loads persistant data
+  /// to the state.
   MoraEventsApp() {
     persistor.load(baseStore);
   }

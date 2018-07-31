@@ -1,19 +1,20 @@
-import 'dart:async' show Future;
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:event_app/state/event.dart';
+import 'package:event_app/state/notification.dart';
+import 'package:event_app/screens/event_list/search_algo.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:event_app/redux_store/actions.dart' as Actions;
+import 'package:firebase_messaging/firebase_messaging.dart'
+    show FirebaseMessaging, IosNotificationSettings;
+import 'package:redux/redux.dart' show Store;
 import 'package:cloud_firestore/cloud_firestore.dart'
     show Firestore, DocumentSnapshot;
 import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
-import 'package:event_app/redux_store/actions.dart' show AddNotification;
 import 'package:event_app/screens/event_details.dart' show EventDetails;
-import 'package:event_app/screens/event_list/search_algo.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
-import 'package:event_app/state/event.dart';
-import 'package:event_app/state/notification.dart';
-import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:event_app/redux_store/store.dart' show EventState;
 import 'package:event_app/screens/event_list/event_card.dart' show EventCard;
-import 'package:redux/redux.dart' show Store;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// Body of EventListWindow.
 /// Contains of a ListView consisting of Event Cards so Users can scroll
@@ -21,21 +22,22 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 /// Also contains a RefreshIndicator so users can refresh Event Content.
 /// Will automatically update
 class EventListBody extends StatefulWidget {
-  final Store<EventStore> store;
+  final Store<EventState> eventStore;
   // Variable needed to Levenshtein Distance
 
-  EventListBody(this.store);
+  EventListBody(this.eventStore);
 
   @override
   EventListBodyState createState() {
     return new EventListBodyState();
   }
 
+  // Initialize firebase messaging
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
   Widget buildEventListBody(BuildContext context) {
     List<Event> eventsToShow = buildEventsToShow();
-    return eventsToShow.length > 0 || this.store.state.searchString != ""
+    return eventsToShow.length > 0 || this.eventStore.state.searchString != ""
         ? ListView.builder(
             itemBuilder: (_, index) => EventCard(eventsToShow[index].id),
             itemCount: eventsToShow.length,
@@ -57,15 +59,17 @@ class EventListBody extends StatefulWidget {
   }
 
   List<Event> buildEventsToShow() {
-    Map<String, Event> events = this.store.state.eventList;
-    String searchString = this.store.state.searchString;
+    Map<String, Event> events = this.eventStore.state.eventList;
+    String searchString = this.eventStore.state.searchString;
     // If no search query return as it is
-    if (searchString == "") return events.values.toList();
-
-    return getSortedEventList(searchString, events.values.toList());
+    if (searchString == "")
+      return events.values.toList();
+    else
+      return getSortedEventList(searchString, events.values.toList());
   }
 
-  Widget buildEventRecievedBottomSheet(BuildContext context, String title,
+  /// Show message recieved bottom Shet
+  Widget _buildEventRecievedBottomSheet(BuildContext context, String title,
       String message, String buttonText, VoidCallback buttonAction) {
     return Theme(
       data: ThemeData.dark(),
@@ -115,7 +119,7 @@ class EventListBody extends StatefulWidget {
     );
   }
 
-  // Handles when cloud message recieves
+  /// Handles when cloud message recieves
   Future<void> handleMessageRecieved(
       Map<String, dynamic> message, BuildContext context) async {
     // Function that shows event window
@@ -137,7 +141,7 @@ class EventListBody extends StatefulWidget {
         notificationType = NotificationType.ADD;
         // Show a bottom sheet
         showModalBottomSheet(
-          builder: (_) => buildEventRecievedBottomSheet(context, "New Event",
+          builder: (_) => _buildEventRecievedBottomSheet(context, "New Event",
               notification, "View Event", () => showEvent(event)),
           context: context,
         );
@@ -148,20 +152,21 @@ class EventListBody extends StatefulWidget {
           notification = "${message['message']}";
           notificationType = NotificationType.MESSAGE;
           showModalBottomSheet(
-            builder: (_) => buildEventRecievedBottomSheet(
-                context, "New Notification", notification, "", null),
+            builder: (_) => _buildEventRecievedBottomSheet(
+                context, "Notification", notification, "", null),
             context: context,
           );
         }
     }
 
-    this.store.dispatch(AddNotification(
+    this.eventStore.dispatch(Actions.AddNotification(
           notification,
           notificationType,
           DateTime.now(),
         ));
   }
 
+  ///Get an Event by ID by seperately requesting
   Future<Event> getEventByID(String eventID) async {
     DocumentSnapshot doc =
         await Firestore.instance.document("events/$eventID").get();
@@ -169,6 +174,7 @@ class EventListBody extends StatefulWidget {
   }
 }
 
+/// State of [EventListBody]
 class EventListBodyState extends State<EventListBody> {
   @override
   void initState() {

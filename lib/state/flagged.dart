@@ -1,3 +1,4 @@
+/// Class for flagged events
 class FlaggedEvent {
   final String eventID;
   final bool alarmStatus;
@@ -5,6 +6,7 @@ class FlaggedEvent {
   // Parse from JSON
   FlaggedEvent(this.eventID, this.alarmStatus);
 
+  /// Parse from JSON
   factory FlaggedEvent.fromJson(Map<String, dynamic> json) {
     return FlaggedEvent(
       json["eventID"], // String
@@ -12,6 +14,7 @@ class FlaggedEvent {
     );
   }
 
+  /// Parse to JSON
   Map toJson() {
     return {
       "eventID": this.eventID,

@@ -66,6 +66,7 @@ class EventDetailsState extends State<EventDetails> {
     );
   }
 
+  /// Window with start date and end date pinned.
   Widget _buildPagedWindow(Event event, Widget child) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -92,30 +93,32 @@ class EventDetailsState extends State<EventDetails> {
 
   Widget _buildInlineListTile(
       String title, String text, IconData icon, BuildContext context) {
+    ThemeData currentTheme = Theme.of(context);
     return Container(
-      color: Theme.of(context).primaryColor,
+      color: currentTheme.primaryColor,
       child: ListTile(
         leading: Icon(
           icon,
-          color: Theme.of(context).cardColor,
+          color: currentTheme.scaffoldBackgroundColor,
         ),
         title: Text(
           title,
           style: TextStyle(
-            color: Theme.of(context).cardColor,
+            color: currentTheme.scaffoldBackgroundColor,
           ),
         ),
         trailing: Text(
           text,
           style: TextStyle(
-            color: Theme.of(context).cardColor,
+            color: currentTheme.scaffoldBackgroundColor,
           ),
         ),
       ),
     );
   }
 
-  /// Animate PageView when BottomNavigationBar is tapped
+  /// Animate PageView when BottomNavigationBar is tapped.
+  /// If far away, jump to it.
   void _handleBottomNavigationBarTap(int index) {
     if ((currentIndex - index).abs() > 1) {
       // Jump to page if page is far away

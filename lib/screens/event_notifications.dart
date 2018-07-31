@@ -1,54 +1,31 @@
-import 'package:event_app/state/notification.dart' show EventNotification;
-import 'package:event_app/redux_store/actions.dart'
-    show MarkNotificationsAsRead, ClearNotifications;
-import 'package:event_app/redux_store/store.dart' show EventStore;
 import 'package:flutter/material.dart';
+import 'package:event_app/redux_store/actions.dart' as Actions;
+import 'package:event_app/state/notification.dart' show EventNotification;
+import 'package:event_app/redux_store/store.dart' show EventState;
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:redux/redux.dart' show Store;
 
+/// [EventNotificationsManager] which will connect to [StoreBuilder].
 class EventNotificationsManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder<EventStore>(
+    return StoreBuilder<EventState>(
       builder: buildEventNotificationsManager,
     );
   }
 
+  /// Builds main page.
   Widget buildEventNotificationsManager(
-      BuildContext context, Store<EventStore> eventStore) {
-    List<Widget> listViewChildren = [];
-    for (EventNotification notification
-        in eventStore.state.notifications.reversed) {
-      listViewChildren.add(ListTile(
-        leading: CircleAvatar(
-          child: Icon(
-            notification.getIcon(),
-            color: Colors.white,
-          ),
-          backgroundColor:
-              notification.read ? Colors.grey : Theme.of(context).primaryColor,
-        ),
-        title: Text(
-          notification.message,
-          style:
-              TextStyle(fontWeight: notification.read ? FontWeight.w400 : null),
-        ),
-        subtitle: Text(
-          getStringText(notification.timestamp),
-          style: TextStyle(
-            color: notification.read ? null : Theme.of(context).accentColor,
-          ),
-        ),
-      ));
-    }
-
+      BuildContext context, Store<EventState> eventStore) {
+    List<Widget> listViewChildren =
+        _buildListViewChildren(context, eventStore.state);
     return Scaffold(
       appBar: AppBar(
         title: Text("Notifications"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.delete),
-            onPressed: () => eventStore.dispatch(ClearNotifications()),
+            onPressed: () => eventStore.dispatch(Actions.ClearNotifications()),
           )
         ],
       ),
@@ -59,13 +36,48 @@ class EventNotificationsManager extends StatelessWidget {
               itemCount: listViewChildren.length,
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => eventStore.dispatch(MarkNotificationsAsRead()),
+        onPressed: () => eventStore.dispatch(Actions.MarkNotificationsAsRead()),
         child: Icon(Icons.done_all),
       ),
     );
   }
 
-  String getStringText(DateTime timestamp) {
+  /// Build the notification list Children
+  List<Widget> _buildListViewChildren(
+      BuildContext context, EventState eventState) {
+    ThemeData currentTheme = Theme.of(context);
+    List<Widget> listViewChildren = [];
+
+    /// Get every Notification and build the notification by that data
+    for (EventNotification notification in eventState.notifications.reversed) {
+      listViewChildren.add(ListTile(
+        leading: CircleAvatar(
+          child: Icon(
+            notification.getIcon(),
+            color: currentTheme.scaffoldBackgroundColor,
+          ),
+          backgroundColor:
+              notification.read ? Colors.grey : currentTheme.primaryColor,
+        ),
+        title: Text(
+          notification.message,
+          style:
+              TextStyle(fontWeight: notification.read ? FontWeight.w400 : null),
+        ),
+        subtitle: Text(
+          getMessageByDate(notification.timestamp),
+          style: TextStyle(
+            color: notification.read ? null : currentTheme.accentColor,
+          ),
+        ),
+      ));
+    }
+    return listViewChildren;
+  }
+
+  /// Creates a message like 'Just Now', '15 minutes ago' ...
+  /// using a timestamp
+  String getMessageByDate(DateTime timestamp) {
     DateTime now = DateTime.now();
     Duration diff = now.difference(timestamp);
     if (diff.inDays == 0) {

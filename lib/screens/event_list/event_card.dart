@@ -5,9 +5,8 @@ import 'package:event_app/custom_widgets/transition_maker.dart'
     show TransitionMaker;
 import 'package:event_app/state/event.dart';
 import 'package:event_app/state/flagged.dart';
-import 'package:event_app/redux_store/actions.dart'
-    show RemoveFromFlaggedList, AddToFlaggedList;
-import 'package:event_app/redux_store/store.dart' show EventStore;
+import 'package:event_app/redux_store/actions.dart' as Actions;
+import 'package:event_app/redux_store/store.dart' show EventState;
 import 'package:event_app/screens/event_details.dart' show EventDetails;
 import 'package:flutter_redux/flutter_redux.dart'
     show StoreBuilder, StoreConnector;
@@ -24,14 +23,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<EventStore, EventStore>(
-      builder: (context, state) => buildEventCard(context, state),
-      converter: (store) => store.state,
+    return StoreConnector<EventState, EventState>(
+      builder: (context, eventState) => buildEventCard(context, eventState),
+      converter: (eventStore) => eventStore.state,
     );
   }
 
   /// Separated build method because StoreBuilder is used
-  Widget buildEventCard(BuildContext context, EventStore store) {
+  Widget buildEventCard(BuildContext context, EventState eventState) {
+    Map<String, Event> eventList = eventState.eventList;
     return Card(
       elevation: 1.0,
       shape: RoundedRectangleBorder(
@@ -39,11 +39,11 @@ class EventCard extends StatelessWidget {
       child: Column(
         children: <Widget>[
           GestureDetector(
-            child: _buildImageBanner(store),
-            onTap: () => _handleBannerOnTap(context, store),
+            child: _buildImageBanner(eventList),
+            onTap: () => _handleBannerOnTap(context, eventList),
           ),
-          _buildTitleStrip(context, store),
-          _buildTimeDateStrip(context, store),
+          _buildTitleStrip(context, eventList),
+          _buildTimeDateStrip(context, eventList),
         ],
       ),
     );
@@ -51,25 +51,25 @@ class EventCard extends StatelessWidget {
 
   /// Builds CachedNetworkImage as Banner.
   /// This will also act as a Hero.
-  Widget _buildImageBanner(EventStore eventStore) {
+  Widget _buildImageBanner(Map<String, Event> eventList) {
     return DefParameterNetworkImage(
-      imageUrl: eventStore.eventList[this.eventID].headerImage,
+      imageUrl: eventList[this.eventID].headerImage,
       isCover: true,
     );
   }
 
   /// Build Time Date Data
-  Widget _buildTimeDateStrip(BuildContext context, EventStore eventStore) {
+  Widget _buildTimeDateStrip(
+      BuildContext context, Map<String, Event> eventList) {
     return IconText(
       icon: Icons.timer,
-      text: "${eventStore.eventList[this.eventID].startTimeString}",
+      text: "${eventList[this.eventID].startTimeString}",
       mainAxisAlignment: MainAxisAlignment.center,
     );
   }
 
   /// Build Title and flagging controller
-  Widget _buildTitleStrip(BuildContext context, EventStore eventStore) {
-    Map<String, Event> eventList = eventStore.eventList;
+  Widget _buildTitleStrip(BuildContext context, Map<String, Event> eventList) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
@@ -83,11 +83,10 @@ class EventCard extends StatelessWidget {
   /// Handles Tap on Banner.
   /// Will show EventImageView and animates Banner as a Hero.
   /// Use Fade animation as transition.
-  void _handleBannerOnTap(BuildContext context, EventStore store) {
+  void _handleBannerOnTap(BuildContext context, Map<String, Event> eventList) {
     TransitionMaker
         .slideTransition(
-          destinationPageCall: () =>
-              EventDetails(store.eventList[this.eventID]),
+          destinationPageCall: () => EventDetails(eventList[this.eventID]),
         )
         .start(context);
   }
@@ -96,10 +95,11 @@ class EventCard extends StatelessWidget {
   final String eventID;
 }
 
+/// Flagging button which dispatched flagging and unflagging events
 class FlaggingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreBuilder<EventStore>(
+    return StoreBuilder<EventState>(
       builder: (context, eventStore) {
         List<FlaggedEvent> flaggedList = eventStore.state.flaggedList;
         bool isFlagged = flaggedList.any((v) => v.eventID == this.eventID);
@@ -119,11 +119,13 @@ class FlaggingButton extends StatelessWidget {
   /// Handles tap on flag
   /// Toggled its flagged state
   void _handleFlagOnTap(
-      BuildContext context, bool isFlagged, Store<EventStore> eventStore) {
+      BuildContext context, bool isFlagged, Store<EventState> eventStore) {
     if (isFlagged) {
-      eventStore.dispatch(RemoveFromFlaggedList(this.eventID, DateTime.now()));
+      eventStore.dispatch(
+          Actions.RemoveFromFlaggedList(this.eventID, DateTime.now()));
     } else {
-      eventStore.dispatch(AddToFlaggedList(this.eventID, DateTime.now()));
+      eventStore
+          .dispatch(Actions.AddToFlaggedList(this.eventID, DateTime.now()));
     }
   }
 
